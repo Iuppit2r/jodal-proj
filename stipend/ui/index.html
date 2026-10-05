@@ -1,0 +1,1802 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>스타이펜드 사업관리시스템</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: 고정 좌측 업무 내비 + 상단 '지급월' 바. 각 화면은 요약(상단) → 상세(하단/우측) 순서. 금액·코드는 모노 서체로 장부처럼 정렬 */
+:root{
+  --bg:#FFFFFF; --surface:#FFFFFF; --surface-2:#F7F8FA; --line:#DCE2EB; --line-strong:#C3CDDA;
+  --ink:#13203A; --ink-2:#3A4860; --muted:#67748A;
+  --brand:#0B4DA2; --brand-ink:#FFFFFF; --brand-soft:#E5EDF9; --brand-strong:#083B7E;
+  --nav:#FFFFFF; --nav-ink:#4E5B71; --nav-strong:#13203A; --nav-hover:#F3F5F8; --nav-line:#E6EAF0;
+  --ok:#1C7A51; --ok-soft:#E2F2E9; --warn:#946000; --warn-soft:#FAEFD6; --bad:#B2362A; --bad-soft:#FAE4E1; --neutral-soft:#ECEFF4;
+  --s1:#2F6CCB; --s2:#16917F; --s3:#7154C0; --s4:#C2841A; --s5:#BE4D78; --s6:#6A7891; --gapc:#B2362A;
+  --scrim:rgba(10,20,40,.38);
+  --shadow:0 1px 2px rgba(16,33,64,.05), 0 6px 20px rgba(16,33,64,.06);
+  --shadow-lg:0 12px 40px rgba(10,24,50,.22);
+  --f-sans:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  --r:10px; --r-sm:6px;
+  color-scheme:light;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.55 var(--f-sans);-webkit-font-smoothing:antialiased;letter-spacing:-.005em;word-break:keep-all;overflow-wrap:break-word}
+button,input,select,textarea{font:inherit;color:inherit}
+h1,h2,h3,h4{margin:0;text-wrap:balance;letter-spacing:-.02em}
+a{color:var(--brand)}
+.num,.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+[hidden]{display:none!important}
+:focus-visible{outline:2px solid var(--brand);outline-offset:2px;border-radius:4px}
+
+/* ---------- shell ---------- */
+.app{display:grid;grid-template-columns:252px minmax(0,1fr);min-height:100%}
+.side{background:var(--nav);color:var(--nav-ink);border-right:1px solid var(--line);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;padding:20px 14px}
+.brand{display:flex;gap:10px;align-items:center;padding:4px 8px 18px;border-bottom:1px solid var(--nav-line)}
+.brand-t{color:var(--nav-strong);font-weight:700;font-size:15px;line-height:1.25}
+.brand-s{font-size:11.5px;color:var(--nav-ink);opacity:.85}
+.nav{display:flex;flex-direction:column;gap:2px;margin-top:16px;flex:1;overflow:auto}
+.nav-g{font-size:11px;letter-spacing:.08em;color:var(--nav-ink);opacity:.6;padding:14px 10px 6px}
+.nav a{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:7px;color:var(--nav-ink);text-decoration:none;font-weight:500;font-size:13.5px;position:relative}
+.nav a:hover{background:var(--nav-hover);color:var(--nav-strong)}
+.nav a.on{background:var(--brand-soft);color:var(--brand);font-weight:600}
+.nav a.on::before{content:"";position:absolute;left:-14px;top:8px;bottom:8px;width:3px;border-radius:0 3px 3px 0;background:var(--brand)}
+.nav svg{width:17px;height:17px;flex:none;opacity:.9}
+.nav .cnt{margin-left:auto;font:600 11px var(--f-mono);background:#D9483B;color:#fff;border-radius:9px;padding:0 6px;line-height:18px}
+.side-foot{border-top:1px solid var(--nav-line);padding:14px 8px 0;font-size:12px;display:flex;gap:10px;align-items:center}
+.avatar{width:30px;height:30px;border-radius:50%;background:var(--brand-soft);color:var(--brand);display:grid;place-items:center;font-weight:600;font-size:12px;flex:none}
+
+.main{min-width:0;display:flex;flex-direction:column}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px;padding:12px 28px;flex-wrap:wrap}
+.crumb{font-size:12.5px;color:var(--muted);display:flex;gap:6px;align-items:center}
+.crumb b{color:var(--ink);font-weight:600}
+.top-r{margin-left:auto;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.month{display:flex;align-items:center;border:1px solid var(--line-strong);background:var(--surface);border-radius:8px;overflow:hidden}
+.month button{border:0;background:none;padding:6px 9px;cursor:pointer;color:var(--muted)}
+.month button:hover{color:var(--ink);background:var(--surface-2)}
+.month button:disabled{opacity:.35;cursor:default;background:none}
+.month span{padding:0 6px;font-weight:600;font-size:13px}
+.month small{font-weight:500;color:var(--muted);font-size:11px;margin-right:4px}
+.iconbtn{border:1px solid var(--line-strong);background:var(--surface);border-radius:8px;width:34px;height:32px;display:grid;place-items:center;cursor:pointer;color:var(--ink-2)}
+.iconbtn:hover{border-color:var(--brand);color:var(--brand)}
+.iconbtn svg{width:16px;height:16px}
+
+.view{padding:24px 28px 56px;display:flex;flex-direction:column;gap:20px;max-width:1480px;width:100%}
+.head{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.head h1{font-size:23px;font-weight:700}
+.head p{margin:4px 0 0;color:var(--muted);font-size:13px}
+.head .act{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+
+/* ---------- primitives ---------- */
+.btn{text-decoration:none;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line-strong);background:var(--surface);border-radius:8px;padding:7px 13px;font-weight:600;font-size:13px;cursor:pointer;white-space:nowrap;color:var(--ink)}
+.btn:hover{border-color:var(--brand);color:var(--brand)}
+.btn svg{width:15px;height:15px}
+.btn.pri{background:var(--brand);border-color:var(--brand);color:var(--brand-ink)}
+.btn.pri:hover{background:var(--brand-strong);border-color:var(--brand-strong);color:var(--brand-ink)}
+.btn.sm{padding:4px 9px;font-size:12px;border-radius:6px}
+.btn.danger{color:var(--bad)}
+.btn.danger:hover{border-color:var(--bad)}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);min-width:0}
+.panel-h{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.panel-h h3{font-size:14.5px;font-weight:700}
+.panel-h .sub{font-size:12px;color:var(--muted)}
+.panel-h .r{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.panel-b{padding:16px 18px}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;border-radius:999px;padding:2px 9px;white-space:nowrap;line-height:18px}
+.chip::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.9}
+.chip.plain::before{display:none}
+.chip.ok{color:var(--ok);background:var(--ok-soft)}
+.chip.warn{color:var(--warn);background:var(--warn-soft)}
+.chip.bad{color:var(--bad);background:var(--bad-soft)}
+.chip.info{color:var(--brand);background:var(--brand-soft)}
+.chip.mute{color:var(--muted);background:var(--neutral-soft)}
+.tag{font-size:11.5px;color:var(--ink-2);background:var(--neutral-soft);border-radius:4px;padding:1px 7px;white-space:nowrap}
+.seg{display:inline-flex;background:var(--neutral-soft);border-radius:8px;padding:3px;gap:2px;flex-wrap:wrap}
+.seg button{border:0;background:none;padding:5px 11px;border-radius:6px;font-size:12.5px;font-weight:600;color:var(--muted);cursor:pointer}
+.seg button.on{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.seg button .n{font-family:var(--f-mono);font-weight:500;margin-left:4px;opacity:.7}
+.field{display:flex;align-items:center;gap:8px;border:1px solid var(--line-strong);background:var(--surface);border-radius:8px;padding:0 10px;height:34px;min-width:0}
+.field input,.field select{border:0;background:none;outline:none;height:100%;min-width:0;width:100%}
+.field svg{width:15px;height:15px;color:var(--muted);flex:none}
+select.sel{border:1px solid var(--line-strong);background:var(--surface);border-radius:8px;height:34px;padding:0 10px}
+.muted{color:var(--muted)}
+.tiny{font-size:11.5px}
+.grid{display:grid;gap:20px}
+.g-2-1{grid-template-columns:minmax(0,2fr) minmax(0,1fr)}
+.g-1-1{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g-side{grid-template-columns:320px minmax(0,1fr)}
+
+/* tables */
+.tw{overflow-x:auto}
+table.t{width:100%;border-collapse:collapse;font-size:13px}
+.t th{text-align:left;font-weight:600;color:var(--muted);font-size:11.5px;letter-spacing:.02em;padding:9px 12px;background:var(--surface-2);border-bottom:1px solid var(--line);white-space:nowrap;position:sticky;top:0}
+.t td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:middle;white-space:nowrap}
+.t tbody tr:last-child td{border-bottom:0}
+.t tr.click{cursor:pointer}
+.t tr.click:hover td{background:var(--surface-2)}
+.t .r{text-align:right}
+.t .c{text-align:center}
+.t tfoot td{font-weight:700;background:var(--surface-2);border-top:1px solid var(--line-strong)}
+.who{display:flex;flex-direction:column;line-height:1.3}
+.who b{font-weight:600}
+.who span{font-size:11.5px;color:var(--muted)}
+.zero{color:var(--muted);opacity:.55}
+
+/* KPI */
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.kpi .l{font-size:12.5px;color:var(--muted);font-weight:500;display:flex;justify-content:space-between;gap:8px}
+.kpi .v{font:600 26px/1.15 var(--f-mono);letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.kpi .v small{font:500 13px var(--f-sans);color:var(--muted);margin-left:3px;letter-spacing:0}
+.kpi .d{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.kpi .up{color:var(--ok);font-weight:600}
+.kpi svg.spark{width:100%;height:34px;margin-top:2px}
+.meter{height:6px;background:var(--neutral-soft);border-radius:4px;overflow:hidden;display:flex}
+.meter i{display:block;height:100%}
+
+/* stepper (실제 업무 순서) */
+.steps{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;counter-reset:st}
+.step{padding:14px 16px 14px 0;position:relative;display:flex;gap:0;align-items:flex-start}
+.step .dot{position:relative;z-index:1;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font:600 11.5px var(--f-mono);flex:none;border:1.5px solid var(--line-strong);color:var(--muted);background:var(--surface)}
+.step.done .dot{background:var(--ok);border-color:var(--ok);color:var(--surface)}
+.step.now .dot{background:var(--brand);border-color:var(--brand);color:var(--brand-ink);box-shadow:0 0 0 4px var(--brand-soft)}
+.step::after{content:"";position:absolute;left:30px;right:8px;top:26px;height:1.5px;background:var(--line)}
+.step:last-child::after{display:none}
+.step.done::after{background:var(--ok)}
+.step .tx{display:flex;flex-direction:column;line-height:1.35;padding:2px 10px 0;position:relative;z-index:1;background:var(--surface)}
+.step .tx b{font-size:13px;font-weight:600}
+.step .tx span{font-size:11.5px;color:var(--muted)}
+
+/* todo list */
+.todo{display:flex;flex-direction:column}
+.todo a{display:flex;gap:12px;align-items:center;padding:12px 18px;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink)}
+.todo a:last-child{border-bottom:0}
+.todo a:hover{background:var(--surface-2)}
+.todo .sev{width:4px;align-self:stretch;border-radius:3px;flex:none}
+.todo .tt{display:flex;flex-direction:column;min-width:0;flex:1}
+.todo .tt b{font-weight:600;font-size:13.5px}
+.todo .tt span{font-size:12px;color:var(--muted)}
+.todo .n{font:600 18px var(--f-mono)}
+.todo svg{width:16px;height:16px;color:var(--muted);flex:none}
+
+/* chart */
+.chart text{font-family:var(--f-mono);font-size:10.5px;fill:var(--muted)}
+.chart .lbl{fill:var(--ink-2);font-weight:500}
+.chart .grid line{stroke:var(--line);stroke-width:1}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--ink-2)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+
+/* 기준선 막대 (지원계획) */
+.plan-side{grid-template-columns:repeat(3,minmax(0,1fr));align-items:start}
+.plan-row{display:grid;grid-template-columns:200px minmax(0,1fr) 120px 100px 120px;gap:16px;align-items:center;padding:11px 18px;border-bottom:1px solid var(--line);cursor:pointer}
+.plan-row:hover{background:var(--surface-2)}
+.plan-row.hd{cursor:default;background:var(--surface-2);font-size:11.5px;font-weight:600;color:var(--muted);padding-block:9px}
+.plan-row.hd:hover{background:var(--surface-2)}
+.plan-row .r{text-align:right}
+.track{position:relative;height:22px;border-radius:4px;background:repeating-linear-gradient(90deg,transparent 0 calc(25% - 1px),var(--line) calc(25% - 1px) 25%)}
+.stack{position:absolute;inset:3px auto 3px 0;display:flex;border-radius:3px;overflow:hidden}
+.stack i{height:100%;display:block;border-right:1px solid var(--surface)}
+.stack i:last-child{border-right:0}
+.gapz{position:absolute;top:3px;bottom:3px;border-radius:0 3px 3px 0;background:repeating-linear-gradient(-45deg,color-mix(in srgb,var(--gapc) 28%,transparent) 0 4px,transparent 4px 8px);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--gapc) 55%,transparent)}
+.thr{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink);border-radius:1px}
+.thr::after{content:attr(data-l);position:absolute;top:-14px;left:50%;transform:translateX(-50%);font:600 9.5px var(--f-mono);color:var(--ink-2);white-space:nowrap}
+.scale{position:relative;height:16px;font:500 10px var(--f-mono);color:var(--muted)}
+.scale span{position:absolute;transform:translateX(-50%)}
+
+/* 증빙 */
+.q{display:flex;flex-direction:column;max-height:640px;overflow:auto}
+.qi{display:flex;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);cursor:pointer;align-items:flex-start;text-align:left;background:none;border-left:0;border-right:0;border-top:0;width:100%}
+.qi:hover{background:var(--surface-2)}
+.qi.on{background:var(--brand-soft)}
+.qi .ic{width:34px;height:40px;border-radius:4px;border:1px solid var(--line-strong);background:var(--surface);display:grid;place-items:center;font:600 9px var(--f-mono);color:var(--bad);flex:none;position:relative}
+.qi .ic::after{content:"";position:absolute;top:-1px;right:-1px;width:9px;height:9px;background:linear-gradient(225deg,var(--bg) 50%,var(--line-strong) 50%)}
+.qi .tt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.qi .tt b{font-weight:600;font-size:13px}
+.qi .tt span{font-size:12px;color:var(--muted)}
+.doc{border:1px solid var(--line);border-radius:8px;background:var(--surface-2);padding:22px;display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden}
+.doc .ln{height:8px;border-radius:3px;background:var(--line)}
+.doc .mask{position:absolute;inset:0;display:grid;place-items:center;background:color-mix(in srgb,var(--surface) 55%,transparent);backdrop-filter:blur(3px)}
+.doc .mask div{display:flex;flex-direction:column;gap:8px;align-items:center;text-align:center;font-size:12.5px;color:var(--ink-2);padding:12px}
+.dl{display:grid;grid-template-columns:110px minmax(0,1fr);gap:8px 14px;font-size:13px;margin:0}
+.dl dt{color:var(--muted)}
+.dl dd{margin:0;min-width:0}
+textarea.memo{width:100%;min-height:72px;border:1px solid var(--line-strong);border-radius:8px;background:var(--surface);padding:9px 11px;resize:vertical}
+
+/* timeline */
+.tl{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.tl li{display:grid;grid-template-columns:14px minmax(0,1fr);gap:10px;padding-bottom:14px;position:relative}
+.tl li::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--surface);border:2px solid var(--brand);margin-top:5px}
+.tl li::after{content:"";position:absolute;left:5.5px;top:17px;bottom:0;width:1.5px;background:var(--line)}
+.tl li:last-child::after{display:none}
+.tl b{font-weight:600;font-size:13px}
+.tl span{display:block;font-size:12px;color:var(--muted)}
+
+/* 연계 배치 */
+.batches{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.bt{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.bt-h{display:flex;align-items:flex-start;gap:10px}
+.bt-h b{font-weight:700;font-size:14px;display:block}
+.bt-h span{font-size:12px;color:var(--muted)}
+.bt-h .chip{margin-left:auto}
+.bt-m{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;border-top:1px dashed var(--line);padding-top:10px}
+.bt-m div{display:flex;flex-direction:column}
+.bt-m small{font-size:11px;color:var(--muted)}
+.bt-m strong{font:600 14px var(--f-mono)}
+.bt-f{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+.bt-f .btn{margin-left:auto}
+.qc{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0}
+.qc div{padding:14px 18px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:2px}
+.qc div:last-child{border-right:0}
+.qc small{font-size:12px;color:var(--muted)}
+.qc strong{font:600 22px var(--f-mono)}
+
+/* 계정 */
+.acct{display:flex;flex-direction:column}
+.acct button{display:flex;gap:10px;align-items:center;width:100%;border:0;border-bottom:1px solid var(--line);background:none;padding:11px 16px;text-align:left;cursor:pointer}
+.acct button:hover{background:var(--surface-2)}
+.acct button.on{background:var(--brand-soft)}
+.acct .nm{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.3}
+.acct .nm b{font-weight:600;font-size:13px}
+.acct .nm span{font-size:11px;color:var(--muted);font-family:var(--f-mono)}
+.acct .bal{font:600 12.5px var(--f-mono)}
+.ind1{padding-left:30px!important}
+.ind2{padding-left:46px!important}
+.ind1 .nm b,.ind2 .nm b{font-weight:500}
+.sum3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-bottom:1px solid var(--line)}
+.sum3 div{padding:14px 18px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:2px}
+.sum3 div:last-child{border-right:0}
+.sum3 small{font-size:12px;color:var(--muted)}
+.sum3 strong{font:600 20px var(--f-mono);letter-spacing:-.03em}
+.in{color:var(--ok)}
+.out{color:var(--bad)}
+
+/* 지급내역 매트릭스 */
+.sw{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:7px;vertical-align:0}
+
+/* settings */
+.setrow{display:grid;grid-template-columns:150px 1fr 150px;gap:14px;align-items:center;padding:12px 18px;border-bottom:1px solid var(--line)}
+.setrow:last-child{border-bottom:0}
+.money-in{display:flex;align-items:center;border:1px solid var(--line-strong);border-radius:8px;background:var(--surface);height:36px;padding:0 10px;max-width:220px}
+.money-in input{border:0;outline:none;background:none;width:100%;text-align:right;font:600 15px var(--f-mono)}
+.money-in span{color:var(--muted);margin-left:6px;font-size:12.5px}
+.mx td.c{font-size:15px}
+.dotf{color:var(--brand)}
+.doth{color:var(--s4)}
+.doto{color:var(--muted)}
+
+/* drawer / modal / toast */
+.scrim{position:fixed;inset:0;background:var(--scrim);z-index:40;opacity:0;pointer-events:none;transition:opacity .2s}
+.scrim.show{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(560px,100%);background:var(--surface);z-index:41;box-shadow:var(--shadow-lg);transform:translateX(104%);transition:transform .25s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.drawer.show{transform:none}
+.dr-h{padding:18px 22px;border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:flex-start}
+.dr-b{flex:1;overflow:auto;padding:18px 22px;display:flex;flex-direction:column;gap:22px}
+.dr-b h4{font-size:12px;letter-spacing:.06em;color:var(--muted);font-weight:600;margin-bottom:10px}
+.checks{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:8px}
+.checks div{display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 12px;border-bottom:1px solid var(--line);font-size:13px}
+.checks div:last-child{border-bottom:0}
+.checks small{display:block;color:var(--muted);font-size:11.5px}
+.ck{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700}
+.ck.ok{background:var(--ok-soft);color:var(--ok)}
+.ck.warn{background:var(--warn-soft);color:var(--warn)}
+.ck.bad{background:var(--bad-soft);color:var(--bad)}
+.modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-46%);opacity:0;pointer-events:none;z-index:42;background:var(--surface);border-radius:12px;box-shadow:var(--shadow-lg);width:min(460px,calc(100% - 32px));transition:all .2s}
+.modal.show{opacity:1;pointer-events:auto;transform:translate(-50%,-50%)}
+.modal .mb{padding:22px}
+.modal .mb h3{font-size:17px;margin-bottom:8px}
+.modal .mb p{margin:0;color:var(--ink-2);font-size:13.5px}
+.modal .mf{display:flex;gap:8px;justify-content:flex-end;padding:14px 22px;border-top:1px solid var(--line);background:var(--surface-2);border-radius:0 0 12px 12px}
+.toasts{position:fixed;right:20px;bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:60;display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+.toast{background:var(--ink);color:var(--bg);border-radius:9px;padding:10px 16px;font-size:13px;box-shadow:var(--shadow-lg);animation:tin .25s ease;max-width:min(420px,calc(100vw - 40px))}
+@keyframes tin{from{transform:translateY(8px);opacity:0}}
+
+/* 사용자 전환 */
+.whobtn{display:flex;gap:10px;align-items:center;width:100%;border:0;background:none;padding:6px;border-radius:8px;cursor:pointer;text-align:left;color:inherit;font-size:12px}
+.whobtn:hover{background:var(--nav-hover)}
+.who-t{flex:1;min-width:0;line-height:1.35}
+.who-t span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.whobtn>svg{margin-left:auto;width:14px;height:14px;opacity:.6;flex:none}
+.rolemenu{position:fixed;left:14px;bottom:70px;width:268px;background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow-lg);padding:6px;z-index:50}
+.rolemenu .h{font-size:11px;color:var(--muted);padding:6px 10px 4px;letter-spacing:.04em}
+.rolemenu button{display:flex;gap:10px;align-items:center;width:100%;border:0;background:none;padding:8px 10px;border-radius:7px;cursor:pointer;text-align:left}
+.rolemenu button:hover{background:var(--surface-2)}
+.rolemenu button.on{background:var(--brand-soft)}
+.rolemenu .who b{font-size:13px}
+/* 신청 */
+.wz{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.wz button{flex:1;display:flex;gap:10px;align-items:center;padding:12px 16px;border:0;border-right:1px solid var(--line);background:var(--surface);cursor:pointer;text-align:left;min-width:0}
+.wz button:last-child{border-right:0}
+.wz button:disabled{cursor:default}
+.wz button.on{background:var(--brand-soft)}
+.wz .n{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--line-strong);display:grid;place-items:center;font:600 11.5px var(--f-mono);color:var(--muted);flex:none;background:var(--surface)}
+.wz button.on .n{background:var(--brand);border-color:var(--brand);color:#fff}
+.wz button.done .n{background:var(--ok);border-color:var(--ok);color:#fff}
+.wz b{display:block;font-size:13px}
+.wz span span{display:block;font-size:11.5px;color:var(--muted)}
+.g-apply{grid-template-columns:minmax(0,1fr) 300px;align-items:start}
+.sumcard{position:sticky;top:76px}
+.final{margin-top:14px;padding-top:14px;border-top:1px dashed var(--line-strong);display:flex;flex-direction:column;gap:2px}
+.final small{color:var(--muted);font-size:12px}
+.final strong{font-size:26px;font-weight:600;letter-spacing:-.03em}
+.final strong span{font:500 13px var(--f-sans);color:var(--muted);margin-left:3px}
+input.cb{width:16px;height:16px;accent-color:var(--brand);cursor:pointer;margin:0}
+.sel.sm{height:30px;font-size:12.5px;padding:0 6px;border-radius:6px}
+.amt-in{display:inline-flex;align-items:center;border:1px solid var(--line-strong);border-radius:6px;height:30px;padding:0 8px;background:var(--surface)}
+.amt-in:focus-within{border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-soft)}
+.amt-in input{border:0;outline:none;background:none;width:92px;text-align:right;font:500 13px var(--f-mono)}
+.amt-in input:disabled{color:var(--muted)}
+.amt-in span{font-size:12px;color:var(--muted);margin-left:4px}
+.t tr.dis td,.t tr.dis td b{color:var(--muted)}
+.hint{display:flex;gap:8px;align-items:flex-start;font-size:12.5px;color:var(--ink-2);background:var(--surface-2);border-radius:8px;padding:10px 12px}
+.hint svg{width:15px;height:15px;color:var(--brand);flex:none;margin-top:2px}
+.formnav{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.acctline{display:flex;align-items:center;gap:16px;padding:14px 16px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);flex-wrap:wrap}
+.acctline small{display:block;font-size:12px;color:var(--muted)}
+.acctline b{font-size:14px}
+.acctline strong{margin-left:auto;font-size:22px;font-weight:600}
+.acctline strong span{font:500 13px var(--f-sans);color:var(--muted);margin-left:3px}
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:14px;border:1px solid var(--line-strong);border-radius:10px;cursor:pointer}
+.opt input{margin-top:3px;accent-color:var(--brand)}
+.opt b{display:block;font-size:13.5px}
+.opt span span{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+.opt.on{border-color:var(--brand);background:var(--brand-soft);box-shadow:inset 0 0 0 1px var(--brand)}
+.droprow{display:flex;gap:8px;align-items:stretch}
+.drop{flex:1;min-width:0;position:relative;border:1.5px dashed var(--line-strong);border-radius:10px;padding:14px 16px;display:flex;gap:12px;align-items:center;cursor:pointer;background:var(--surface-2)}
+.drop:hover,.drop.over{border-color:var(--brand);background:var(--brand-soft)}
+.drop.has{border-style:solid;border-color:color-mix(in srgb,var(--ok) 50%,transparent);background:var(--ok-soft)}
+.drop>svg{width:20px;height:20px;color:var(--muted);flex:none}
+.drop.has>svg{color:var(--ok)}
+.drop .dt{flex:1;min-width:0;display:flex;flex-direction:column}
+.drop .dt b{font-size:13.5px}
+.drop .dt span{font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.drop input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.agree{display:flex;flex-direction:column}
+.agree label{display:flex;gap:10px;align-items:flex-start;padding:9px 0;font-size:13.5px;cursor:pointer;border-bottom:1px solid var(--line)}
+.agree label:last-child{border-bottom:0}
+.agree input{margin-top:3px}
+.done-box{text-align:center;padding:40px 24px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.okmark{width:52px;height:52px;border-radius:50%;background:var(--ok-soft);color:var(--ok);display:grid;place-items:center}
+.okmark.warn{background:var(--warn-soft);color:var(--warn)}
+.okmark svg{width:26px;height:26px}
+.done-box h2{font-size:20px}
+.done-box p{margin:0}
+.tl li.pend::before{border-color:var(--line-strong)}
+.alert{display:flex;gap:12px;align-items:center;padding:14px 18px;border-radius:10px;background:var(--warn-soft);color:var(--ink);text-decoration:none;border:1px solid color-mix(in srgb,var(--warn) 30%,transparent);flex-wrap:wrap}
+.alert>svg{color:var(--warn);width:20px;height:20px;flex:none}
+.alert .tx{flex:1;min-width:200px}
+.alert .tx span{display:block;font-size:12.5px;color:var(--ink-2)}
+.note{padding:10px 12px;border-radius:8px;font-size:12.5px;background:var(--warn-soft)}
+.note b{color:var(--warn)}
+.fi{width:36px;height:36px;border-radius:8px;background:var(--brand-soft);color:var(--brand);display:grid;place-items:center;flex:none}
+.fi svg{width:18px;height:18px}
+.pgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;align-items:start}
+
+/* 로그인 */
+.login{min-height:100%;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);background:var(--bg)}
+.login-l{padding:56px 64px 40px;display:flex;flex-direction:column;gap:40px;border-right:1px solid var(--line)}
+.login-l .org{font-size:13px;color:var(--brand);font-weight:600;letter-spacing:.02em}
+.login-l h1{font-size:34px;line-height:1.28;font-weight:700;margin-top:10px;letter-spacing:-.03em}
+.login-l p{color:var(--muted);margin:14px 0 0;font-size:14.5px}
+.sched h3{font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.06em;margin-bottom:10px}
+.sched-l{display:flex;flex-direction:column;border-top:1px solid var(--line);max-width:520px}
+.sched-l div{display:grid;grid-template-columns:120px minmax(0,1fr);gap:12px;padding:14px 0;border-bottom:1px solid var(--line);font-size:13.5px}
+.sched-l .d{font-family:var(--f-mono);color:var(--brand);font-weight:500;font-size:13px}
+.sched-l span span{display:block;font-size:12px;color:var(--muted)}
+.login-l footer{margin-top:auto;font-size:12px;color:var(--muted);display:flex;gap:6px 16px;flex-wrap:wrap}
+.login-l footer b{color:var(--ink-2);font-weight:600}
+.login-r{display:grid;place-items:center;padding:48px 24px}
+.lcard{width:100%;max-width:380px;display:flex;flex-direction:column;gap:18px}
+.lcard h2{font-size:24px}
+.lcard .lsub{margin:4px 0 0;color:var(--muted);font-size:13px}
+.lseg{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--line)}
+.lseg button{border:0;background:none;padding:12px 0;font-weight:600;font-size:14px;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer}
+.lseg button.on{color:var(--brand);border-color:var(--brand)}
+.lf{display:flex;flex-direction:column;gap:6px}
+.lf label{font-size:12.5px;font-weight:600;color:var(--ink-2)}
+.lf input{height:46px;border:1px solid var(--line-strong);border-radius:8px;padding:0 14px;font-size:15px;background:var(--surface);outline:none}
+.lf input:focus{border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-soft)}
+.lf.err input{border-color:var(--bad)}
+.lf .em{font-size:12px;color:var(--bad)}
+.lrow{display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--ink-2)}
+.lrow label{display:flex;gap:8px;align-items:center;cursor:pointer}
+.lbtn{height:48px;font-size:15px;justify-content:center;width:100%}
+.lor{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted)}
+.lor::before,.lor::after{content:"";flex:1;height:1px;background:var(--line)}
+.llinks{display:flex;justify-content:center;gap:16px;font-size:12.5px}
+.llinks button{border:0;background:none;color:var(--muted);cursor:pointer;padding:0}
+.llinks button:hover{color:var(--ink);text-decoration:underline}
+.lnote{font-size:12px;color:var(--muted);line-height:1.6;border-top:1px solid var(--line);padding-top:14px;margin:0}
+.spin{width:16px;height:16px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+/* 세션 · 알림 · 사용자 메뉴 */
+.sess{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+.sess b{font:500 12.5px var(--f-mono);color:var(--ink)}
+.sess b.low{color:var(--bad)}
+.sess button{border:1px solid var(--line-strong);background:var(--surface);border-radius:6px;font-size:11.5px;padding:2px 8px;cursor:pointer;color:var(--ink-2)}
+.sess button:hover{border-color:var(--brand);color:var(--brand)}
+.iconbtn{position:relative}
+.iconbtn .dot{position:absolute;top:5px;right:6px;width:7px;height:7px;border-radius:50%;background:var(--bad);box-shadow:0 0 0 2px var(--surface)}
+.pop{position:fixed;top:54px;right:28px;width:360px;max-width:calc(100vw - 32px);background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow-lg);z-index:50;overflow:hidden}
+.pop .ph{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--line);font-weight:700;font-size:13.5px}
+.pop .ph button{border:0;background:none;color:var(--brand);font-size:12px;cursor:pointer;font-weight:600}
+.pop a{display:flex;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink)}
+.pop a:last-child{border-bottom:0}
+.pop a:hover{background:var(--surface-2)}
+.pop a i{width:7px;height:7px;border-radius:50%;background:var(--brand);margin-top:7px;flex:none}
+.pop a.read i{background:transparent}
+.pop a.read b{font-weight:400;color:var(--ink-2)}
+.pop a b{display:block;font-size:13px;font-weight:600}
+.pop a span{font-size:11.5px;color:var(--muted)}
+.um-h{display:flex;gap:10px;align-items:center;padding:10px;border-bottom:1px solid var(--line);margin-bottom:4px}
+.um-h b{display:block;font-size:13.5px}
+.um-h span{font-size:11.5px;color:var(--muted)}
+.um-meta{font-size:11.5px;color:var(--muted);padding:6px 10px 8px;line-height:1.6}
+.rolemenu button.out{color:var(--bad)}
+
+.t tr.need td{border-bottom:0}
+.t tr.subrow td{background:var(--warn-soft);padding:12px 14px;white-space:normal}
+.fix{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.fix-m{flex:1;min-width:240px;font-size:12.5px}
+.fix-m b{color:var(--warn);margin-right:8px}
+.fix-a{display:flex;gap:8px;align-items:center}
+.pick{position:relative;display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 10px;border:1px dashed var(--line-strong);border-radius:6px;background:var(--surface);font-size:12.5px;cursor:pointer;max-width:260px}
+.pick span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pick:hover{border-color:var(--brand);color:var(--brand)}
+.pick.has{border-style:solid;border-color:var(--ok);color:var(--ok)}
+.pick svg{width:14px;height:14px;flex:none}
+.pick input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+
+/* ---------- responsive ---------- */
+@media (max-width:1180px){
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .batches{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .g-2-1,.plan-side,.g-apply{grid-template-columns:minmax(0,1fr)}
+  .sumcard{position:static}
+  .plan-row{grid-template-columns:150px minmax(0,1fr) 100px 80px 96px;gap:12px}
+}
+@media (max-width:900px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:sticky;top:0;height:auto;z-index:30;padding:10px 16px;flex-direction:row;align-items:center;gap:12px;overflow:hidden}
+  .brand{border:0;padding:0}
+  .brand-s,.nav-g,.who-t,.whobtn>svg{display:none}
+  .side-foot{border:0;padding:0;margin-left:auto}
+  .rolemenu{left:auto;right:16px;top:58px;bottom:auto}
+  .wz{flex-direction:column}
+  .wz button{border-right:0;border-bottom:1px solid var(--line)}
+  .opts,.pgrid{grid-template-columns:minmax(0,1fr)}
+  .nav{flex-direction:row;margin:0;overflow-x:auto;gap:4px;scrollbar-width:none}
+  .nav a{white-space:nowrap;padding:7px 10px}
+  .nav a.on::before{display:none}
+  .nav a svg{display:none}
+  .top{position:static;padding:10px 16px}
+  .view{padding:18px 16px 48px}
+  .g-side,.g-1-1{grid-template-columns:minmax(0,1fr)}
+  .steps{grid-template-columns:minmax(0,1fr)}
+  .step::after{display:none}
+  .step{padding:8px 0}
+  .qc{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .qc div:nth-child(2){border-right:0}
+  .qc div:nth-child(-n+2){border-bottom:1px solid var(--line)}
+  .plan-row{grid-template-columns:minmax(0,1fr) auto;gap:6px 12px}
+  .plan-row .bar-c{grid-column:1/-1;order:3}
+  .plan-row .c-th,.plan-row .c-tot{display:none}
+  .plan-row.hd{display:none}
+  .scale-row{display:none!important}
+  .setrow{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:900px){
+  .login{grid-template-columns:minmax(0,1fr)}
+  .login-l{padding:28px 16px 24px;border-right:0;border-bottom:1px solid var(--line);gap:0}
+  .login-l h1{font-size:24px}
+  .sched,.login-l footer{display:none}
+  .login-r{padding:28px 16px 40px;place-items:start center}
+  .sess span{display:none}
+  .pop{right:16px;top:100px}
+}
+@media (max-width:560px){
+  .kpis,.batches{grid-template-columns:minmax(0,1fr)}
+  .sum3{grid-template-columns:minmax(0,1fr)}
+  .sum3 div{border-right:0;border-bottom:1px solid var(--line)}
+  .head h1{font-size:20px}
+  .brand-t{font-size:14px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<section class="login" id="login" hidden></section>
+<div class="app" hidden>
+  <aside class="side">
+    <div class="brand">
+      <div><div class="brand-t">스타이펜드 사업관리</div><div class="brand-s">이공계 연구생활장려금 · 연구지원팀</div></div>
+    </div>
+    <nav class="nav" id="nav" aria-label="주요 메뉴"></nav>
+    <div class="side-foot">
+      <button class="whobtn" id="whoBtn" aria-haspopup="menu" aria-label="사용자 메뉴">
+        <span class="avatar" id="whoAv">박</span>
+        <span class="who-t"><span id="whoName" style="display:block;color:var(--nav-strong);font-weight:600">박○○ 담당자</span><span id="whoSub" style="display:block;opacity:.75">연구지원팀 · 업무관리자</span></span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 15l5 5 5-5M7 9l5-5 5 5"/></svg>
+      </button>
+    </div>
+    <div class="rolemenu" id="roleMenu" role="menu" hidden></div>
+  </aside>
+
+  <div class="main">
+    <header class="top">
+      <div class="crumb" id="crumb"></div>
+      <div class="top-r">
+        <div class="month" role="group" aria-label="지급월 선택">
+          <button id="mPrev" aria-label="이전 달">‹</button>
+          <span><small>지급월</small><span class="num" id="mLabel">2026.10</span></span>
+          <button id="mNext" aria-label="다음 달">›</button>
+        </div>
+        <div class="sess" title="30분 동안 사용하지 않으면 자동으로 로그아웃됩니다"><span>자동 로그아웃</span><b id="sessT">30:00</b><button id="sessExt">연장</button></div>
+        <button class="iconbtn" id="bellBtn" aria-label="알림">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+          <span class="dot" id="bellDot"></span>
+        </button>
+      </div>
+      <div class="pop" id="bellPop" hidden></div>
+    </header>
+    <main class="view" id="view"></main>
+  </div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-hidden="true" role="dialog" aria-label="학생연구자 상세"></aside>
+<div class="modal" id="modal" role="dialog" aria-modal="true"></div>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script>
+/* =========================================================
+   데이터
+   ========================================================= */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const R = mulberry32(20261005);
+const pick = a => a[Math.floor(R()*a.length)];
+const r10k = n => Math.round(n/10000)*10000;
+
+const MONTHS = ['2026.03','2026.04','2026.05','2026.06','2026.07','2026.08','2026.09','2026.10'];
+const LAST = MONTHS.length-1;
+let CUR = LAST;
+const JOIN = [22,25,27,29,31,33,35,36];
+const MN = () => +MONTHS[CUR].slice(5)+'월';
+const YM = () => MONTHS[CUR].slice(0,4)+'년 '+MN();
+const confirmed = () => CUR<LAST || state.rosterConfirmed;
+const baseDay = () => { const y=+MONTHS[CUR].slice(0,4), m=+MONTHS[CUR].slice(5); return m>=10?y+'.10.01':m>=4?y+'.04.01':(y-1)+'.10.01'; };
+
+const state = {
+  base:{M:800000, D:1100000},
+  baseHist:[{at:'2025.07.01', m:800000, d:1100000, by:'시스템관리자', note:'재단 운영 가이드라인 최초 반영'}],
+  rosterConfirmed:false, rosterConfirmedAt:null,
+  calcHist:[
+    {at:'2026.10.03 09:12', by:'배치(자동)', note:'산단회계 9월 지급결과 반영 후 자동 산정', n:36},
+    {at:'2026.10.04 15:40', by:'박○○', note:'BK21 장학금 지급계획 변경 반영', n:3},
+  ],
+  proofTab:'검토대기', proofSel:null, rosterFilter:'전체', rosterQ:'', planFilter:'전체',
+  paySid:null, acctSel:'C10', ledgerF:'전체', setTab:'기준금액', unmask:false,
+};
+
+const DEPTS = [
+  {d:'기계공학부',c:'공과대학',p:'김정훈',lab:'열유체시스템연구실'},
+  {d:'화공생명·환경공학부',c:'공과대학',p:'이상철',lab:'촉매반응공학연구실'},
+  {d:'전기전자공학부',c:'공과대학',p:'박미경',lab:'전력반도체연구실'},
+  {d:'정보컴퓨터공학부',c:'공과대학',p:'최영호',lab:'분산시스템연구실'},
+  {d:'고분자공학과',c:'공과대학',p:'정은주',lab:'기능성고분자연구실'},
+  {d:'물리학과',c:'자연과학대학',p:'한동수',lab:'응집물질이론연구실'},
+  {d:'화학과',c:'자연과학대학',p:'서지훈',lab:'유기합성연구실'},
+  {d:'분자생물학과',c:'자연과학대학',p:'윤성희',lab:'세포신호연구실'},
+  {d:'해양학과',c:'자연과학대학',p:'배재민',lab:'해양관측연구실'},
+  {d:'나노에너지공학과',c:'나노과학기술대학',p:'오혜진',lab:'이차전지소재연구실'},
+];
+const SRC = [
+  {k:'rnd', name:'R&D 학생인건비(통합관리)', short:'R&D 통합', acct:'연구책임자계정', mode:'DB 연계', code:'F01', col:'--s1'},
+  {k:'rndx',name:'R&D 학생인건비(비통합)', short:'R&D 비통합', acct:'과제계정', mode:'DB 연계', code:'F02', col:'--s2'},
+  {k:'svc', name:'용역과제 인건비', short:'용역과제', acct:'과제계정', mode:'DB 연계', code:'F03', col:'--s3'},
+  {k:'bk',  name:'BK21 장학금', short:'BK21', acct:'사업단계정', mode:'표준 업로드', code:'F04', col:'--s4'},
+  {k:'sch', name:'교내 연구장학금', short:'교내장학', acct:'대학계정', mode:'DB 연계', code:'F05', col:'--s5'},
+  {k:'loc', name:'지자체·기타 국고', short:'지자체 등', acct:'과제계정', mode:'표준 업로드', code:'F06', col:'--s6'},
+];
+const SRCW = [0.42,0.14,0.14,0.14,0.10,0.06];
+function pickSrc(){let x=R(),a=0;for(let i=0;i<SRC.length;i++){a+=SRCW[i];if(x<a)return SRC[i].k}return 'rnd'}
+
+const NAMES = ['김도현','이서연','박준혁','최지우','정민재','강하은','조성훈','윤예린','장태윤','임수빈','한지호','오다인','서현우','신유나','권도윤','황민서','안재원','송채원','류건우','전소율','홍승민','고은채','문시우','양지안','손우진','배나연','백현준','허서윤','남궁민','노하린','심재희','유태오','구민지','변정우','엄소희','차윤호'];
+
+function courseBase(s){ if(s.course==='석사') return 'M'; if(s.course==='박사') return 'D'; return s.sem<=4?'M':'D'; }
+function thOf(s){ return state.base[courseBase(s)]; }
+
+const students = NAMES.map((name,i)=>{
+  const dp = DEPTS[i%DEPTS.length];
+  const join = JOIN.findIndex(t=>i<t);
+  const x = R();
+  const course = x<0.55?'석사':(x<0.9?'박사':'석박통합');
+  const sem = course==='석사'?1+Math.floor(R()*4):course==='박사'?1+Math.floor(R()*8):1+Math.floor(R()*9);
+  const yr = 2026 - Math.floor((sem-1)/2);
+  const s = {id:'S'+String(i+1).padStart(3,'0'), join, name, course, sem, dept:dp.d, college:dp.c, advisor:dp.p, lab:dp.lab,
+    sno: String(yr)+String(Math.floor(R()*9000+1000)).padStart(5,'2'),
+    nri: String(Math.floor(R()*90000000+10000000)),
+    status: course!=='석사' && sem>=7 && R()<0.5 ? '수료연구생' : '재학'};
+  s.fulltime = (i%13===5)?'확인중':(i===17?'미충족':'충족');
+  s.activity = R()<0.3?'학위논문':'연구과제';
+  s.past = s.activity==='학위논문' ? '참여(2023.03~2025.02)' : '해당없음';
+  s.limit = s.activity==='학위논문' ? (s.course==='석사'?'2027.02':'2028.08') : '-';
+  // 최근 월 재원별 금액
+  const th = state.base[courseBase(s)];
+  const ratio = R()<0.6 ? 1+R()*0.75 : 0.3+R()*0.62;
+  const total = r10k(th*ratio);
+  const n = 1+Math.floor(R()*2.6);
+  const keys=[]; while(keys.length<n){const k=pickSrc(); if(!keys.includes(k)) keys.push(k);}
+  const w = keys.map(()=>0.3+R()); const ws=w.reduce((a,b)=>a+b,0);
+  s.src={}; let acc=0;
+  keys.forEach((k,j)=>{ const v = j===keys.length-1 ? total-acc : r10k(total*w[j]/ws); s.src[k]=v; acc+=v; });
+  // 월별 이력
+  s.hist={};
+  keys.forEach(k=>{
+    const start = R()<0.25 ? 2+Math.floor(R()*4) : 0;
+    s.hist[k] = MONTHS.map((m,mi)=>{
+      if(mi===LAST) return s.src[k];
+      if(mi<start||mi<join) return 0;
+      const r=R(); if(r<0.1) return 0;
+      return r<0.72 ? s.src[k] : r10k(s.src[k]*(0.7+R()*0.5));
+    });
+  });
+  s.piBal = r10k(200000+R()*4800000); // 연구책임자계정 잔액
+  return s;
+});
+
+const payerOf = s => s.dept==='기계공학부'?'D11':s.dept==='정보컴퓨터공학부'?'D12':s.college==='공과대학'?'C10':s.college==='자연과학대학'?'C20':'C30';
+const totalOf = (s,mi=CUR) => Object.values(s.hist).reduce((a,arr)=>a+arr[mi],0);
+const gapOf = (s,mi=CUR) => Math.max(0, thOf(s)-totalOf(s,mi));
+const eligible = s => s.fulltime!=='미충족';
+const active = (s,mi=CUR) => eligible(s) && s.join<=mi;
+const inMonth = s => s.join<=CUR;
+
+// 증빙
+const PROOF_TYPES = ['건강보험 자격득실 확인서','지도교수 확인서','연구활동 확인자료','과거 연구과제 참여 확약서','단과대학 확인서'];
+const proofs=[]; let pid=1;
+const days = ['2026.10.01','2026.10.02','2026.10.02','2026.10.03','2026.10.04','2026.10.05'];
+students.forEach((s,i)=>{
+  const list = ['건강보험 자격득실 확인서','지도교수 확인서', s.activity==='학위논문'?'과거 연구과제 참여 확약서':'연구활동 확인자료'];
+  list.forEach((t,j)=>{
+    let st='승인';
+    if(s.fulltime==='확인중' && j===0) st='검토대기';
+    else if(s.fulltime==='미충족' && j===0) st='반려';
+    else { const r=R(); if(r<0.1) st='검토대기'; else if(r<0.15) st='보완요청'; }
+    const sub = pick(days);
+    proofs.push({id:'E'+String(pid++).padStart(4,'0'), sid:s.id, type:t, status:st, submitted:sub, valid:'2026.10.01',
+      checked: st==='승인'||st==='반려' ? '2026.10.0'+(3+Math.floor(R()*3)) : '-',
+      handler: st==='승인'||st==='반려' ? pick(['박○○','김○○']) : '-',
+      file: t.replace(/\s/g,'')+'_'+s.sno.slice(0,4)+'.pdf',
+      memo: st==='보완요청' ? '발급일이 기준일(10.01) 이전입니다. 10월 1일 이후 발급본으로 다시 제출해 주세요.' : st==='반려' ? '직장가입자 자격 확인 — 전일제 요건 미충족' : '',
+      log:[{at:sub+' 10:2'+j, who: j===1?'지도교수 '+s.advisor:'학생 '+s.name, what:'제출'}]});
+  });
+});
+proofs.forEach(p=>{ if(p.status!=='검토대기') p.log.push({at:(p.checked!=='-'?p.checked:'2026.10.04')+' 14:0'+(p.id.charCodeAt(4)%9), who:'연구지원팀 '+(p.handler!=='-'?p.handler:'김○○'), what:p.status}); });
+
+// 정합성 불일치
+const MISM = [
+  {sid:'S004', item:'실지급액 차이', reason:'9월 소급분 이중 반영 의심', st:'조치중', d:-50000},
+  {sid:'S011', item:'지급계획 미반영', reason:'과제 종료(09.30)로 지급계획 삭제됨', st:'미조치', d:-400000},
+  {sid:'S019', item:'재원코드 불일치', reason:'BK21 장학금이 교내장학(F05)으로 매핑됨', st:'조치완료', d:0},
+  {sid:'S023', item:'확정금액 대비 초과지급', reason:'연구책임자 추가지급 승인 문서 확인 필요', st:'미조치', d:120000},
+  {sid:'S030', item:'실지급액 차이', reason:'원천징수 정정분', st:'조치중', d:-30000},
+];
+
+const BATCH = [
+  {name:'학적·인적정보', src:'학사행정시스템', cycle:'매일 02:00', last:'10.05 02:00', rows:1284, err:0, st:'정상', mode:'DB 연계'},
+  {name:'학생인건비 지급계획', src:'연구관리시스템', cycle:'매일 03:00', last:'10.05 03:00', rows:412, err:0, st:'정상', mode:'DB 연계'},
+  {name:'산단회계 지급결과', src:'산학협력단 회계시스템', cycle:'월 1회 · 익월 2일', last:'10.02 04:10', rows:968, err:3, st:'경고', mode:'DB 연계'},
+  {name:'기관계정 거래내역', src:'산학협력단 회계시스템', cycle:'매일 04:00', last:'10.05 04:00', rows:37, err:0, st:'정상', mode:'DB 연계'},
+  {name:'BK21 장학금', src:'사업단 제출 · 표준 업로드 양식', cycle:'월 1회', last:'09.03 14:22', rows:58, err:0, st:'미반영', mode:'파일 업로드', note:'10월분 업로드 대기'},
+  {name:'지자체·기타 재원', src:'표준 업로드 양식', cycle:'월 1회', last:'10.03 10:05', rows:12, err:1, st:'오류', mode:'파일 업로드', note:'학번 미매핑 1건'},
+];
+
+// 기관계정
+const ACCTS = [
+  {id:'U00', name:'대학 통합관리계정', lv:0, code:'PNU-ST-0000'},
+  {id:'C10', name:'공과대학 세부계정', lv:1, code:'PNU-ST-1000'},
+  {id:'D11', name:'기계공학부 세부계정', lv:2, code:'PNU-ST-1101'},
+  {id:'D12', name:'정보컴퓨터공학부 세부계정', lv:2, code:'PNU-ST-1102'},
+  {id:'C20', name:'자연과학대학 세부계정', lv:1, code:'PNU-ST-2000'},
+  {id:'C30', name:'나노과학기술대학 세부계정', lv:1, code:'PNU-ST-3000'},
+];
+function buildLedgers(){
+  const L={}; ACCTS.forEach(a=>L[a.id]=[]);
+  const subs=['C10','D11','D12','C20','C30'];
+  const monthly={}; subs.forEach(id=>monthly[id]=MONTHS.map(()=>({sum:0,n:0})));
+  students.filter(eligible).forEach(s=>{ MONTHS.forEach((m,mi)=>{ const g=gapOf(s,mi); if(g>0 && s.join<=mi){ const o=monthly[payerOf(s)][mi]; o.sum+=g; o.n++; } }); });
+  let a1Tot=0,a2Tot=0;
+  subs.forEach(id=>{
+    const e1=monthly[id].slice(0,4).reduce((a,b)=>a+b.sum,0), e2=monthly[id].slice(4).reduce((a,b)=>a+b.sum,0);
+    const a1=Math.ceil(e1*1.12/100000)*100000, a2=Math.ceil(e2*1.08/100000)*100000;
+    a1Tot+=a1; a2Tot+=a2;
+    const nm=ACCTS.find(a=>a.id===id).name.replace(' 세부계정','');
+    L[id].push({d:'2026.03.12',k:'수입',cat:'대학계정 배정',memo:'1차 배정(3~6월분)',amt:a1});
+    L[id].push({d:'2026.07.10',k:'수입',cat:'대학계정 배정',memo:'2차 배정(7~10월분)',amt:a2});
+    L['U00'].push({d:'2026.03.12',k:'지출',cat:'세부계정 배정',memo:nm+' 1차',amt:a1});
+    L['U00'].push({d:'2026.07.10',k:'지출',cat:'세부계정 배정',memo:nm+' 2차',amt:a2});
+    MONTHS.forEach((m,mi)=>{ const o=monthly[id][mi]; if(o.sum>0) L[id].push({d:m+'.25',k:'지출',cat:'학생 인건비 지급',memo:`연구생활장려금 부족분 ${o.n}명`,amt:o.sum}); });
+    L[id].push({d:'2026.06.30',k:'수입',cat:'이자',memo:'상반기 결산이자',amt:r10k(a1*0.004)+3270});
+    if(id==='C10'||id==='C20') L[id].push({d:'2026.05.20',k:'수입',cat:'연구책임자계정 이체',memo:'잔여 학생인건비 이체(교수 2명)',amt:id==='C10'?1850000:960000});
+    if(id==='D11') L[id].push({d:'2026.08.14',k:'수입',cat:'상환금',memo:'중도 휴학자 지급분 상환',amt:440000});
+    if(id==='C30') L[id].push({d:'2026.09.08',k:'수입',cat:'추가기여',memo:'단과대학 발전기금 추가기여',amt:1000000});
+  });
+  const g1=Math.ceil(a1Tot*0.85/1000000)*1000000, u1=Math.ceil(a1Tot*0.3/1000000)*1000000;
+  const g2=Math.ceil(a2Tot*0.9/1000000)*1000000, u2=Math.ceil(a2Tot*0.25/1000000)*1000000;
+  L['U00'].push({d:'2026.03.04',k:'수입',cat:'정부지원금',memo:'한국연구재단 1차 교부',amt:g1});
+  L['U00'].push({d:'2026.03.06',k:'수입',cat:'대학 자체재원',memo:'대학 대응자금 1차',amt:u1});
+  L['U00'].push({d:'2026.07.02',k:'수입',cat:'정부지원금',memo:'한국연구재단 2차 교부',amt:g2});
+  L['U00'].push({d:'2026.07.03',k:'수입',cat:'대학 자체재원',memo:'대학 대응자금 2차',amt:u2});
+  L['U00'].push({d:'2026.06.30',k:'수입',cat:'이자',memo:'상반기 결산이자',amt:412880});
+  L['U00'].push({d:'2026.09.21',k:'수입',cat:'연구책임자계정 이체',memo:'잔여 학생인건비 이체(교수 5명)',amt:4300000});
+  Object.values(L).forEach(arr=>{ arr.sort((a,b)=>a.d.localeCompare(b.d)); let b=0; arr.forEach(e=>{ b+= e.k==='수입'?e.amt:-e.amt; e.bal=b; }); });
+  return L;
+}
+let LEDGER = buildLedgers();
+
+/* =========================================================
+   공통 유틸
+   ========================================================= */
+const $ = s => document.querySelector(s);
+const won = n => Number(n).toLocaleString('ko-KR');
+const man = n => (n/10000).toLocaleString('ko-KR',{maximumFractionDigits:1})+'만';
+const chip = (t,tone,plain) => `<span class="chip ${tone}${plain?' plain':''}">${t}</span>`;
+const S = id => students.find(s=>s.id===id);
+const maskSno = s => state.unmask ? s : s.slice(0,4)+'••'+s.slice(-3);
+const maskNri = s => state.unmask ? s : s.slice(0,3)+'•••••';
+const ICON = {
+  dash:'<path d="M3 13h8V3H3zM13 21h8V11h-8zM3 21h8v-6H3zM13 3v6h8V3z"/>',
+  roster:'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/>',
+  plan:'<path d="M3 3v18h18"/><path d="M7 15h3v3H7zM12 10h3v8h-3zM17 6h3v12h-3z"/><path d="M3 9h18" stroke-dasharray="2 2"/>',
+  proof:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 15l2 2 4-4"/>',
+  pay:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 4v16"/>',
+  acct:'<path d="M3 10l9-6 9 6M5 10v9M19 10v9M9 10v9M15 10v9M3 21h18"/>',
+  sync:'<path d="M21 12a9 9 0 0 1-15.5 6.2L3 16M3 12a9 9 0 0 1 15.5-6.2L21 8"/><path d="M21 3v5h-5M3 21v-5h5"/>',
+  audit:'<path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z"/><path d="M9 12l2 2 4-4"/>',
+  set:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-2.9-1.2l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.7 1.7 0 0 0 3 14H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.2-2.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1A1.7 1.7 0 0 0 10 3V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 2.9 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1A1.7 1.7 0 0 0 21 10h0a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',
+  dl:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>',
+  search:'<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',
+  arrow:'<path d="M9 18l6-6-6-6"/>',
+  x:'<path d="M18 6L6 18M6 6l12 12"/>',
+  re:'<path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.5 9a9 9 0 0 1 14.9-3.4L23 10M1 14l4.6 4.4A9 9 0 0 0 20.5 15"/>',
+  lock:'<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+  up:'<path d="M12 19V5M5 12l7-7 7 7"/>',
+};
+const ico = (k,extra='') => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" ${extra}>${ICON[k]}</svg>`;
+function toast(msg){ const t=document.createElement('div'); t.className='toast'; t.textContent=msg; $('#toasts').appendChild(t); setTimeout(()=>t.remove(),3200); }
+
+const ROUTES_ADMIN = [
+  {g:'운영'},
+  {id:'dashboard', t:'운영 현황', i:'dash'},
+  {id:'intake', t:'지원 신청 접수', i:'inbox', cnt:()=>intakeRows().filter(r=>r.st==='접수대기').length},
+  {id:'roster', t:'참여 학생연구자 명부', i:'roster'},
+  {id:'plan', t:'지원계획·부족금액', i:'plan'},
+  {id:'evidence', t:'증빙 검토', i:'proof', cnt:()=>proofs.filter(p=>p.status==='검토대기').length},
+  {g:'지급·계정'},
+  {id:'payments', t:'학생별 지급내역', i:'pay'},
+  {id:'accounts', t:'기관 통합관리계정', i:'acct'},
+  {id:'sync', t:'연계·정합성 검증', i:'sync', cnt:()=>MISM.filter(m=>m.st!=='조치완료').length},
+  {g:'관리'},
+  {id:'settings', t:'기준정보·권한', i:'set'},
+];
+function renderNav(cur){
+  const RL = ROLES[state.role];
+  $('#nav').innerHTML = RL.routes.map(r=> r.g ? `<div class="nav-g">${r.g}</div>` :
+    `<a href="#${r.id}" class="${r.id===cur?'on':''}" ${r.id===cur?'aria-current="page"':''}>${ico(r.i)}<span>${r.t}</span>${r.cnt&&r.cnt()>0?`<span class="cnt">${r.cnt()}</span>`:''}</a>`).join('');
+  const r = RL.routes.find(x=>x.id===cur);
+  $('#crumb').innerHTML = RL.crumb.map(x=>x+' <span>›</span> ').join('')+`<b>${r.t}</b>`;
+  $('.brand-s').textContent = '이공계 연구생활장려금 · '+RL.brand;
+  $('#whoAv').textContent=RL.av; $('#whoName').textContent=RL.name; $('#whoSub').textContent=RL.ss; $('#whoBtn').title=RL.name+' · '+RL.sub;
+  document.querySelector('.month').hidden = state.role!=='admin';
+}
+
+/* =========================================================
+   1. 운영 현황 (SFR-007)
+   ========================================================= */
+function viewDashboard(){
+  const el = students.filter(s=>active(s));
+  const nM = el.filter(s=>courseBase(s)==='M').length, nD = el.length-nM;
+  const met = el.filter(s=>gapOf(s)===0).length;
+  const gapSum = el.reduce((a,s)=>a+gapOf(s),0);
+  const avg = Math.round(el.reduce((a,s)=>a+totalOf(s)+gapOf(s),0)/el.length);
+  const actM = mi => students.filter(s=>active(s,mi));
+  const gapHist = MONTHS.slice(0,CUR+1).map((m,mi)=>actM(mi).reduce((a,s)=>a+gapOf(s,mi),0));
+  const metHist = MONTHS.slice(0,CUR+1).map((m,mi)=>{const a=actM(mi);return Math.round(a.filter(s=>gapOf(s,mi)===0).length/a.length*100)});
+  const cnt = MONTHS.map((m,mi)=>actM(mi).length);
+  const pending = proofs.filter(p=>p.status==='검토대기').length;
+  const ftCheck = students.filter(s=>s.fulltime==='확인중').length;
+  const mis = MISM.filter(m=>m.st!=='조치완료').length;
+  const prev = CUR>0 ? gapHist[CUR-1] : gapSum;
+  const delta = prev ? Math.round((gapSum-prev)/prev*100) : 0;
+
+  const steps = [
+    {t:'원천자료 연계', d:'10.02 산단회계 반영', s:'done'},
+    {t:'지원요건 검토', d:`전일제 확인 ${ftCheck}명 남음`, s:'now'},
+    {t:'부족금액 산정', d:'10.04 15:40 재산정', s:'done'},
+    {t:'명부 확정', d:state.rosterConfirmed?state.rosterConfirmedAt:'확정 전', s:state.rosterConfirmed?'done':''},
+    {t:'지급계획 연계', d:'10.20 지급계획 마감', s:''},
+  ];
+  if(CUR<LAST){ const mm=MONTHS[CUR].slice(5); ['02 산단회계 반영','08 요건 검토 완료','10 산정 완료','18 확정 · 김○○','20 지급계획 반영'].forEach((d,i)=>{ steps[i].s='done'; steps[i].d=mm+'.'+d; }); }
+
+  // 월별 참여 인원 차트
+  const W=640,H=230,pl=34,pr=10,pt=22,pb=28, iw=W-pl-pr, ih=H-pt-pb, ymax=40;
+  const bw = iw/MONTHS.length*0.56;
+  const y = v => pt+ih-(v/ymax)*ih;
+  let bars='';
+  cnt.forEach((c,i)=>{
+    if(i>CUR) return;
+    const a=actM(i); const m=a.filter(s=>courseBase(s)==='M').length;
+    const x = pl + iw/MONTHS.length*(i+0.5) - bw/2;
+    const isCur = i===CUR;
+    bars += `<rect x="${x}" y="${y(c)}" width="${bw}" height="${y(m)-y(c)+0.5}" rx="2" fill="var(--s3)" opacity="${isCur?1:.55}"/>`;
+    bars += `<rect x="${x}" y="${y(m)}" width="${bw}" height="${pt+ih-y(m)}" fill="var(--brand)" opacity="${isCur?1:.55}"/>`;
+    bars += `<text x="${x+bw/2}" y="${y(c)-6}" text-anchor="middle" class="${isCur?'lbl':''}">${c}</text>`;
+    bars += `<text x="${x+bw/2}" y="${H-8}" text-anchor="middle" class="${isCur?'lbl':''}">${MONTHS[i].slice(5)}월</text>`;
+  });
+  let grid=''; [0,10,20,30,40].forEach(v=>{ grid+=`<line x1="${pl}" x2="${W-pr}" y1="${y(v)}" y2="${y(v)}"/>`; });
+  let ylab=''; [0,10,20,30,40].forEach(v=>{ ylab+=`<text x="${pl-8}" y="${y(v)+3.5}" text-anchor="end">${v}</text>`; });
+
+  const spark = (arr,col) => { const w=200,h=34,mx=Math.max(...arr)*1.1,mn=Math.min(...arr)*0.85;
+    const pts = arr.map((v,i)=>[i*(w/(arr.length-1)), h-2-((v-mn)/(mx-mn))*(h-6)]);
+    const d = pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+    const last=pts[pts.length-1];
+    return `<svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><path d="${d} L${w} ${h} L0 ${h}Z" fill="var(${col})" opacity=".1"/><path d="${d}" fill="none" stroke="var(${col})" stroke-width="1.6" vector-effect="non-scaling-stroke"/><circle cx="${last[0]-2}" cy="${last[1]}" r="2.6" fill="var(${col})"/></svg>`; };
+
+  // 지도교수별
+  const byLab = {}; el.forEach(s=>{ const k=s.advisor; byLab[k]=byLab[k]||{p:s.advisor,lab:s.lab,dept:s.dept,n:0,gap:0,tot:0}; byLab[k].n++; byLab[k].gap+=gapOf(s); byLab[k].tot+=totalOf(s)+gapOf(s); });
+  const labs = Object.values(byLab).sort((a,b)=>b.n-a.n||b.gap-a.gap).slice(0,6);
+
+  const balOf = id => LEDGER[id].length ? LEDGER[id][LEDGER[id].length-1].bal : 0;
+  const acctMax = Math.max(...ACCTS.map(a=>balOf(a.id)));
+
+  return `
+  <div class="head">
+    <div><h1>${YM()} 운영 현황</h1><p>참여 학생연구자, 기준금액 충족 여부, 기관계정 잔액을 한 화면에서 확인합니다. 연차·수시점검과 자체점검 자료는 각 화면에서 추출할 수 있습니다.</p></div>
+    <div class="act"><button class="btn" data-export="자체점검 통계자료">${ico('dl')}자체점검 자료 추출</button></div>
+  </div>
+
+  <section class="panel" aria-label="명부 진행 단계">
+    <div class="panel-h"><h3>${MN()} 명부 진행 단계</h3><span class="sub">전일제 기준일 ${baseDay()} · 지급계획 마감 ${MONTHS[CUR].slice(5)}.20</span><div class="r">${confirmed()?chip('명부 확정','ok'):chip('작성 중','info')}</div></div>
+    <div class="panel-b" style="padding-block:4px"><div class="steps">${steps.map((s,i)=>`<div class="step ${s.s}"><span class="dot">${s.s==='done'?'✓':i+1}</span><span class="tx"><b>${s.t}</b><span>${s.d}</span></span></div>`).join('')}</div></div>
+  </section>
+
+  <section class="kpis">
+    <div class="kpi"><div class="l">참여 학생연구자 <span class="tiny num">${MN()}</span></div><div class="v">${el.length}<small>명</small></div>
+      <div class="meter" title="석사 기준 ${nM}명 · 박사 기준 ${nD}명"><i style="width:${nM/el.length*100}%;background:var(--brand)"></i><i style="width:${nD/el.length*100}%;background:var(--s3)"></i></div>
+      <div class="d"><span><i class="sw" style="background:var(--brand)"></i>석사 기준 ${nM}</span><span><i class="sw" style="background:var(--s3)"></i>박사 기준 ${nD}</span></div></div>
+    <div class="kpi"><div class="l">기준금액 충족 비율 <span class="tiny">산단회계 지급만</span></div><div class="v">${Math.round(met/el.length*100)}<small>%</small></div>
+      ${spark(metHist,'--ok')}<div class="d">${met}명 충족 · ${el.length-met}명 부족분 지원</div></div>
+    <div class="kpi"><div class="l">부족분 지원 총액</div><div class="v">${man(gapSum)}<small>원</small></div>
+      ${spark(gapHist,'--gapc')}<div class="d">전월 대비 <span class="${delta<=0?'up':''}" style="${delta>0?'color:var(--bad);font-weight:600':''}">${delta>0?'+':''}${delta}%</span></div></div>
+    <div class="kpi"><div class="l">1인 평균 월 지급액 <span class="tiny">부족분 포함</span></div><div class="v">${man(avg)}<small>원</small></div>
+      <div class="d" style="margin-top:auto">석사 기준 ${man(state.base.M)} · 박사 기준 ${man(state.base.D)}</div></div>
+  </section>
+
+  <div class="grid g-2-1">
+    <section class="panel">
+      <div class="panel-h"><h3>월별 참여 학생연구자</h3><span class="sub">단위: 명</span>
+        <div class="r legend"><span><i style="background:var(--brand)"></i>석사 기준</span><span><i style="background:var(--s3)"></i>박사 기준</span></div></div>
+      <div class="panel-b"><svg class="chart" viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="3월부터 ${MN()}까지 월별 참여 학생연구자 수"><g class="grid">${grid}</g>${ylab}${bars}</svg></div>
+    </section>
+    <section class="panel">
+      <div class="panel-h"><h3>처리할 일</h3><span class="sub">2026.10.05 기준</span></div>
+      <div class="todo">
+        <a href="#evidence"><i class="sev" style="background:var(--warn)"></i><span class="tt"><b>증빙 검토 대기</b><span>건강보험 자격득실·지도교수 확인서 등</span></span><span class="n">${pending}</span>${ico('arrow')}</a>
+        <a href="#roster" data-filter="확인필요"><i class="sev" style="background:var(--warn)"></i><span class="tt"><b>전일제 여부 확인 필요</b><span>기준일 10.01 확인자료 미검토</span></span><span class="n">${ftCheck}</span>${ico('arrow')}</a>
+        <a href="#sync"><i class="sev" style="background:var(--bad)"></i><span class="tt"><b>지급정보 불일치</b><span>지급계획·확정액·실지급액 비교</span></span><span class="n">${mis}</span>${ico('arrow')}</a>
+        <a href="#sync"><i class="sev" style="background:var(--bad)"></i><span class="tt"><b>재원 연계 미반영</b><span>BK21 장학금 10월분 업로드 대기</span></span><span class="n">1</span>${ico('arrow')}</a>
+      </div>
+    </section>
+  </div>
+
+  <div class="grid g-1-1">
+    <section class="panel">
+      <div class="panel-h"><h3>기관 통합관리계정 잔액</h3><span class="sub">2026.10.05 04:00 기준</span><div class="r"><a href="#accounts" class="btn sm">계정 상세</a></div></div>
+      <div class="tw"><table class="t"><tbody>
+        ${ACCTS.map(a=>{const b=balOf(a.id);return `<tr><td class="${a.lv===1?'ind1':a.lv===2?'ind2':''}" style="${a.lv?'':'font-weight:600'}">${a.name}</td><td style="width:40%"><div class="meter"><i style="width:${b/acctMax*100}%;background:${a.lv?'var(--s1)':'var(--brand)'}"></i></div></td><td class="r num">${won(b)}</td></tr>`}).join('')}
+      </tbody></table></div>
+    </section>
+    <section class="panel">
+      <div class="panel-h"><h3>지도교수별 참여 현황</h3><span class="sub">참여 학생 수 상위</span></div>
+      <div class="tw"><table class="t"><thead><tr><th>지도교수 · 연구실</th><th class="r">학생</th><th class="r">총 지급액</th><th class="r">부족분</th></tr></thead><tbody>
+        ${labs.map(l=>`<tr><td><div class="who"><b>${l.p} 교수</b><span>${l.dept} · ${l.lab}</span></div></td><td class="r num">${l.n}</td><td class="r num">${won(l.tot)}</td><td class="r num ${l.gap?'':'zero'}">${won(l.gap)}</td></tr>`).join('')}
+      </tbody></table></div>
+    </section>
+  </div>`;
+}
+
+/* =========================================================
+   2. 참여 학생연구자 명부 (SFR-001)
+   ========================================================= */
+function reqTone(s){ return s.fulltime==='충족'?['요건 충족','ok']:s.fulltime==='확인중'?['확인 필요','warn']:['요건 미충족','bad']; }
+function proofSummary(s){ const ps=proofs.filter(p=>p.sid===s.id); const ok=ps.filter(p=>p.status==='승인').length; return {ok,n:ps.length}; }
+function viewRoster(){
+  const f = state.rosterFilter, q=state.rosterQ.trim();
+  const base = students.filter(inMonth);
+  let list = base.slice();
+  if(f==='석사') list=list.filter(s=>s.course==='석사');
+  if(f==='박사') list=list.filter(s=>s.course==='박사');
+  if(f==='석박통합') list=list.filter(s=>s.course==='석박통합');
+  if(f==='확인필요') list=list.filter(s=>s.fulltime!=='충족');
+  if(q) list=list.filter(s=>(s.name+s.dept+s.advisor+s.sno).includes(q));
+  const cnt = k => k==='전체'?base.length:k==='확인필요'?base.filter(s=>s.fulltime!=='충족').length:base.filter(s=>s.course===k).length;
+  return `
+  <div class="head">
+    <div><h1>참여 학생연구자 명부</h1><p>이공계·전일제·연구활동 요건을 기준으로 ${MN()} 참여 대상을 확정합니다. 확정 이후 변경은 사유와 함께 이력으로 남습니다.</p></div>
+    <div class="act">
+      <button class="btn" data-export="별지1 참여 학생연구자 명부">${ico('dl')}별지1 명부 추출</button>
+      <button class="btn pri" id="confirmRoster" ${confirmed()?'disabled':''}>${confirmed()?'확정 완료':MN()+' 명부 확정'}</button>
+    </div>
+  </div>
+  ${confirmed()?`<div class="panel" style="padding:12px 18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">${chip('확정','ok')}<span>${MN()} 명부가 확정되었습니다.</span><span class="muted tiny">확정자 ${CUR<LAST?'김○○ · '+MONTHS[CUR]+'.18 11:30':'박○○ · '+state.rosterConfirmedAt}</span></div>`:''}
+  <section class="panel">
+    <div class="panel-h">
+      <div class="seg" role="tablist">${['전체','석사','박사','석박통합','확인필요'].map(k=>`<button class="${f===k?'on':''}" data-rf="${k}">${k==='확인필요'?'요건 확인 필요':k}<span class="n">${cnt(k)}</span></button>`).join('')}</div>
+      <div class="r">
+        <label class="field" style="width:230px">${ico('search')}<input id="rq" placeholder="성명·학과·지도교수·학번" value="${state.rosterQ}"></label>
+        <button class="btn sm" id="unmask" title="마스킹 해제 시 사유와 조회 이력이 기록됩니다">${ico('lock')}${state.unmask?'마스킹 적용':'마스킹 해제'}</button>
+      </div>
+    </div>
+    <div class="tw"><table class="t">
+      <thead><tr><th>성명</th><th>과정</th><th>학번</th><th>소속</th><th>지도교수</th><th>학적</th><th>전일제 <span class="tiny">(${baseDay().slice(5)})</span></th><th>연구활동</th><th class="c">증빙</th><th>판정</th></tr></thead>
+      <tbody>${list.map(s=>{const [rt,rc]=reqTone(s);const ps=proofSummary(s);return `<tr class="click" data-sid="${s.id}" tabindex="0">
+        <td><div class="who"><b>${s.name}</b><span class="mono">국가연구자번호 ${maskNri(s.nri)}</span></div></td>
+        <td>${s.course} <span class="muted tiny">${s.sem}학기</span></td>
+        <td class="num">${maskSno(s.sno)}</td>
+        <td><div class="who"><b style="font-weight:500">${s.dept}</b><span>${s.college}</span></div></td>
+        <td>${s.advisor}</td>
+        <td>${s.status==='재학'?'<span class="tag">재학</span>':'<span class="tag">수료연구생</span>'}</td>
+        <td>${s.fulltime==='충족'?chip('충족','ok',1):s.fulltime==='확인중'?chip('확인 중','warn',1):chip('미충족','bad',1)}</td>
+        <td>${s.activity}${s.activity==='학위논문'?` <span class="muted tiny">~${s.limit}</span>`:''}</td>
+        <td class="c num ${ps.ok<ps.n?'':'muted'}" style="${ps.ok<ps.n?'color:var(--warn);font-weight:600':''}">${ps.ok}/${ps.n}</td>
+        <td>${chip(rt,rc)}</td></tr>`}).join('') || `<tr><td colspan="10" class="muted" style="padding:28px;text-align:center">조건에 맞는 학생연구자가 없습니다. 검색어를 지우거나 다른 구분을 선택해 보세요.</td></tr>`}</tbody>
+    </table></div>
+    <div class="panel-b muted tiny" style="border-top:1px solid var(--line);display:flex;gap:16px;flex-wrap:wrap"><span>${list.length}명 표시 · 전체 ${base.length}명</span><span>학적정보 연계 2026.10.05 02:00</span><span>개인정보는 권한에 따라 마스킹되며 조회 이력이 기록됩니다</span></div>
+  </section>`;
+}
+function openStudent(sid){
+  const s=S(sid); const [rt,rc]=reqTone(s); const ps=proofs.filter(p=>p.sid===sid);
+  const ck = (ok,t,d,right) => `<div><span class="ck ${ok}">${ok==='ok'?'✓':ok==='warn'?'!':'×'}</span><span>${t}<small>${d}</small></span><span>${right||''}</span></div>`;
+  $('#drawer').innerHTML = `
+    <div class="dr-h"><div style="flex:1;min-width:0"><div class="tiny muted mono">${s.id} · ${MN()} 명부</div><h3 style="font-size:20px;margin:2px 0 6px">${s.name} <span class="muted" style="font-size:14px;font-weight:500">${s.course} ${s.sem}학기</span></h3>${chip(rt,rc)}</div>
+    <button class="iconbtn" data-close aria-label="닫기">${ico('x')}</button></div>
+    <div class="dr-b">
+      <div><h4>기본정보</h4><dl class="dl">
+        <dt>소속</dt><dd>${s.college} ${s.dept}</dd><dt>학번</dt><dd class="num">${maskSno(s.sno)}</dd>
+        <dt>국가연구자번호</dt><dd class="num">${maskNri(s.nri)}</dd><dt>원소속대학</dt><dd>부산대학교</dd>
+        <dt>지도교수</dt><dd>${s.advisor} · ${s.lab}</dd><dt>학적상태</dt><dd>${s.status}</dd></dl></div>
+      <div><h4>지원요건</h4><div class="checks">
+        ${ck('ok','이공계 학과','학과 코드 기준 자동 판정')}
+        ${ck(s.fulltime==='충족'?'ok':s.fulltime==='확인중'?'warn':'bad','전일제 여부',`기준일 ${baseDay()} · 건강보험 자격득실 확인서`, s.fulltime==='충족'?'<span class="tiny muted">지역가입(피부양)</span>':s.fulltime==='확인중'?'<span class="tiny" style="color:var(--warn)">검토 대기</span>':'<span class="tiny" style="color:var(--bad)">직장가입</span>')}
+        ${ck('ok','연구활동 유형',s.activity==='학위논문'?`학위논문형 · 과거 연구활동 ${s.past}`:'연구과제 참여 · 연구관리시스템 참여율 연계', s.activity==='학위논문'?`<span class="tiny muted">지원 가능기한 ${s.limit}</span>`:'')}
+        ${ck(s.status==='재학'||s.status==='수료연구생'?'ok':'bad','학적상태','재학생 또는 수료연구생')}
+      </div></div>
+      <div><h4>${MN()} 지급 산정</h4><dl class="dl">
+        <dt>산단회계 총액</dt><dd class="num">${won(totalOf(s))}원</dd>
+        <dt>기준금액</dt><dd class="num">${won(thOf(s))}원 <span class="muted tiny">(${courseBase(s)==='M'?'석사':'박사'} 기준)</span></dd>
+        <dt>부족분 지원액</dt><dd class="num" style="font-weight:600;color:${gapOf(s)?'var(--bad)':'var(--ok)'}">${won(gapOf(s))}원</dd>
+        <dt>지급 계정</dt><dd>${ACCTS.find(a=>a.id===payerOf(s)).name}</dd></dl></div>
+      <div><h4>증빙 (${ps.length})</h4><div class="checks">
+        ${ps.map(p=>`<div><span class="ck ${p.status==='승인'?'ok':p.status==='반려'?'bad':'warn'}">${p.status==='승인'?'✓':p.status==='반려'?'×':'!'}</span><span>${p.type}<small>제출 ${p.submitted} · 처리 ${p.checked}</small></span><span>${chip(p.status,p.status==='승인'?'ok':p.status==='반려'?'bad':'warn',1)}</span></div>`).join('')}
+      </div></div>
+      <div><h4>변경 이력</h4><ul class="tl">
+        <li><div><b>요건 검토 메모 추가</b><span>2026.10.04 16:02 · 연구지원팀 박○○</span></div></li>
+        <li><div><b>학적정보 갱신 (학기 ${s.sem-1} → ${s.sem})</b><span>2026.09.01 02:00 · 학사행정시스템 연계</span></div></li>
+        <li><div><b>9월 명부 확정</b><span>2026.09.18 11:30 · 연구지원팀 김○○</span></div></li>
+      </ul></div>
+    </div>`;
+  openLayer('#drawer');
+}
+
+/* =========================================================
+   3. 지원계획·부족금액 (SFR-002)
+   ========================================================= */
+function viewPlan(){
+  const el = students.filter(s=>active(s));
+  let list = el.slice().sort((a,b)=>gapOf(b)-gapOf(a)||a.name.localeCompare(b.name));
+  if(state.planFilter==='부족') list=list.filter(s=>gapOf(s)>0);
+  if(state.planFilter==='충족') list=list.filter(s=>gapOf(s)===0);
+  const MAX=2400000, pct=v=>Math.min(v/MAX*100,100);
+  const short = el.filter(s=>gapOf(s)>0);
+  const gapSum = short.reduce((a,s)=>a+gapOf(s),0);
+  const srcTot = SRC.map(src=>el.reduce((a,s)=>a+(s.hist[src.k]?s.hist[src.k][CUR]:0),0));
+  const allTot = srcTot.reduce((a,b)=>a+b,0);
+  return `
+  <div class="head">
+    <div><h1>지원계획 · 부족금액</h1><p>학생별 ${MN()} 산단회계 지급예정액을 재원별로 합산해 학위과정별 기준금액과 비교합니다. 빗금 구간이 연구생활장려금으로 채울 부족분입니다.</p></div>
+    <div class="act"><button class="btn" data-export="부족금액 산정 결과">${ico('dl')}산정 결과 추출</button><button class="btn pri" id="recalc">${ico('re')}재산정</button></div>
+  </div>
+  <section class="kpis">
+    <div class="kpi"><div class="l">산정 대상</div><div class="v">${el.length}<small>명</small></div><div class="d">요건 미충족 ${students.filter(s=>inMonth(s)&&!eligible(s)).length}명 제외</div></div>
+    <div class="kpi"><div class="l">기준금액 충족</div><div class="v" style="color:var(--ok)">${el.length-short.length}<small>명</small></div><div class="d">산단회계 지급만으로 충족</div></div>
+    <div class="kpi"><div class="l">부족</div><div class="v" style="color:var(--bad)">${short.length}<small>명</small></div><div class="d">평균 부족액 ${man(Math.round(gapSum/Math.max(short.length,1)))}원</div></div>
+    <div class="kpi"><div class="l">부족분 지원 합계</div><div class="v">${won(gapSum)}<small>원</small></div><div class="d">기관 세부계정에서 지급</div></div>
+  </section>
+  <div class="grid">
+    <section class="panel">
+      <div class="panel-h">
+        <div class="seg">${['전체','부족','충족'].map(k=>`<button class="${state.planFilter===k?'on':''}" data-pf="${k}">${k}</button>`).join('')}</div>
+        <div class="r legend">${SRC.map(s=>`<span><i style="background:var(${s.col})"></i>${s.short}</span>`).join('')}<span><i style="background:repeating-linear-gradient(-45deg,var(--gapc) 0 2px,transparent 2px 4px);outline:1px solid var(--gapc)"></i>부족분</span></div>
+      </div>
+      <div class="plan-row hd"><span>학생연구자</span><span>재원별 지급예정액 · 기준선</span><span class="r c-tot">산단회계 합계</span><span class="r c-th">기준</span><span class="r">부족금액</span></div>
+      <div class="plan-row hd scale-row" style="padding-block:4px 0;border-bottom:0"><span></span><div class="scale">${[0,600000,1200000,1800000,2400000].map(v=>`<span style="left:${pct(v)}%">${v?man(v):'0'}</span>`).join('')}</div><span class="c-tot"></span><span class="c-th"></span><span></span></div>
+      ${list.map(s=>{ const th=thOf(s), tot=totalOf(s), g=gapOf(s); let x=0;
+        const segs = SRC.filter(k=>s.hist[k.k]&&s.hist[k.k][CUR]>0).map(k=>{const v=s.hist[k.k][CUR];return `<i style="width:${v/Math.max(tot,1)*100}%;background:var(${k.col})" title="${k.name} ${won(v)}원"></i>`}).join('');
+        return `<div class="plan-row" data-sid="${s.id}" tabindex="0">
+          <div class="who"><b>${s.name}</b><span>${s.course} · ${s.dept}</span></div>
+          <div class="bar-c"><div class="track">
+            <div class="stack" style="width:${pct(tot)}%">${segs}</div>
+            ${g>0?`<div class="gapz" style="left:${pct(tot)}%;width:${pct(th)-pct(tot)}%" title="부족분 ${won(g)}원"></div>`:''}
+            <div class="thr" style="left:${pct(th)}%" data-l="${man(th)}"></div>
+          </div></div>
+          <div class="r num c-tot">${won(tot)}</div>
+          <div class="r num c-th muted">${won(th)}</div>
+          <div class="r">${g>0?`<span class="num" style="color:var(--bad);font-weight:600">${won(g)}</span>`:chip('충족','ok')}</div>
+        </div>`}).join('')}
+    </section>
+    <div class="grid plan-side">
+      <section class="panel">
+        <div class="panel-h"><h3>재원별 ${MN()} 지급예정</h3></div>
+        <div class="panel-b" style="display:flex;flex-direction:column;gap:10px">
+          ${SRC.map((s,i)=>`<div style="display:grid;grid-template-columns:1fr auto;gap:4px 8px;font-size:12.5px"><span><i class="sw" style="background:var(${s.col})"></i>${s.name}</span><span class="num">${man(srcTot[i])}</span><div class="meter" style="grid-column:1/-1"><i style="width:${srcTot[i]/allTot*100}%;background:var(${s.col})"></i></div></div>`).join('')}
+        </div>
+      </section>
+      <section class="panel">
+        <div class="panel-h"><h3>산정 기준</h3><a href="#settings" class="btn sm" style="margin-left:auto">변경</a></div>
+        <div class="panel-b"><dl class="dl" style="grid-template-columns:90px 1fr">
+          <dt>석사</dt><dd class="num">${won(state.base.M)}원</dd><dt>박사</dt><dd class="num">${won(state.base.D)}원</dd>
+          <dt>석박통합</dt><dd>학기별 석사·박사 적용</dd><dt>집행 순서</dt><dd>책임자계정 잔액 우선</dd></dl></div>
+      </section>
+      <section class="panel">
+        <div class="panel-h"><h3>산정 이력</h3></div>
+        <div class="panel-b"><ul class="tl">${state.calcHist.slice().reverse().map(h=>`<li><div><b>${h.note}</b><span>${h.at} · ${h.by} · 변경 ${h.n}명</span></div></li>`).join('')}</ul></div>
+      </section>
+    </div>
+  </div>`;
+}
+
+/* =========================================================
+   4. 증빙 검토 (SFR-003)
+   ========================================================= */
+function viewEvidence(){
+  const tabs=['검토대기','보완요청','승인','반려'];
+  const list = proofs.filter(p=>p.status===state.proofTab).sort((a,b)=>b.submitted.localeCompare(a.submitted));
+  if(!state.proofSel || !list.find(p=>p.id===state.proofSel)) state.proofSel = list[0]?.id || null;
+  const p = proofs.find(x=>x.id===state.proofSel);
+  const s = p ? S(p.sid) : null;
+  return `
+  <div class="head">
+    <div><h1>증빙 검토</h1><p>학생·지도교수가 제출한 지원요건 증빙을 검토합니다. 개인정보가 포함된 파일은 담당 권한자만 열람할 수 있고, 열람·처리 내역이 남습니다.</p></div>
+    <div class="act"><button class="btn" data-export="증빙 처리현황">${ico('dl')}처리현황 추출</button></div>
+  </div>
+  <div class="grid g-side" style="grid-template-columns:360px minmax(0,1fr)">
+    <section class="panel">
+      <div class="panel-h"><div class="seg">${tabs.map(t=>`<button class="${state.proofTab===t?'on':''}" data-pt="${t}">${t}<span class="n">${proofs.filter(p=>p.status===t).length}</span></button>`).join('')}</div></div>
+      <div class="q">${list.map(x=>{const st=S(x.sid);return `<button class="qi ${x.id===state.proofSel?'on':''}" data-pid="${x.id}"><span class="ic">PDF</span><span class="tt"><b>${x.type}</b><span>${st.name} · ${st.course} · ${st.dept}</span><span class="mono tiny">${x.id} · 제출 ${x.submitted}</span></span></button>`}).join('') || `<div class="panel-b muted" style="text-align:center;padding:40px 16px">이 상태의 증빙이 없습니다.</div>`}</div>
+    </section>
+    ${p?`<section class="panel">
+      <div class="panel-h"><div><h3 style="font-size:16px">${p.type}</h3><span class="sub mono">${p.id} · ${p.file}</span></div><div class="r">${chip(p.status,p.status==='승인'?'ok':p.status==='반려'?'bad':p.status==='보완요청'?'warn':'info')}</div></div>
+      <div class="panel-b grid g-1-1" style="align-items:start">
+        <div class="doc" aria-label="증빙 미리보기">
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted)"><span>${p.type.includes('건강보험')?'국민건강보험공단':'부산대학교'}</span><span class="mono">p.1 / 1</span></div>
+          <div style="font-weight:700;font-size:15px;text-align:center;padding:6px 0">${p.type.replace(' 확인서','').replace('자료','')} ${p.type.includes('확인서')?'확인서':''}</div>
+          ${[92,70,84,60,88,40,76,66,90,52].map(w=>`<div class="ln" style="width:${w}%"></div>`).join('')}
+          <div style="height:60px"></div>
+          <div class="mask"><div>${ico('lock','style="width:22px;height:22px"')}<b>개인정보 포함 문서</b><span class="muted tiny">열람 시 사유와 시각이 접속 이력에 기록됩니다</span><button class="btn sm" id="viewDoc">열람</button></div></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:18px;min-width:0">
+          <dl class="dl">
+            <dt>학생연구자</dt><dd><b>${s.name}</b> <span class="muted">${s.course} ${s.sem}학기</span></dd>
+            <dt>소속</dt><dd>${s.dept}</dd>
+            <dt>지도교수</dt><dd>${s.advisor}</dd>
+            <dt>제출일</dt><dd class="num">${p.submitted}</dd>
+            <dt>유효기준일</dt><dd class="num">${p.valid}</dd>
+            <dt>확인일</dt><dd class="num">${p.checked}</dd>
+            <dt>처리자</dt><dd>${p.handler}</dd>
+            <dt>보관기한</dt><dd>사업 종료 후 5년</dd>
+          </dl>
+          ${p.memo?`<div style="background:var(--warn-soft);color:var(--ink);padding:10px 12px;border-radius:8px;font-size:12.5px"><b style="color:var(--warn)">처리 의견</b><br>${p.memo}</div>`:''}
+          ${p.status==='검토대기'||p.status==='보완요청'?`
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <label for="memo" class="tiny muted">처리 의견 (보완요청·반려 시 필수)</label>
+            <textarea id="memo" class="memo" placeholder="예: 10월 1일 이후 발급본으로 다시 제출해 주세요."></textarea>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">
+              <button class="btn danger" data-act="반려">반려</button><button class="btn" data-act="보완요청">보완 요청</button><button class="btn pri" data-act="승인">승인</button>
+            </div></div>`:''}
+          <div><h4 class="tiny muted" style="letter-spacing:.06em;margin-bottom:10px">처리 이력</h4><ul class="tl">${p.log.slice().reverse().map(l=>`<li><div><b>${l.what}</b><span>${l.at} · ${l.who}</span></div></li>`).join('')}</ul></div>
+        </div>
+      </div>
+    </section>`:`<section class="panel"><div class="panel-b muted" style="padding:60px;text-align:center">왼쪽 목록에서 증빙을 선택하세요.</div></section>`}
+  </div>`;
+}
+
+/* =========================================================
+   5. 학생별 지급내역 (SFR-005)
+   ========================================================= */
+function viewPayments(){
+  if(!state.paySid) state.paySid = students.find(s=>Object.keys(s.hist).length>=2 && gapOf(s)>0)?.id || 'S001';
+  const s = S(state.paySid);
+  const rows = SRC.filter(k=>s.hist[k.k]);
+  const tot = MONTHS.map((m,mi)=>totalOf(s,mi));
+  const gaps = MONTHS.map((m,mi)=>eligible(s)?gapOf(s,mi):0);
+  const sum = a=>a.reduce((x,y)=>x+y,0);
+  return `
+  <div class="head">
+    <div><h1>학생별 지급내역</h1><p>재원·계정별 월 지급내역을 원천자료 기준으로 통합 조회합니다. 지급이 없는 달은 0원으로 표시하며, 재원별 상세 합계는 학생별 총지급액과 같아야 합니다.</p></div>
+    <div class="act"><button class="btn" data-export="별지2 학생지원금 지급내역">${ico('dl')}별지2 지급내역 추출</button></div>
+  </div>
+  <section class="panel">
+    <div class="panel-h">
+      <label class="field" style="width:320px;max-width:100%">${ico('search')}<select id="paySel" aria-label="학생 선택">${students.map(x=>`<option value="${x.id}" ${x.id===s.id?'selected':''}>${x.name} · ${x.course} · ${x.dept}</option>`).join('')}</select></label>
+      <div class="r tiny muted">원천: 산단회계 지급결과 10.02 연계 · 집계 반영 10.03</div>
+    </div>
+    <div class="sum3">
+      <div><small>2026년 누적 산단회계 지급</small><strong>${won(sum(tot))}</strong></div>
+      <div><small>누적 연구생활장려금(부족분)</small><strong style="color:var(--bad)">${won(sum(gaps))}</strong></div>
+      <div><small>누적 총 지급액</small><strong>${won(sum(tot)+sum(gaps))}</strong></div>
+    </div>
+    <div class="tw"><table class="t">
+      <thead><tr><th>재원</th><th>계정구분</th><th>코드</th>${MONTHS.map((m,i)=>`<th class="r" style="${i===CUR?'color:var(--brand)':''}">${m.slice(2).replace('.','.')}</th>`).join('')}<th class="r">합계</th></tr></thead>
+      <tbody>
+        ${rows.map(k=>`<tr><td><i class="sw" style="background:var(${k.col})"></i>${k.name}</td><td class="muted">${k.acct}</td><td class="mono muted">${k.code}</td>${s.hist[k.k].map((v,i)=>`<td class="r num ${v?'':'zero'}" style="${i===CUR?'font-weight:600':''}">${won(v)}</td>`).join('')}<td class="r num" style="font-weight:600">${won(sum(s.hist[k.k]))}</td></tr>`).join('')}
+        <tr><td style="font-weight:600">산단회계 소계</td><td></td><td></td>${tot.map(v=>`<td class="r num" style="font-weight:600">${won(v)}</td>`).join('')}<td class="r num" style="font-weight:700">${won(sum(tot))}</td></tr>
+        <tr><td><i class="sw" style="background:repeating-linear-gradient(-45deg,var(--gapc) 0 2px,transparent 2px 4px);outline:1px solid var(--gapc)"></i>연구생활장려금(부족분)</td><td class="muted">기관 세부계정</td><td class="mono muted">ST01</td>${gaps.map(v=>`<td class="r num ${v?'':'zero'}" style="${v?'color:var(--bad)':''}">${won(v)}</td>`).join('')}<td class="r num" style="color:var(--bad);font-weight:600">${won(sum(gaps))}</td></tr>
+      </tbody>
+      <tfoot><tr><td>월 총 지급액</td><td></td><td class="muted tiny" style="font-weight:500">기준 ${man(thOf(s))}</td>${tot.map((v,i)=>`<td class="r num">${won(v+gaps[i])}</td>`).join('')}<td class="r num">${won(sum(tot)+sum(gaps))}</td></tr></tfoot>
+    </table></div>
+    <div class="panel-b tiny muted" style="border-top:1px solid var(--line);display:flex;gap:8px;align-items:center;flex-wrap:wrap">${chip('합계 검증 통과','ok')}<span>재원별 상세 합계와 학생별 총지급액이 일치합니다 (8개월 · ${rows.length+1}개 재원).</span></div>
+  </section>`;
+}
+
+/* =========================================================
+   6. 기관 통합관리계정 (SFR-006)
+   ========================================================= */
+function viewAccounts(){
+  const a = ACCTS.find(x=>x.id===state.acctSel);
+  const L = LEDGER[a.id];
+  const inc = L.filter(e=>e.k==='수입').reduce((x,e)=>x+e.amt,0), exp=L.filter(e=>e.k==='지출').reduce((x,e)=>x+e.amt,0);
+  let rows = L.slice().reverse(); if(state.ledgerF!=='전체') rows=rows.filter(e=>e.k===state.ledgerF);
+  const cats = {}; L.forEach(e=>{ cats[e.k+'|'+e.cat]=(cats[e.k+'|'+e.cat]||0)+e.amt; });
+  const bal = id => LEDGER[id][LEDGER[id].length-1]?.bal||0;
+  return `
+  <div class="head">
+    <div><h1>기관 통합관리계정</h1><p>대학·단과대학·학부(과) 계정별 수입, 지출, 잔액을 회계 원천자료와 대조해 관리합니다. 수입은 정부지원금·자체재원·연구책임자계정 이체·추가기여·상환금·이자로 구분합니다.</p></div>
+    <div class="act"><button class="btn" data-export="별지3 기관계정 현황">${ico('dl')}별지3 계정현황 추출</button></div>
+  </div>
+  <div class="grid g-side">
+    <section class="panel" style="align-self:start">
+      <div class="panel-h"><h3>계정</h3><span class="sub">잔액 · 10.05 기준</span></div>
+      <div class="acct">${ACCTS.map(x=>`<button class="${x.lv===1?'ind1':x.lv===2?'ind2':''} ${x.id===a.id?'on':''}" data-acct="${x.id}"><span class="nm"><b>${x.name}</b><span>${x.code}</span></span><span class="bal">${man(bal(x.id))}</span></button>`).join('')}</div>
+    </section>
+    <section class="panel">
+      <div class="panel-h"><div><h3 style="font-size:16px">${a.name}</h3><span class="sub mono">${a.code} · 2026.03.01 ~ 2026.10.05</span></div>
+        <div class="r"><div class="seg">${['전체','수입','지출'].map(k=>`<button class="${state.ledgerF===k?'on':''}" data-lf="${k}">${k}</button>`).join('')}</div></div></div>
+      <div class="sum3">
+        <div><small>누적 수입</small><strong class="in">${won(inc)}</strong></div>
+        <div><small>누적 지출</small><strong class="out">${won(exp)}</strong></div>
+        <div><small>잔액</small><strong>${won(inc-exp)}</strong></div>
+      </div>
+      <div class="panel-b" style="display:flex;gap:8px;flex-wrap:wrap;border-bottom:1px solid var(--line)">
+        ${Object.entries(cats).map(([k,v])=>{const [kk,c]=k.split('|');return `<span class="tag" style="display:inline-flex;gap:6px"><span class="${kk==='수입'?'in':'out'}">${kk}</span>${c}<b class="num">${man(v)}</b></span>`}).join('')}
+      </div>
+      <div class="tw"><table class="t">
+        <thead><tr><th>거래일</th><th>구분</th><th>항목</th><th>적요</th><th class="r">수입</th><th class="r">지출</th><th class="r">잔액</th></tr></thead>
+        <tbody>${rows.map(e=>`<tr><td class="num">${e.d}</td><td>${e.k==='수입'?chip('수입','ok',1):chip('지출','bad',1)}</td><td>${e.cat}</td><td class="muted">${e.memo}</td><td class="r num in">${e.k==='수입'?won(e.amt):''}</td><td class="r num out">${e.k==='지출'?won(e.amt):''}</td><td class="r num" style="font-weight:600">${won(e.bal)}</td></tr>`).join('')}</tbody>
+      </table></div>
+      <div class="panel-b tiny muted" style="border-top:1px solid var(--line);display:flex;gap:8px;align-items:center;flex-wrap:wrap">${chip('원천 대조 일치','ok')}<span>산학협력단 회계시스템 거래 ${L.length}건과 수입-지출-잔액이 일치합니다 (10.05 04:00 연계).</span></div>
+    </section>
+  </div>`;
+}
+
+/* =========================================================
+   7. 연계·정합성 검증 (SFR-004 · SIR · DAR)
+   ========================================================= */
+function viewSync(){
+  const tone = st => st==='정상'?'ok':st==='경고'?'warn':st==='미반영'?'mute':'bad';
+  return `
+  <div class="head">
+    <div><h1>연계 · 정합성 검증</h1><p>학내 원천시스템과 재원별 지급정보를 최소 월 1회 수집하고, 확정 지원금액·지급계획·실지급액을 비교해 불일치를 추적합니다.</p></div>
+    <div class="act"><button class="btn">${ico('up')}표준양식 업로드</button><button class="btn pri" id="runAll">${ico('re')}전체 재처리</button></div>
+  </div>
+  <section class="batches">${BATCH.map((b,i)=>`
+    <div class="bt">
+      <div class="bt-h"><div><b>${b.name}</b><span>${b.src}</span></div>${chip(b.st,tone(b.st))}</div>
+      <div class="bt-m"><div><small>최근 처리</small><strong>${b.last}</strong></div><div><small>건수</small><strong>${won(b.rows)}</strong></div><div><small>오류</small><strong style="${b.err?'color:var(--bad)':''}">${b.err}</strong></div></div>
+      <div class="bt-f"><span class="tag">${b.mode}</span><span>${b.note||b.cycle}</span><button class="btn sm" data-rerun="${i}">${b.mode==='파일 업로드'?'업로드':'재처리'}</button></div>
+    </div>`).join('')}</section>
+
+  <section class="panel">
+    <div class="panel-h"><h3>데이터 품질 점검</h3><span class="sub">10.05 04:30 자동 점검</span></div>
+    <div class="qc">
+      <div><small>필수항목 누락</small><strong>0</strong><span class="tiny muted">재단 별지1~3 필수항목</span></div>
+      <div><small>중복 지급 의심</small><strong style="color:var(--warn)">1</strong><span class="tiny muted">동일 학생·월·재원</span></div>
+      <div><small>코드 불일치</small><strong style="color:var(--warn)">2</strong><span class="tiny muted">재원·계정 코드 매핑</span></div>
+      <div><small>합계 오류</small><strong>0</strong><span class="tiny muted">상세합 ≠ 총액</span></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-h"><h3>지급정보 불일치</h3><span class="sub">지급계획 · 확정금액 · 실지급액 비교</span><div class="r">${chip(`미해결 ${MISM.filter(m=>m.st!=='조치완료').length}건`,'bad')}</div></div>
+    <div class="tw"><table class="t">
+      <thead><tr><th>학생연구자</th><th>유형</th><th class="r">장려금 확정액</th><th class="r">지급계획</th><th class="r">실지급액</th><th class="r">차이</th><th>사유</th><th>조치</th></tr></thead>
+      <tbody>${MISM.map((m,i)=>{const s=S(m.sid);const conf=gapOf(s)||200000;const plan=m.item==='지급계획 미반영'?0:conf;const act=conf+m.d;return `<tr>
+        <td><div class="who"><b>${s.name}</b><span>${s.course} · ${s.dept}</span></div></td>
+        <td>${m.item}</td><td class="r num">${won(conf)}</td><td class="r num ${plan?'':'zero'}">${won(plan)}</td><td class="r num">${won(act)}</td>
+        <td class="r num" style="${m.d?'color:var(--bad);font-weight:600':''}">${m.d>0?'+':''}${won(m.d||(plan-conf))}</td>
+        <td class="muted" style="white-space:normal;min-width:220px">${m.reason}</td>
+        <td>${m.st==='조치완료'?chip('조치완료','ok'):`<button class="btn sm" data-fix="${i}">${m.st==='조치중'?'조치 완료':'조치 등록'}</button>`}</td></tr>`}).join('')}</tbody>
+    </table></div>
+  </section>`;
+}
+
+/* =========================================================
+   8. 기준정보·권한 (COR-001 · SER-001)
+   ========================================================= */
+function viewSettings(){
+  const tabs=['기준금액','재원·계정 코드','권한','접속 이력'];
+  let body='';
+  if(state.setTab==='기준금액') body = `
+    <div class="grid g-2-1">
+      <section class="panel">
+        <div class="panel-h"><h3>학위과정별 기준금액</h3><span class="sub">월 최소 지급 기준 · 변경 시 해당 월부터 재산정</span></div>
+        <div class="setrow"><b>석사과정</b><div class="money-in"><input id="bM" inputmode="numeric" value="${won(state.base.M)}" aria-label="석사 기준금액"><span>원</span></div><span class="tiny muted">석박통합 4학기 이하 포함</span></div>
+        <div class="setrow"><b>박사과정</b><div class="money-in"><input id="bD" inputmode="numeric" value="${won(state.base.D)}" aria-label="박사 기준금액"><span>원</span></div><span class="tiny muted">석박통합 5학기 이상 포함</span></div>
+        <div class="setrow"><b>적용 시작월</b><select class="sel" id="bFrom" style="max-width:220px"><option>2026.11</option><option>2026.10</option><option>2027.03</option></select><span></span></div>
+        <div class="setrow"><b>전일제 확인 기준일</b><div style="display:flex;gap:6px;flex-wrap:wrap"><span class="tag num">04.01</span><span class="tag num">10.01</span></div><span class="tiny muted">재단 가이드라인</span></div>
+        <div class="panel-b" style="border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:8px"><button class="btn pri" id="saveBase">변경 저장</button></div>
+      </section>
+      <section class="panel">
+        <div class="panel-h"><h3>변경 이력</h3></div>
+        <div class="panel-b"><ul class="tl">${state.baseHist.slice().reverse().map(h=>`<li><div><b class="num">석사 ${won(h.m)} · 박사 ${won(h.d)}</b><span>${h.at} · ${h.by}</span><span>${h.note}</span></div></li>`).join('')}</ul></div>
+      </section>
+    </div>`;
+  if(state.setTab==='재원·계정 코드') body = `
+    <section class="panel"><div class="panel-h"><h3>재원 분류 코드</h3><span class="sub">재원 추가·변경 시 이력 관리</span><div class="r"><button class="btn sm">코드 추가</button></div></div>
+    <div class="tw"><table class="t"><thead><tr><th>코드</th><th>재원</th><th>계정구분</th><th>통합관리</th><th>수집 방식</th><th>수집 주기</th><th>사용</th></tr></thead><tbody>
+      ${SRC.map((s,i)=>`<tr><td class="mono">${s.code}</td><td><i class="sw" style="background:var(${s.col})"></i>${s.name}</td><td>${s.acct}</td><td>${i===0?chip('통합','info',1):'<span class="muted">비통합</span>'}</td><td><span class="tag">${s.mode}</span></td><td>${s.mode==='DB 연계'?'매일':'월 1회'}</td><td>${chip('사용','ok',1)}</td></tr>`).join('')}
+      <tr><td class="mono">ST01</td><td>연구생활장려금(부족분)</td><td>기관 세부계정</td><td>${chip('통합','info',1)}</td><td><span class="tag">시스템 산정</span></td><td>월 1회</td><td>${chip('사용','ok',1)}</td></tr>
+    </tbody></table></div></section>`;
+  if(state.setTab==='권한'){
+    const roles=['시스템관리자','연구지원팀 담당','단과대학 담당','지도교수','학생연구자'];
+    const fn=[['명부 조회','FFHHO'],['명부 확정','FF---'],['증빙 제출','--HHO'],['증빙 승인·반려','FFH--'],['지급내역 조회','FFHHO'],['원자료(Raw) 추출','FF---'],['개인정보 마스킹 해제','FF---'],['기준정보 변경','F----']];
+    const sym={F:'<span class="dotf" title="전체">●</span>',H:'<span class="doth" title="소속 한정">◐</span>',O:'<span class="doto" title="본인">○</span>','-':'<span class="muted">–</span>'};
+    body = `<section class="panel"><div class="panel-h"><h3>역할별 권한</h3><span class="sub">역할 기반 접근통제</span><div class="r legend"><span>${sym.F} 전체</span><span>${sym.H} 소속 한정</span><span>${sym.O} 본인</span></div></div>
+      <div class="tw"><table class="t mx"><thead><tr><th>기능</th>${roles.map(r=>`<th class="c">${r}</th>`).join('')}</tr></thead><tbody>
+      ${fn.map(([f,v])=>`<tr><td>${f}</td>${[...v].map(c=>`<td class="c">${sym[c]}</td>`).join('')}</tr>`).join('')}</tbody></table></div></section>`;
+  }
+  if(state.setTab==='접속 이력'){
+    const log=[['10.05 09:41:12','박○○','마스킹 해제','참여 명부 · 사유: 전일제 증빙 대조','164.125.••.31'],['10.05 09:38:02','박○○','증빙 열람','E0047 건강보험 자격득실 확인서','164.125.••.31'],['10.05 09:12:55','김○○','파일 추출','별지2 지급내역 (9월)','164.125.••.18'],['10.04 17:20:40','이○○ (공과대학)','명부 조회','공과대학 소속 한정','164.125.••.102'],['10.04 15:40:11','박○○','재산정','10월 부족금액','164.125.••.31'],['10.04 11:03:29','시스템','로그인 실패 차단','5회 연속 실패 · 계정 잠금','211.36.••.7']];
+    body = `<section class="panel"><div class="panel-h"><h3>접속·조회·변경 이력</h3><span class="sub">위·변조 방지 저장 · 보관 2년</span><div class="r"><button class="btn sm" data-export="접속 이력">${ico('dl')}추출</button></div></div>
+      <div class="tw"><table class="t"><thead><tr><th>일시</th><th>사용자</th><th>행위</th><th>대상</th><th>접속 IP</th></tr></thead><tbody>
+      ${log.map(l=>`<tr><td class="num">${l[0]}</td><td>${l[1]}</td><td>${l[2].includes('차단')?chip(l[2],'bad',1):l[2].includes('해제')||l[2].includes('열람')?chip(l[2],'warn',1):l[2]}</td><td class="muted">${l[3]}</td><td class="mono muted">${l[4]}</td></tr>`).join('')}</tbody></table></div></section>`;
+  }
+  return `
+  <div class="head"><div><h1>기준정보 · 권한</h1><p>기준금액, 지원요건, 재원 분류, 기준일 같은 정책성 기준을 설정값으로 관리합니다. 모든 변경은 적용 시점과 함께 이력으로 남습니다.</p></div></div>
+  <div class="seg" style="align-self:flex-start">${tabs.map(t=>`<button class="${state.setTab===t?'on':''}" data-st="${t}">${t}</button>`).join('')}</div>
+  ${body}`;
+}
+
+/* =========================================================
+   신청 포털 · 지원 신청 접수
+   ========================================================= */
+Object.assign(ICON,{
+  inbox:'<path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.5 5.1L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.5-6.9A2 2 0 0 0 16.8 4H7.2a2 2 0 0 0-1.7 1.1z"/>',
+  list:'<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',
+  home:'<path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/>',
+  file:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/>',
+  check:'<path d="M20 6L9 17l-5-5"/>',
+  info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',
+});
+const APPLY_L = '11월분';
+const PROF = (()=>{ let best=DEPTS[0],bn=-1; DEPTS.forEach(d=>{ const n=students.filter(s=>s.advisor===d.p&&eligible(s)&&gapOf(s,LAST)>0).length; if(n>bn){bn=n;best=d;} }); return best; })();
+const profStudents = () => students.filter(s=>s.advisor===PROF.p);
+const ME = profStudents().find(s=>eligible(s)&&gapOf(s,LAST)>0) || profStudents()[0];
+const PI_BAL = 240000;
+const hp = s => proofs.find(p=>p.sid===s.id && p.type.includes('건강보험'));
+const ptone = st => st==='승인'?'ok':st==='반려'?'bad':st==='보완요청'?'warn':'info';
+const plabel = st => st==='검토대기'?'검토 중':st;
+const nowHM = () => new Date().toTimeString().slice(0,5);
+{ const p=hp(ME); p.status='보완요청'; p.checked='2026.10.04'; p.handler='박○○'; p.memo='발급일이 기준일(10.01) 이전입니다. 10월 1일 이후 발급본으로 다시 제출해 주세요.'; p.log=[p.log[0],{at:'2026.10.04 14:05',who:'연구지원팀 박○○',what:'보완요청'}]; }
+
+state.role='admin'; state.upl={}; state.intake={};
+state.app={step:1, sel:{}, amt:{}, act:{}, pi:null, piReason:'', agree:[false,false,false], status:'작성중', at:null};
+profStudents().forEach(s=>{ const g=gapOf(s,LAST); state.app.sel[s.id]=eligible(s)&&g>0; state.app.amt[s.id]=g; state.app.act[s.id]=s.activity; });
+const appSel = () => profStudents().filter(s=>state.app.sel[s.id]);
+const appTotal = () => appSel().reduce((a,s)=>a+(state.app.amt[s.id]||0),0);
+const piDeduct = () => state.app.pi==='use' ? Math.min(PI_BAL, appTotal()) : 0;
+const appFinal = () => appTotal()-piDeduct();
+const AGREE = [
+  '신청 학생은 이공계 전일제 대학원생이며, 신청일 현재 지원요건을 충족합니다.',
+  '연구책임자계정의 학생인건비 잔액을 확인했으며, 운영규정에 따라 우선 집행합니다.',
+  '지원금은 학생연구자의 연구생활 지원 외 용도로 사용하지 않으며, 부당 지급 시 환수에 동의합니다.',
+];
+const drop = (k,t,d) => { const f=state.upl[k]; return `<div class="droprow"><label class="drop ${f?'has':''}" for="f-${k}">${ico(f?'check':'file')}<span class="dt"><b>${t}</b><span>${f?f:d+' · 파일을 선택하거나 끌어다 놓으세요'}</span></span><span class="btn sm">${f?'변경':'파일 선택'}</span><input type="file" id="f-${k}" data-upl="${k}" accept=".pdf,.jpg,.jpeg,.png"></label></div>`; };
+
+function sumcardHTML(){
+  const a=state.app;
+  return `<aside class="panel sumcard" id="sumcard">
+    <div class="panel-h"><h3>신청 요약</h3><div class="r">${chip(a.status==='작성중'?'작성 중':'제출 완료', a.status==='작성중'?'mute':'ok')}</div></div>
+    <div class="panel-b"><dl class="dl" style="grid-template-columns:96px 1fr">
+      <dt>신청월</dt><dd>2026년 ${APPLY_L}</dd>
+      <dt>접수기간</dt><dd class="num">10.01 ~ 10.20 <span class="chip warn plain">D-15</span></dd>
+      <dt>연구실</dt><dd>${PROF.lab}</dd>
+      <dt>신청 인원</dt><dd class="num">${appSel().length}명</dd>
+      <dt>신청 합계</dt><dd class="num">${won(appTotal())}원</dd>
+      <dt>책임자계정</dt><dd class="num">${piDeduct()?'−'+won(piDeduct())+'원':'-'}</dd>
+    </dl>
+    <div class="final"><small>최종 신청액</small><strong class="num">${won(appFinal())}<span>원</span></strong></div></div>
+    <div class="panel-b tiny muted" style="border-top:1px solid var(--line)">지급일 매월 25일 · 명부 확정 후 지급<br>문의 연구지원팀 051-510-7275</div>
+  </aside>`;
+}
+
+function viewApply(){
+  const a=state.app, ps=profStudents(), locked=a.status!=='작성중';
+  const ist = state.intake[PROF.p];
+  const W=[['대상 학생·금액','신청 학생과 신청금액'],['연구책임자계정·서류','잔액 우선 집행, 첨부서류'],['확인·제출','확약 후 제출']];
+  const wz = `<div class="wz">${W.map((d,i)=>{const n=i+1, done=locked||a.step>n;return `<button data-wz="${n}" class="${!locked&&a.step===n?'on':done?'done':''}" ${locked||n>a.step?'disabled':''}><span class="n">${done?'✓':n}</span><span><b>${d[0]}</b><span>${d[1]}</span></span></button>`}).join('')}</div>`;
+  let body='';
+  if(locked){
+    const back = ist==='보완요청';
+    body = `<section class="panel"><div class="done-box">
+      <div class="okmark ${back?'warn':''}">${ico(back?'info':'check')}</div>
+      <h2>${back?'연구지원팀이 보완을 요청했습니다':APPLY_L+' 지원 신청을 제출했습니다'}</h2>
+      <p class="muted">접수번호 <span class="mono">ST-2611-${String(DEPTS.indexOf(PROF)+1).padStart(4,'0')}</span> · ${a.at} 제출 · 최종 신청액 <b class="num" style="color:var(--ink)">${won(appFinal())}원</b></p>
+      ${back?`<div class="note" style="max-width:440px;text-align:left"><b>담당자 의견</b><br>의무이행확약서에 학생 서명이 빠져 있습니다. 서명본으로 다시 첨부해 주세요.</div>`:''}
+      <ul class="tl" style="text-align:left;width:100%;max-width:380px;margin-top:12px">
+        <li><div><b>신청서 제출</b><span>${a.at} · ${PROF.p} 교수</span></div></li>
+        <li class="${ist==='접수완료'?'':'pend'}"><div><b>연구지원팀 접수</b><span>${ist==='접수완료'?'접수 완료':back?'보완 요청':'접수 대기'}</span></div></li>
+        <li class="pend"><div><b>지원요건·증빙 검토</b><span>학생별 전일제 증빙 확인</span></div></li>
+        <li class="pend"><div><b>11월 명부 확정</b><span>11.18 예정</span></div></li>
+        <li class="pend"><div><b>지급</b><span>11.25 예정</span></div></li>
+      </ul>
+      <div class="formnav" style="justify-content:center;margin-top:8px"><a class="btn" href="#p-history">신청 내역</a>${back?`<button class="btn pri" id="appEdit">수정 후 다시 제출</button>`:ist!=='접수완료'?`<button class="btn danger" id="appCancel">제출 취소</button>`:''}</div>
+    </div></section>`;
+  } else if(a.step===1){
+    body = `<div style="display:flex;flex-direction:column;gap:16px;min-width:0"><section class="panel">
+      <div class="panel-h"><h3>대상 학생 · 신청금액</h3><span class="sub">산단회계 지급예정액은 연구관리시스템 11월 지급계획 기준 (10.05 03:00)</span></div>
+      <div class="tw"><table class="t">
+        <thead><tr><th class="c"></th><th>학생연구자</th><th>연구활동 유형</th><th class="r">산단회계 지급예정</th><th class="r">기준금액</th><th class="r">부족분</th><th class="r">신청금액</th><th>전일제 증빙</th></tr></thead>
+        <tbody>${ps.map(s=>{ const g=gapOf(s,LAST), tot=totalOf(s,LAST), ok=eligible(s)&&g>0, h=hp(s);
+          const why = !eligible(s)?'전일제 요건 미충족':'기준금액 충족';
+          return `<tr class="${ok?'':'dis'}">
+            <td class="c"><input type="checkbox" class="cb" data-sel="${s.id}" ${a.sel[s.id]?'checked':''} ${ok?'':'disabled'} aria-label="${s.name} 선택"></td>
+            <td><div class="who"><b>${s.name}</b><span>${s.course} ${s.sem}학기 · ${maskSno(s.sno)}</span></div></td>
+            <td><select class="sel sm" data-actsel="${s.id}" ${ok?'':'disabled'} aria-label="${s.name} 연구활동 유형"><option ${a.act[s.id]==='연구과제'?'selected':''}>연구과제</option><option ${a.act[s.id]==='학위논문'?'selected':''}>학위논문</option></select></td>
+            <td class="r num">${won(tot)}</td>
+            <td class="r num muted">${won(thOf(s))}</td>
+            <td class="r num" style="${g?'color:var(--bad);font-weight:600':''}">${won(g)}</td>
+            <td class="r">${ok?`<span class="amt-in"><input data-amt="${s.id}" data-max="${g}" inputmode="numeric" value="${won(a.amt[s.id]||0)}" ${a.sel[s.id]?'':'disabled'} aria-label="${s.name} 신청금액"><span>원</span></span>`:`<span class="tiny">${why}</span>`}</td>
+            <td>${chip(h.status==='승인'?'승인':plabel(h.status), ptone(h.status),1)}</td></tr>`}).join('')}</tbody>
+      </table></div></section>
+      <div class="hint">${ico('info')}<span>신청금액은 부족분(기준금액 − 산단회계 지급예정액)을 넘을 수 없습니다.<br>전일제 증빙이 승인되지 않은 학생은 증빙 승인 후 명부에 확정됩니다.</span></div>
+      <div class="formnav"><button class="btn pri" data-next="2">다음</button></div></div>`;
+  } else if(a.step===2){
+    const opt=(v,t,d)=>`<label class="opt ${a.pi===v?'on':''}"><input type="radio" name="pi" value="${v}" ${a.pi===v?'checked':''}><span><b>${t}</b><span>${d}</span></span></label>`;
+    body = `<div style="display:flex;flex-direction:column;gap:20px;min-width:0">
+      <section class="panel"><div class="panel-h"><h3>연구책임자계정 잔액 확인</h3><span class="sub">연구관리시스템 10.05 03:00 기준</span></div>
+        <div class="panel-b" style="display:flex;flex-direction:column;gap:14px">
+          <div class="acctline"><div><small>학생인건비 통합관리 · 연구책임자계정</small><b>${PROF.p} 교수 · ${PROF.d}</b></div><strong class="num">${won(PI_BAL)}<span>원</span></strong></div>
+          <p class="muted" style="margin:0;font-size:13px">운영규정에 따라 연구책임자계정에 학생인건비 잔액이 있으면 먼저 집행하고, 남는 부족분을 신청합니다.</p>
+          <div class="opts">${opt('use','잔액을 먼저 지급합니다',`${won(Math.min(PI_BAL,appTotal()))}원은 학생인건비로 먼저 지급`)}${opt('keep','잔액을 사용할 수 없습니다','사유를 적으면 연구지원팀이 검토')}</div>
+          ${a.pi==='keep'?`<div style="display:flex;flex-direction:column;gap:6px"><label for="piReason" class="tiny muted">사유</label><textarea id="piReason" class="memo" placeholder="예: 잔액은 11월 신규 참여연구원 인건비로 계상되어 있습니다.">${a.piReason}</textarea></div>`:''}
+        </div></section>
+      <section class="panel"><div class="panel-h"><h3>첨부서류</h3><span class="sub">PDF·이미지 · 파일당 최대 10MB</span><div class="r"><button class="btn sm" data-form>${ico('dl')}신청 양식 받기</button></div></div>
+        <div class="panel-b" style="display:flex;flex-direction:column;gap:10px">
+          ${drop('loan','대여신청서','연구책임자 서명본')}
+          ${drop('pledge','의무이행확약서','연구책임자·학생 서명본')}
+        </div></section>
+      <div class="formnav"><button class="btn" data-prev="1">이전</button><button class="btn pri" data-next="3">다음</button></div></div>`;
+  } else {
+    body = `<div style="display:flex;flex-direction:column;gap:20px;min-width:0">
+      <section class="panel"><div class="panel-h"><h3>신청 내용 확인</h3></div>
+        <div class="tw"><table class="t"><thead><tr><th>학생연구자</th><th>과정</th><th>연구활동</th><th class="r">신청금액</th></tr></thead>
+        <tbody>${appSel().map(s=>`<tr><td><b>${s.name}</b></td><td>${s.course} ${s.sem}학기</td><td>${a.act[s.id]}</td><td class="r num">${won(a.amt[s.id])}</td></tr>`).join('')}</tbody>
+        <tfoot><tr><td colspan="3">신청 합계</td><td class="r num">${won(appTotal())}</td></tr>
+        ${piDeduct()?`<tr><td colspan="3" style="font-weight:500">연구책임자계정 우선 집행</td><td class="r num" style="font-weight:500">−${won(piDeduct())}</td></tr>`:''}
+        <tr><td colspan="3">최종 신청액</td><td class="r num" style="color:var(--brand)">${won(appFinal())}</td></tr></tfoot></table></div>
+        <div class="panel-b" style="border-top:1px solid var(--line);display:flex;gap:8px;flex-wrap:wrap">${['loan','pledge'].map(k=>`<span class="tag">${state.upl[k]}</span>`).join('')}<span class="tag">연구책임자계정 ${a.pi==='use'?'잔액 우선 집행':'미사용 · 사유 제출'}</span></div>
+      </section>
+      <section class="panel"><div class="panel-h"><h3>확약</h3><span class="sub">연구책임자 확인 사항</span></div><div class="panel-b agree">
+        ${AGREE.map((t,i)=>`<label><input type="checkbox" class="cb" data-agree="${i}" ${a.agree[i]?'checked':''}><span>${t}</span></label>`).join('')}
+      </div></section>
+      <div class="formnav"><button class="btn" data-prev="2">이전</button><button class="btn pri" id="appSubmit">신청서 제출</button></div></div>`;
+  }
+  return `<div class="head"><div><h1>${APPLY_L} 연구생활장려금 지원 신청</h1><p>연구실 학생 중 기준금액에 못 미치는 학생의 부족분을 신청합니다. 제출한 신청은 연구지원팀 접수와 지원요건 검토를 거쳐 11월 명부에 확정됩니다.</p></div></div>
+    ${wz}<div class="grid g-apply">${body}${sumcardHTML()}</div>`;
+}
+
+function viewProfHistory(){
+  const a=state.app, ps=profStudents(), ist=state.intake[PROF.p];
+  const rows=[{m:'2026.11', n:appSel().length, amt:appFinal(), at:a.at||'-', st:a.status==='작성중'?['작성 중','mute']:ist==='접수완료'?['접수 완료','info']:ist==='보완요청'?['보완 요청','warn']:['제출','info'], pay:'11.25 예정'}];
+  for(let mi=LAST;mi>=0;mi--){ const list=ps.filter(s=>active(s,mi)&&gapOf(s,mi)>0); if(!list.length) continue;
+    const pm = mi>0?MONTHS[mi-1]:'2026.02';
+    rows.push({m:MONTHS[mi], n:list.length, amt:list.reduce((x,s)=>x+gapOf(s,mi),0), at:pm+'.1'+(mi%9)+' 1'+(mi%6)+':20', st:mi===LAST?['요건 검토 중','warn']:['지급 완료','ok'], pay:mi===LAST?'10.25 예정':MONTHS[mi].slice(5)+'.25'});
+  }
+  const paid = rows.filter(r=>r.st[0]==='지급 완료');
+  return `<div class="head"><div><h1>신청 내역</h1><p>${PROF.lab}의 월별 연구생활장려금 신청과 지급 결과입니다.</p></div><div class="act"><a class="btn pri" href="#p-apply">${APPLY_L} 신청</a></div></div>
+  <section class="panel">
+    <div class="sum3"><div><small>2026년 지급 완료</small><strong>${paid.length}개월</strong></div><div><small>누적 지원 연인원</small><strong>${paid.reduce((x,r)=>x+r.n,0)}명</strong></div><div><small>누적 지원액</small><strong>${won(paid.reduce((x,r)=>x+r.amt,0))}</strong></div></div>
+    <div class="tw"><table class="t"><thead><tr><th>지원월</th><th class="r">신청 인원</th><th class="r">신청액</th><th>제출일시</th><th>상태</th><th>지급일</th></tr></thead>
+    <tbody>${rows.map(r=>`<tr><td class="num" style="font-weight:600">${r.m}</td><td class="r num">${r.n}</td><td class="r num">${won(r.amt)}</td><td class="num muted">${r.at}</td><td>${chip(r.st[0],r.st[1])}</td><td class="num">${r.pay}</td></tr>`).join('')}</tbody></table></div>
+  </section>`;
+}
+
+function viewProfStudents(){
+  const ps=profStudents();
+  return `<div class="head"><div><h1>연구실 학생 현황</h1><p>${PROF.lab} 소속 학생의 지원요건, 증빙 제출 상태, 이번 달 지급 예정액입니다.</p></div></div>
+  <section class="panel"><div class="tw"><table class="t">
+    <thead><tr><th>학생연구자</th><th>과정</th><th>연구활동</th><th>전일제 증빙</th><th>지도교수 확인서</th><th class="r">10월 산단회계</th><th class="r">10월 장려금</th><th>판정</th><th></th></tr></thead>
+    <tbody>${ps.map(s=>{ const [rt,rc]=reqTone(s); const h=hp(s); const pc=proofs.find(p=>p.sid===s.id&&p.type==='지도교수 확인서'); const g=eligible(s)?gapOf(s,LAST):0;
+      return `<tr><td><div class="who"><b>${s.name}</b><span>${maskSno(s.sno)}</span></div></td><td>${s.course} ${s.sem}학기</td><td>${s.activity}</td>
+      <td>${chip(plabel(h.status),ptone(h.status),1)}</td><td>${chip(plabel(pc.status),ptone(pc.status),1)}</td>
+      <td class="r num">${won(totalOf(s,LAST))}</td><td class="r num ${g?'':'zero'}">${won(g)}</td><td>${chip(rt,rc)}</td>
+      <td>${h.status!=='승인'?`<button class="btn sm" data-nudge="${s.name}">제출 요청</button>`:''}</td></tr>`}).join('')}</tbody>
+  </table></div></section>`;
+}
+
+function viewStudentHome(){
+  const s=ME, th=thOf(s), tot=totalOf(s,LAST), g=gapOf(s,LAST), h=hp(s);
+  const MX=Math.max(th,tot)*1.3, pc=v=>Math.min(v/MX*100,100);
+  const segs = SRC.filter(k=>s.hist[k.k]&&s.hist[k.k][LAST]>0).map(k=>`<i style="width:${s.hist[k.k][LAST]/Math.max(tot,1)*100}%;background:var(${k.col})"></i>`).join('');
+  const hist=[]; for(let mi=LAST;mi>=0;mi--){ if(s.join>mi) continue; const t=totalOf(s,mi), gg=gapOf(s,mi); hist.push(`<tr><td class="num" style="font-weight:600">${MONTHS[mi]}</td><td class="r num">${won(t)}</td><td class="r num ${gg?'':'zero'}" style="${gg?'color:var(--brand);font-weight:600':''}">${won(gg)}</td><td class="r num">${won(t+gg)}</td><td>${mi===LAST?chip('지급 예정','info'):chip('지급 완료','ok')}</td></tr>`); }
+  const ck = (ok,t,d) => `<div><span class="ck ${ok}">${ok==='ok'?'✓':'!'}</span><span>${t}<small>${d}</small></span><span></span></div>`;
+  return `<div class="head"><div><h1>${s.name}님의 연구생활장려금</h1><p>${s.college} ${s.dept} · ${s.course} ${s.sem}학기 · 지도교수 ${s.advisor}</p></div></div>
+  ${h.status==='보완요청'||h.status==='반려'?`<a class="alert" href="#s-proof">${ico('info')}<span class="tx"><b>${h.type} ${h.status==='반려'?'반려':'보완 요청'}</b><span>${h.memo}</span></span><span class="btn sm">다시 제출</span></a>`:''}
+  <section class="panel">
+    <div class="panel-h"><h3>10월 지급 예정</h3><span class="sub">지급일 10.25 · 명부 확정 후 지급</span><div class="r">${chip(state.rosterConfirmed?'명부 확정':'요건 검토 중',state.rosterConfirmed?'ok':'warn')}</div></div>
+    <div class="sum3"><div><small>산단회계 지급예정</small><strong>${won(tot)}</strong></div><div><small>연구생활장려금</small><strong style="color:var(--brand)">${won(g)}</strong></div><div><small>월 합계</small><strong>${won(tot+g)}</strong></div></div>
+    <div class="panel-b" style="padding-top:28px">
+      <div class="track" style="height:30px;background:none">
+        <div class="stack" style="width:${pc(tot)}%">${segs}</div>
+        ${g>0?`<div class="gapz" style="left:${pc(tot)}%;width:${pc(th)-pc(tot)}%;background:repeating-linear-gradient(-45deg,color-mix(in srgb,var(--brand) 30%,transparent) 0 4px,transparent 4px 8px);box-shadow:inset 0 0 0 1px var(--brand)"></div>`:''}
+        <div class="thr" style="left:${pc(th)}%" data-l="${s.course==='석사'||courseBase(s)==='M'?'석사':'박사'} 기준 ${man(th)}"></div>
+      </div>
+      <div class="legend" style="margin-top:14px">${SRC.filter(k=>s.hist[k.k]&&s.hist[k.k][LAST]>0).map(k=>`<span><i style="background:var(${k.col})"></i>${k.name} ${won(s.hist[k.k][LAST])}원</span>`).join('')}${g?`<span><i style="background:repeating-linear-gradient(-45deg,var(--brand) 0 2px,transparent 2px 4px);outline:1px solid var(--brand)"></i>연구생활장려금 ${won(g)}원</span>`:''}</div>
+    </div>
+  </section>
+  <div class="pgrid">
+    <section class="panel"><div class="panel-h"><h3>지원요건</h3><span class="sub">기준일 2026.10.01</span></div><div class="panel-b"><div class="checks">
+      ${ck('ok','이공계 대학원생',s.dept+' · '+s.status)}
+      ${ck(h.status==='승인'?'ok':'warn','전일제 여부',h.status==='승인'?'건강보험 자격득실 확인서 승인':'건강보험 자격득실 확인서 '+(h.status==='검토대기'?'검토 중':h.status))}
+      ${ck('ok','연구활동',s.activity==='학위논문'?'학위논문형 · 지원 가능기한 '+s.limit:'연구과제 참여 중')}
+    </div></div></section>
+    <section class="panel"><div class="panel-h"><h3>월별 지급 내역</h3></div><div class="tw"><table class="t">
+      <thead><tr><th>지급월</th><th class="r">산단회계</th><th class="r">장려금</th><th class="r">합계</th><th>상태</th></tr></thead><tbody>${hist.join('')}</tbody></table></div></section>
+  </div>`;
+}
+
+function viewStudentProof(){
+  const GUIDE={'건강보험 자격득실 확인서':'국민건강보험공단 발급 · 기준일 이후 발급본','지도교수 확인서':'지도교수가 제출','연구활동 확인자료':'과제 참여확인서 또는 연구계획서','과거 연구과제 참여 확약서':'학위논문형 지원 시 제출'};
+  const list=proofs.filter(p=>p.sid===ME.id);
+  const cnt=k=>list.filter(p=>p.status===k).length;
+  const rows=list.map(p=>{ const can=p.status==='보완요청'||p.status==='반려', byProf=p.type==='지도교수 확인서', k='p'+p.id, f=state.upl[k];
+    const row=`<tr class="${can?'need':''}">
+      <td><div class="who"><b>${p.type}</b><span>${GUIDE[p.type]||''}</span></div></td>
+      <td class="mono" style="font-size:12.5px">${p.file}</td>
+      <td class="num">${p.submitted}</td>
+      <td class="num">${p.valid}</td>
+      <td>${p.checked!=='-'?`<span class="num">${p.checked}</span> <span class="muted tiny">${p.handler}</span>`:'<span class="muted">-</span>'}</td>
+      <td>${chip(plabel(p.status),ptone(p.status))}</td>
+      <td style="text-align:right">${can?(byProf?'<span class="muted tiny">지도교수 재제출</span>':''):''}</td></tr>`;
+    const sub = can ? `<tr class="subrow"><td colspan="7"><div class="fix">
+      <div class="fix-m"><b>담당자 의견</b><span>${p.memo||'-'}</span></div>
+      ${byProf?`<span class="muted tiny">지도교수에게 재제출 알림을 보냈습니다.</span>`:`<div class="fix-a">
+        <label class="pick ${f?'has':''}" for="f-${k}">${ico(f?'check':'file')}<span>${f||'새 파일 선택'}</span><input type="file" id="f-${k}" data-upl="${k}" accept=".pdf,.jpg,.jpeg,.png"></label>
+        <button class="btn sm pri" data-resub="${p.id}">다시 제출</button></div>`}
+    </div></td></tr>` : '';
+    return row+sub; }).join('');
+  return `<div class="head"><div><h1>증빙 제출</h1><p>지원요건 확인에 필요한 증빙입니다. 제출한 파일은 연구지원팀 담당자만 열람하며, 사업 종료 후 5년이 지나면 파기됩니다.</p></div></div>
+  <section class="panel">
+    <div class="panel-h"><h3>제출 증빙</h3><span class="sub">전일제 확인 기준일 2026.10.01</span>
+      <div class="r tiny muted" style="gap:14px"><span>승인 <b class="num" style="color:var(--ok)">${cnt('승인')}</b></span><span>검토 중 <b class="num">${cnt('검토대기')}</b></span><span>보완 필요 <b class="num" style="color:var(--warn)">${cnt('보완요청')+cnt('반려')}</b></span></div></div>
+    <div class="tw"><table class="t">
+      <thead><tr><th>증빙 유형</th><th>제출 파일</th><th>제출일</th><th>유효기준일</th><th>처리</th><th>상태</th><th></th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table></div>
+    <div class="panel-b tiny muted" style="border-top:1px solid var(--line)">개인정보 수집·이용 동의 완료 (2026.03.02) · PDF·이미지, 파일당 최대 10MB</div>
+  </section>`;
+}
+
+const INTAKE0=['접수완료','접수대기','보완요청','미제출','접수완료','접수대기','미제출','접수완료','보완요청','접수대기'];
+function intakeRows(){
+  return DEPTS.map((d,i)=>{
+    const list=students.filter(s=>s.advisor===d.p&&active(s,LAST)&&gapOf(s,LAST)>0);
+    const mine=d.p===PROF.p, sent=mine&&state.app.status!=='작성중';
+    let st = mine ? (sent?(state.intake[d.p]||'접수대기'):'미제출') : (state.intake[d.p]||INTAKE0[i]);
+    if(!mine && !list.length) st='대상 없음';
+    return {d, st, n: sent?appSel().length:list.length, amt: sent?appFinal():list.reduce((a,s)=>a+gapOf(s,LAST),0),
+      at: st==='미제출'||st==='대상 없음'?'-':mine?state.app.at:'2026.10.0'+(1+i%4)+' '+(9+i)+':'+String(10+i*4).padStart(2,'0'),
+      pi: mine?(state.app.pi==='use'?'우선 집행':'미사용'):(i%3===0?'우선 집행':'미사용'), docs: st==='보완요청'?1:2};
+  });
+}
+function viewIntake(){
+  const rows=intakeRows(), subm=rows.filter(r=>['접수대기','접수완료','보완요청'].includes(r.st));
+  const tone={'접수완료':'ok','접수대기':'info','보완요청':'warn','미제출':'mute','대상 없음':'mute'};
+  return `<div class="head"><div><h1>${APPLY_L} 지원 신청 접수</h1><p>지도교수가 제출한 월별 지원 신청을 확인하고 접수합니다. 접수된 학생은 11월 명부 후보로 넘어갑니다.</p></div><div class="act"><button class="btn" data-export="${APPLY_L} 신청 현황">${ico('dl')}신청 현황 추출</button></div></div>
+  <section class="kpis">
+    <div class="kpi"><div class="l">접수기간</div><div class="v" style="font-size:20px">10.01 – 10.20</div><div class="d">마감까지 15일</div></div>
+    <div class="kpi"><div class="l">제출 연구실</div><div class="v">${subm.length}<small>/ ${rows.filter(r=>r.st!=='대상 없음').length}</small></div><div class="d">접수 대기 ${rows.filter(r=>r.st==='접수대기').length} · 보완 ${rows.filter(r=>r.st==='보완요청').length}</div></div>
+    <div class="kpi"><div class="l">신청 학생</div><div class="v">${subm.reduce((a,r)=>a+r.n,0)}<small>명</small></div><div class="d">제출된 신청 기준</div></div>
+    <div class="kpi"><div class="l">신청 총액</div><div class="v">${man(subm.reduce((a,r)=>a+r.amt,0))}<small>원</small></div><div class="d">연구책임자계정 우선 집행 반영</div></div>
+  </section>
+  <section class="panel"><div class="tw"><table class="t">
+    <thead><tr><th>지도교수 · 연구실</th><th class="r">신청 인원</th><th class="r">신청액</th><th>연구책임자계정</th><th class="c">첨부</th><th>제출일시</th><th>상태</th><th></th></tr></thead>
+    <tbody>${rows.map(r=>`<tr><td><div class="who"><b>${r.d.p} 교수</b><span>${r.d.d} · ${r.d.lab}</span></div></td>
+      <td class="r num">${r.st==='대상 없음'?'-':r.n}</td><td class="r num">${r.st==='대상 없음'?'-':won(r.amt)}</td>
+      <td>${r.st==='미제출'||r.st==='대상 없음'?'<span class="muted">-</span>':r.pi}</td>
+      <td class="c num ${r.docs<2?'':'muted'}" style="${r.docs<2&&r.st==='보완요청'?'color:var(--warn);font-weight:600':''}">${r.st==='미제출'||r.st==='대상 없음'?'-':r.docs+'/2'}</td>
+      <td class="num muted">${r.at}</td><td>${chip(r.st,tone[r.st])}</td>
+      <td style="text-align:right">${r.st==='접수대기'?`<button class="btn sm" data-ireq="${r.d.p}">보완 요청</button> <button class="btn sm pri" data-iok="${r.d.p}">접수</button>`:r.st==='미제출'?`<button class="btn sm" data-nudge="${r.d.p} 교수">제출 요청</button>`:''}</td></tr>`).join('')}</tbody>
+  </table></div></section>`;
+}
+
+const ROLES = {
+  admin:{name:'박○○ 담당자', sub:'연구지원팀 · 업무관리자', ss:'연구지원팀', av:'박', brand:'연구지원팀', crumb:['부산대학교 산학협력단','연구생활장려금'], home:'dashboard', routes:ROUTES_ADMIN},
+  prof:{name:PROF.p+' 교수', sub:PROF.d+' · '+PROF.lab, ss:PROF.d, av:PROF.p[0], brand:'지도교수', crumb:['연구생활장려금 신청'], home:'p-apply', routes:[
+    {g:'지원 신청'},{id:'p-apply',t:APPLY_L+' 지원 신청',i:'proof'},{id:'p-history',t:'신청 내역',i:'list'},{g:'연구실'},{id:'p-students',t:'연구실 학생 현황',i:'roster',cnt:()=>profStudents().filter(s=>hp(s).status!=='승인').length}]},
+  student:{name:ME.name, sub:ME.dept+' · '+ME.course+' '+ME.sem+'학기', ss:ME.course+' '+ME.sem+'학기', av:ME.name[0], brand:'학생연구자', crumb:['연구생활장려금'], home:'s-home', routes:[
+    {g:'내 정보'},{id:'s-home',t:'내 지원 현황',i:'home'},{id:'s-proof',t:'증빙 제출',i:'up',cnt:()=>proofs.filter(p=>p.sid===ME.id&&(p.status==='보완요청'||p.status==='반려')).length}]},
+};
+const roleLabel={admin:'연구지원팀',prof:'지도교수',student:'학생연구자'};
+function toggleRoleMenu(show){
+  const m=$('#roleMenu');
+  if(show===false){ m.hidden=true; return; }
+  const r=ROLES[state.role];
+  m.innerHTML = `<div class="um-h"><span class="avatar">${r.av}</span><span><b>${r.name}</b><span>${roleLabel[state.role]} · ${r.sub}</span></span></div>
+    <div class="um-meta">최근 접속 2026.10.04 17:22 · 164.125.••.31<br>이번 접속 2026.10.05 ${state.loginAt}</div>
+    <button role="menuitem" data-um="pw">${ico('lock','style="width:15px;height:15px"')}비밀번호 변경</button>
+    <button role="menuitem" data-um="out" class="out">${ico('x','style="width:15px;height:15px"')}로그아웃</button>`;
+  m.hidden=!m.hidden;
+}
+function validStep(n){
+  const a=state.app;
+  if(n>=2){ if(!appSel().length){ toast('신청할 학생을 한 명 이상 선택하세요.'); return false; }
+    const z=appSel().find(s=>!(a.amt[s.id]>0)); if(z){ toast(`${z.name} 학생의 신청금액을 입력하세요.`); return false; } }
+  if(n>=3){ if(!a.pi){ toast('연구책임자계정 잔액 처리 방법을 선택하세요.'); return false; }
+    if(a.pi==='keep'&&!a.piReason.trim()){ toast('잔액을 사용할 수 없는 사유를 입력하세요.'); $('#piReason')?.focus(); return false; }
+    if(!state.upl.loan||!state.upl.pledge){ toast('대여신청서와 의무이행확약서를 모두 첨부하세요.'); return false; } }
+  return true;
+}
+document.addEventListener('click',e=>{
+  const t=e.target.closest('button,a'); 
+  if(!e.target.closest('#roleMenu,#whoBtn')) toggleRoleMenu(false);
+  if(!t) return;
+  const a=state.app;
+  if(t.id==='whoBtn') return toggleRoleMenu();
+  if(t.dataset.role){ state.role=t.dataset.role; toggleRoleMenu(false); const h='#'+ROLES[state.role].home; if(location.hash===h) render(); else location.hash=h; window.scrollTo(0,0); return toast(`${ROLES[state.role].name}(으)로 전환했습니다.`); }
+  if(t.dataset.next){ const n=+t.dataset.next; if(!validStep(n)) return; a.step=n; render(); return window.scrollTo(0,0); }
+  if(t.dataset.prev){ a.step=+t.dataset.prev; render(); return window.scrollTo(0,0); }
+  if(t.dataset.wz){ const n=+t.dataset.wz; if(n<=a.step){ a.step=n; render(true); } return; }
+  if(t.hasAttribute('data-form')) return toast('대여신청서·의무이행확약서 양식(hwp)을 내려받았습니다.');
+  if(t.id==='appSubmit'){
+    if(a.agree.some(x=>!x)) return toast('확약 항목에 모두 동의해야 제출할 수 있습니다.');
+    a.status='제출'; a.at='2026.10.05 '+nowHM(); delete state.intake[PROF.p]; render(); window.scrollTo(0,0);
+    return toast(`${APPLY_L} 지원 신청을 제출했습니다. 연구지원팀 접수 후 알림을 보내드립니다.`);
+  }
+  if(t.id==='appCancel') return confirmModal('제출을 취소할까요?','신청서가 작성 중 상태로 돌아갑니다. 접수기간(10.20) 안에 다시 제출해야 합니다.','제출 취소',()=>{ a.status='작성중'; a.step=3; render(); toast('제출을 취소했습니다.'); });
+  if(t.id==='appEdit'){ a.status='작성중'; a.step=2; state.upl.pledge=null; delete state.intake[PROF.p]; render(); return toast('의무이행확약서를 다시 첨부해 주세요.'); }
+  if(t.dataset.nudge) return toast(`${t.dataset.nudge}에게 제출 요청 알림을 보냈습니다.`);
+  if(t.dataset.iok){ state.intake[t.dataset.iok]='접수완료'; render(true); return toast(`${t.dataset.iok} 교수 신청을 접수했습니다. 신청 학생이 11월 명부 후보에 추가됩니다.`); }
+  if(t.dataset.ireq){ state.intake[t.dataset.ireq]='보완요청'; render(true); return toast(`${t.dataset.ireq} 교수에게 보완 요청을 보냈습니다.`); }
+  if(t.dataset.resub){ const p=proofs.find(x=>x.id===t.dataset.resub), f=state.upl['p'+p.id];
+    if(!f) return toast('제출할 파일을 선택하세요.');
+    p.status='검토대기'; p.file=f; p.submitted='2026.10.05'; p.checked='-'; p.handler='-'; p.memo='';
+    p.log.push({at:'2026.10.05 '+nowHM(), who:'학생 '+ME.name, what:'재제출'}); delete state.upl['p'+p.id];
+    render(true); return toast(`${p.type}를 다시 제출했습니다. 담당자 검토 후 알려드립니다.`); }
+});
+document.addEventListener('change',e=>{
+  const el=e.target, a=state.app;
+  if(el.dataset.sel){ a.sel[el.dataset.sel]=el.checked; render(true); }
+  else if(el.dataset.actsel){ a.act[el.dataset.actsel]=el.value; }
+  else if(el.name==='pi'){ a.pi=el.value; render(true); }
+  else if(el.dataset.agree){ a.agree[+el.dataset.agree]=el.checked; }
+  else if(el.dataset.upl){ const f=el.files[0]; if(f){ state.upl[el.dataset.upl]=f.name; render(true); } }
+});
+document.addEventListener('input',e=>{
+  const el=e.target;
+  if(el.dataset.amt){ let v=+el.value.replace(/[^\d]/g,'')||0; const mx=+el.dataset.max; if(v>mx){ v=mx; toast(`신청금액은 부족분 ${won(mx)}원을 넘을 수 없습니다.`); }
+    state.app.amt[el.dataset.amt]=v; el.value=v?won(v):''; $('#sumcard').outerHTML=sumcardHTML(); }
+  if(el.id==='piReason') state.app.piReason=el.value;
+});
+document.addEventListener('dragover',e=>{ const d=e.target.closest&&e.target.closest('.drop'); if(d){ e.preventDefault(); d.classList.add('over'); } });
+document.addEventListener('dragleave',e=>{ const d=e.target.closest&&e.target.closest('.drop'); if(d) d.classList.remove('over'); });
+document.addEventListener('drop',e=>{ const d=e.target.closest&&e.target.closest('.drop'); if(!d) return; e.preventDefault(); const f=e.dataTransfer.files[0]; if(f){ state.upl[d.querySelector('input').dataset.upl]=f.name; render(true); } });
+
+/* =========================================================
+   로그인 · 세션 · 알림
+   ========================================================= */
+state.authed=false; state.loginTab='admin'; state.loginId=''; state.loginErr={}; state.loginBusy=false; state.sessLeft=1800; state.noteRead={}; state.loginAt='';
+const LTABS=[['student','학생','학번','예: 202412345'],['prof','교수','교번','교번 7자리'],['admin','교직원','교직원번호','교직원번호 7자리']];
+function renderLogin(){
+  const tab=LTABS.find(t=>t[0]===state.loginTab), er=state.loginErr, busy=state.loginBusy;
+  $('#login').innerHTML = `
+  <div class="login-l">
+    <div><div class="org">부산대학교 산학협력단</div><h1>이공계 연구생활장려금<br>사업관리시스템</h1><p>지원 신청, 증빙 제출, 지급 내역 조회와 사업 운영 관리를 한곳에서 처리합니다.</p></div>
+    <div class="sched"><h3>이번 달 일정</h3><div class="sched-l">
+      <div><span class="d">10.01 – 10.20</span><span>11월분 지원 신청 접수<span>지도교수 · 학생별 부족분 신청</span></span></div>
+      <div><span class="d">10.01</span><span>하반기 전일제 확인 기준일<span>건강보험 자격득실 확인서는 기준일 이후 발급본 제출</span></span></div>
+      <div><span class="d">10.18</span><span>10월 참여 학생연구자 명부 확정</span></div>
+      <div><span class="d">10.25</span><span>10월 연구생활장려금 지급</span></div>
+    </div></div>
+    <footer><span><b>연구지원팀</b> 051-510-7275 · 평일 09:00–18:00</span><span>개인정보처리방침</span><span>이용약관</span></footer>
+  </div>
+  <div class="login-r"><form class="lcard" id="loginForm" novalidate>
+    <div><h2>로그인</h2><p class="lsub">학생·교수는 포털 아이디(학번·교번)와 비밀번호를 사용합니다.</p></div>
+    <div class="lseg" role="tablist">${LTABS.map(t=>`<button type="button" role="tab" data-ltab="${t[0]}" class="${t[0]===state.loginTab?'on':''}" aria-selected="${t[0]===state.loginTab}">${t[1]}</button>`).join('')}</div>
+    <div class="lf ${er.id?'err':''}"><label for="lid">${tab[2]}</label><input id="lid" autocomplete="username" placeholder="${tab[3]}" value="${state.loginId}" ${busy?'disabled':''}>${er.id?`<span class="em">${er.id}</span>`:''}</div>
+    <div class="lf ${er.pw?'err':''}"><label for="lpw">비밀번호</label><input id="lpw" type="password" autocomplete="current-password" placeholder="포털 비밀번호" ${busy?'disabled':''}>${er.pw?`<span class="em">${er.pw}</span>`:''}</div>
+    <div class="lrow"><label><input type="checkbox" class="cb" id="lsave">${tab[2]} 저장</label><span class="tiny muted">Caps Lock 확인</span></div>
+    <button class="btn pri lbtn" type="submit" ${busy?'disabled':''}>${busy?'<span class="spin"></span>로그인 중':'로그인'}</button>
+    <div class="lor">또는</div>
+    <button class="btn lbtn" type="button" id="ssoBtn" ${busy?'disabled':''}>부산대학교 통합인증(SSO)으로 로그인</button>
+    <div class="llinks"><button type="button" data-lhelp="id">아이디 찾기</button><button type="button" data-lhelp="pw">비밀번호 재설정</button><button type="button" data-lhelp="guide">이용 안내</button></div>
+    <p class="lnote">공용 PC에서는 사용 후 꼭 로그아웃하세요.<br>30분 동안 사용하지 않으면 자동 로그아웃됩니다.</p>
+  </form></div>`;
+}
+function doLogin(){
+  state.loginBusy=true; renderLogin();
+  setTimeout(()=>{ state.loginBusy=false; state.authed=true; state.role=state.loginTab; state.sessLeft=1800; state.loginErr={}; state.noteRead={};
+    state.loginAt=new Date().toTimeString().slice(0,5);
+    const h='#'+ROLES[state.role].home; if(location.hash===h) render(); else location.hash=h; window.scrollTo(0,0); tickSess(); },650);
+}
+function logout(msg){
+  state.authed=false; state.loginId=''; toggleRoleMenu(false); $('#bellPop').hidden=true; closeLayers();
+  history.replaceState(null,'',location.pathname); render(); if(msg) toast(msg);
+}
+document.addEventListener('submit',e=>{
+  if(e.target.id!=='loginForm') return; e.preventDefault();
+  const id=$('#lid').value.trim(), pw=$('#lpw').value; state.loginId=id; state.loginErr={};
+  if(!id) state.loginErr.id=LTABS.find(t=>t[0]===state.loginTab)[2]+'를 입력하세요.';
+  if(!pw) state.loginErr.pw='비밀번호를 입력하세요.';
+  if(state.loginErr.id||state.loginErr.pw){ renderLogin(); (state.loginErr.id?$('#lid'):$('#lpw')).focus(); return; }
+  doLogin();
+});
+const LHELP={id:'아이디는 학번·교번·교직원번호입니다. 확인이 어려우면 정보화본부로 문의하세요.',pw:'비밀번호는 부산대학교 포털 통합인증에서 재설정할 수 있습니다.',guide:'지도교수는 매월 1–20일에 다음 달 지원을 신청하고, 학생은 증빙을 제출합니다.'};
+function fmtSess(){ const m=Math.floor(state.sessLeft/60), s=state.sessLeft%60; const el=$('#sessT'); if(el){ el.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0'); el.classList.toggle('low',state.sessLeft<=300); } }
+function tickSess(){ fmtSess(); }
+setInterval(()=>{ if(!state.authed) return; state.sessLeft--; if(state.sessLeft===300) toast('5분 뒤 자동 로그아웃됩니다. 계속 사용하려면 연장을 누르세요.'); if(state.sessLeft<=0) return logout('30분 동안 사용하지 않아 자동 로그아웃되었습니다.'); fmtSess(); },1000);
+
+function notes(){
+  const ist=state.intake[PROF.p], h=hp(ME);
+  return ({
+    admin:[
+      ...(state.app.status!=='작성중'?[{t:`${PROF.p} 교수 ${APPLY_L} 지원 신청 제출`,d:state.app.at,h:'#intake'}]:[]),
+      ...proofs.filter(p=>p.log.some(l=>l.what==='재제출')).map(p=>({t:`${S(p.sid).name} ${p.type} 재제출`,d:'2026.10.05',h:'#evidence'})),
+      {t:'산단회계 지급결과 연계 경고 3건',d:'2026.10.02 04:10',h:'#sync'},
+      {t:'BK21 장학금 10월분 업로드 대기',d:'2026.10.03 09:00',h:'#sync'},
+      {t:'이상철 교수 11월분 지원 신청 제출',d:'2026.10.02 10:14',h:'#intake'},
+    ],
+    prof:[
+      ...(ist==='보완요청'?[{t:`${APPLY_L} 지원 신청 보완 요청`,d:'2026.10.05',h:'#p-apply'}]:ist==='접수완료'?[{t:`${APPLY_L} 지원 신청이 접수되었습니다`,d:'2026.10.05',h:'#p-apply'}]:[]),
+      {t:`${ME.name} 학생 건강보험 자격득실 확인서 보완 요청`,d:'2026.10.04 14:05',h:'#p-students'},
+      {t:`${APPLY_L} 지원 신청 마감 10.20 (D-15)`,d:'2026.10.05 09:00',h:'#p-apply'},
+      {t:'10월 연구생활장려금 지급 예정일 10.25',d:'2026.10.01 09:00',h:'#p-history'},
+    ],
+    student:[
+      ...(h.status==='보완요청'?[{t:'건강보험 자격득실 확인서 보완 요청',d:'2026.10.04 14:05',h:'#s-proof'}]:h.status==='승인'?[{t:'건강보험 자격득실 확인서 승인',d:'2026.10.05',h:'#s-proof'}]:[]),
+      {t:'10월 연구생활장려금 지급 예정 (10.25)',d:'2026.10.01 09:00',h:'#s-home'},
+      {t:'9월 연구생활장려금 지급 완료',d:'2026.09.25 15:00',h:'#s-home'},
+    ],
+  })[state.role].map(n=>({...n,id:state.role+'|'+n.t}));
+}
+function toggleBell(show){
+  const m=$('#bellPop'); if(show===false){ m.hidden=true; return; }
+  const ns=notes();
+  m.innerHTML=`<div class="ph"><span>알림</span><button data-readall>모두 읽음</button></div>`+ns.map(n=>`<a href="${n.h}" data-note="${n.id}" class="${state.noteRead[n.id]?'read':''}"><i></i><span style="min-width:0"><b>${n.t}</b><span>${n.d}</span></span></a>`).join('');
+  m.hidden=!m.hidden;
+}
+document.addEventListener('click',e=>{
+  if(!e.target.closest('#bellPop,#bellBtn')) toggleBell(false);
+  const t=e.target.closest('button,a'); if(!t) return;
+  if(t.dataset.ltab){ state.loginId=$('#lid').value; state.loginTab=t.dataset.ltab; state.loginErr={}; renderLogin(); $('#lid').focus(); return; }
+  if(t.id==='ssoBtn'){ state.loginId=''; return doLogin(); }
+  if(t.dataset.lhelp) return toast(LHELP[t.dataset.lhelp]);
+  if(t.id==='sessExt'){ state.sessLeft=1800; fmtSess(); return toast('로그인 시간을 30분 연장했습니다.'); }
+  if(t.id==='bellBtn') return toggleBell();
+  if(t.hasAttribute('data-readall')){ notes().forEach(n=>state.noteRead[n.id]=1); toggleBell(false); return render(true); }
+  if(t.dataset.note){ state.noteRead[t.dataset.note]=1; toggleBell(false); setTimeout(()=>render(true),0); return; }
+  if(t.dataset.um==='out'){ toggleRoleMenu(false); return confirmModal('로그아웃할까요?','작성 중인 내용은 저장되지 않습니다.','로그아웃',()=>logout('로그아웃했습니다.')); }
+  if(t.dataset.um==='pw'){ toggleRoleMenu(false); return toast('비밀번호는 부산대학교 포털 통합인증에서 변경할 수 있습니다.'); }
+});
+window.addEventListener('hashchange',()=>{ if(state.authed){ state.sessLeft=1800; fmtSess(); } toggleBell(false); });
+
+/* =========================================================
+   라우팅 · 이벤트
+   ========================================================= */
+const VIEWS = {intake:viewIntake, 'p-apply':viewApply, 'p-history':viewProfHistory, 'p-students':viewProfStudents, 's-home':viewStudentHome, 's-proof':viewStudentProof, dashboard:viewDashboard, roster:viewRoster, plan:viewPlan, evidence:viewEvidence, payments:viewPayments, accounts:viewAccounts, sync:viewSync, settings:viewSettings};
+function route(){ const RL=ROLES[state.role]; const id=(location.hash||'').slice(1); return RL.routes.some(r=>r.id===id)?id:RL.home; }
+function render(keepScroll){
+  if(!state.authed){ document.querySelector('.app').hidden=true; $('#login').hidden=false; renderLogin(); return; }
+  document.querySelector('.app').hidden=false; $('#login').hidden=true;
+  const id = route(); renderNav(id); $('#bellDot').hidden = !notes().some(n=>!state.noteRead[n.id]);
+  const y = window.scrollY;
+  $('#view').innerHTML = VIEWS[id]();
+  if(keepScroll) window.scrollTo(0,y);
+}
+window.addEventListener('hashchange',()=>{ closeLayers(); toggleRoleMenu(false); render(); window.scrollTo(0,0); });
+
+function openLayer(sel){ $('#scrim').classList.add('show'); $(sel).classList.add('show'); $(sel).setAttribute('aria-hidden','false'); setTimeout(()=>$(sel).querySelector('button')?.focus(),50); }
+function closeLayers(){ ['#drawer','#modal'].forEach(s=>{$(s).classList.remove('show');$(s).setAttribute('aria-hidden','true')}); $('#scrim').classList.remove('show'); }
+$('#scrim').addEventListener('click',closeLayers);
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeLayers(); if(e.key==='Enter' && e.target.matches('[data-sid]')) openStudent(e.target.dataset.sid); });
+
+function confirmModal(title,msg,ok,onOk){
+  $('#modal').innerHTML = `<div class="mb"><h3>${title}</h3><p>${msg}</p></div><div class="mf"><button class="btn" data-close>취소</button><button class="btn pri" id="mOk">${ok}</button></div>`;
+  openLayer('#modal');
+  $('#mOk').onclick = ()=>{ closeLayers(); onOk(); };
+}
+
+document.addEventListener('click',e=>{
+  const t = e.target.closest('button,a,tr,[data-sid]'); if(!t) return;
+  if(t.matches('[data-close]')) return closeLayers();
+  if(t.dataset.export) return toast(`${t.dataset.export} 파일(xlsx)을 생성했습니다. 추출 이력이 기록됩니다.`);
+  if(t.dataset.filter){ state.rosterFilter=t.dataset.filter; }
+  if(t.dataset.rf){ state.rosterFilter=t.dataset.rf; return render(true); }
+  if(t.dataset.sid && !t.closest('#drawer')) return openStudent(t.dataset.sid);
+  if(t.id==='unmask'){
+    if(state.unmask){ state.unmask=false; render(true); return toast('개인정보 마스킹을 다시 적용했습니다.'); }
+    return confirmModal('마스킹을 해제할까요?','학번과 국가연구자번호가 화면에 표시됩니다. 해제 사유("전일제 증빙 대조")와 시각이 접속 이력에 기록됩니다.','해제',()=>{state.unmask=true;render(true);toast('마스킹을 해제했습니다. 조회 이력이 기록되었습니다.')});
+  }
+  if(t.id==='confirmRoster'){
+    const nCheck = students.filter(s=>s.fulltime==='확인중').length;
+    return confirmModal(MN()+' 명부를 확정할까요?',`요건 충족 ${students.filter(s=>s.fulltime==='충족').length}명이 확정됩니다.<br>전일제 확인 중인 ${nCheck}명은 제외되며, 확인 후 추가 확정할 수 있습니다.<br>확정 이후 변경은 사유와 함께 이력으로 남습니다.`,'확정',()=>{
+      state.rosterConfirmed=true; const d=new Date(); state.rosterConfirmedAt=`2026.10.05 ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`; render(true); toast(MN()+' 참여 학생연구자 명부를 확정했습니다.'); });
+  }
+  if(t.dataset.pf){ state.planFilter=t.dataset.pf; return render(true); }
+  if(t.id==='recalc'){
+    const d=new Date(); state.calcHist.push({at:`2026.10.05 ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`,by:'박○○',note:'수동 재산정',n:0});
+    render(true); return toast(MN()+' 부족금액을 재산정했습니다. 변경된 학생은 없습니다.');
+  }
+  if(t.dataset.pt){ state.proofTab=t.dataset.pt; state.proofSel=null; return render(true); }
+  if(t.dataset.pid){ state.proofSel=t.dataset.pid; return render(true); }
+  if(t.id==='viewDoc'){ t.closest('.mask').remove(); return toast('증빙 열람 이력이 기록되었습니다.'); }
+  if(t.dataset.act){
+    const p=proofs.find(x=>x.id===state.proofSel); const memo=$('#memo').value.trim();
+    if(t.dataset.act!=='승인' && !memo){ $('#memo').focus(); $('#memo').style.borderColor='var(--bad)'; return toast('보완 요청이나 반려는 처리 의견을 입력해야 합니다.'); }
+    p.status=t.dataset.act; p.memo=memo; p.handler='박○○'; p.checked='2026.10.05';
+    p.log.push({at:'2026.10.05 '+new Date().toTimeString().slice(0,5),who:'연구지원팀 박○○',what:t.dataset.act});
+    if(p.type.includes('건강보험')){ const s=S(p.sid); if(t.dataset.act==='승인') s.fulltime='충족'; if(t.dataset.act==='반려') s.fulltime='미충족'; LEDGER=buildLedgers(); }
+    state.proofSel=null; render(true);
+    return toast(`${S(p.sid).name} · ${p.type}: ${t.dataset.act} 처리했습니다.`);
+  }
+  if(t.dataset.acct){ state.acctSel=t.dataset.acct; return render(true); }
+  if(t.dataset.lf){ state.ledgerF=t.dataset.lf; return render(true); }
+  if(t.dataset.rerun){ const b=BATCH[+t.dataset.rerun];
+    if(b.mode==='파일 업로드') return toast(`${b.name} 표준 업로드 양식을 선택하세요. 업로드 후 검증 결과가 표시됩니다.`);
+    b.err=0; b.st='정상'; b.last='10.05 '+new Date().toTimeString().slice(0,5); render(true); return toast(`${b.name} 재처리를 완료했습니다.`); }
+  if(t.id==='runAll'){ BATCH.forEach(b=>{ if(b.mode==='DB 연계'){ b.err=0; b.st='정상'; b.last='10.05 '+new Date().toTimeString().slice(0,5);} }); render(true); return toast('DB 연계 4건을 재처리했습니다. 업로드 재원 2건은 파일이 필요합니다.'); }
+  if(t.dataset.fix){ const m=MISM[+t.dataset.fix]; m.st = m.st==='미조치'?'조치중':'조치완료'; render(true); return toast(m.st==='조치중'?'조치 내용을 등록했습니다.':'불일치 건을 조치 완료로 닫았습니다.'); }
+  if(t.dataset.st){ state.setTab=t.dataset.st; return render(true); }
+  if(t.id==='saveBase'){
+    const m=+$('#bM').value.replace(/[^\d]/g,''), d=+$('#bD').value.replace(/[^\d]/g,'');
+    if(!m||!d||m>d) return toast('기준금액을 확인하세요. 석사 금액은 박사 금액보다 클 수 없습니다.');
+    if(m===state.base.M && d===state.base.D) return toast('변경된 값이 없습니다.');
+    state.base={M:m,D:d}; state.baseHist.push({at:'2026.10.05',m,d,by:'박○○',note:`${$('#bFrom').value}부터 적용 · 부족금액 재산정 필요`});
+    LEDGER=buildLedgers(); render(true); return toast('기준금액을 저장했습니다. 지원계획 화면의 부족금액이 새 기준으로 다시 계산됩니다.');
+  }
+});
+document.addEventListener('input',e=>{
+  if(e.target.id==='rq'){ state.rosterQ=e.target.value; const pos=e.target.selectionStart; render(true); const i=$('#rq'); i.focus(); i.setSelectionRange(pos,pos); }
+  if(e.target.id==='bM'||e.target.id==='bD'){ const v=e.target.value.replace(/[^\d]/g,''); e.target.value = v?won(+v):''; }
+});
+document.addEventListener('change',e=>{ if(e.target.id==='paySel'){ state.paySid=e.target.value; render(true); } });
+
+// 지급월
+function setMonth(i){ CUR=Math.max(0,Math.min(LAST,i)); $('#mLabel').textContent=MONTHS[CUR]; $('#mPrev').disabled=CUR===0; $('#mNext').disabled=CUR===LAST; render(true); }
+$('#mPrev').onclick=()=>setMonth(CUR-1);
+$('#mNext').onclick=()=>setMonth(CUR+1);
+$('#mNext').disabled=true;
+
+
+render();
+</script>
+</body>
+</html>

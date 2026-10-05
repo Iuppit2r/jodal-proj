@@ -1,0 +1,2259 @@
+{
+ "sources": [
+  {
+   "url": "https://www.imaeil.com/page/view/2020030218151602009",
+   "note": "매일신문 '김천의 100산 100설' 1회 총론: 백두대간/수도지맥/기양지맥/금오지맥 개관, 경계(영동·무주·거창·성주·상주)"
+  },
+  {
+   "url": "https://www.imaeil.com/page/view/2020032317105856669",
+   "note": "2회 백두덕대단맥: 신선봉927·진밭산723·바래봉584·동구지산655·덕대산811·고성산482"
+  },
+  {
+   "url": "https://www.imaeil.com/page/view/2020042815410347975",
+   "note": "3회 기양지맥·백운/미모단맥: 8개 산 높이·한자·위치"
+  },
+  {
+   "url": "https://www.imaeil.com/page/view/2020060215335939269",
+   "note": "4회 백두난함단맥: 문암봉597·내남산667·구화산328·달봉산306·애기봉440. 김천 70명산(2019)→100명산 재지정, 2020.5.16 프로젝트 시작, 담당 산림녹지과 054-420-6324"
+  },
+  {
+   "url": "https://www.imaeil.com/page/view/2020062217132183965",
+   "note": "5회 금오문의·연석·운남단맥: 12개 산 목록. '김천시의 100명산 재지정으로 연재순서 변경' 명시"
+  },
+  {
+   "url": "https://www.imaeil.com/page/view/2020072720082380466",
+   "note": "6회 백두대간1: 백두대간 21개 봉우리 전체 목록(높이 포함)"
+  },
+  {
+   "url": "https://www.imaeil.com/page/view/2020072723222542617",
+   "note": "6회 백두대간2 (우두령~용문산) 산행기"
+  },
+  {
+   "url": "https://www.imaeil.com/page/view/2020082416123118341",
+   "note": "7회 가야수도지맥: 10개 봉우리 목록"
+  },
+  {
+   "url": "https://www.imaeil.com/page/view/2020092210505443351",
+   "note": "8회 금오지맥2: '금오지맥에 속한 산들' 15개 목록"
+  },
+  {
+   "url": "https://www.imaeil.com/page/view/2020102116123623443",
+   "note": "9회 백두호초당단맥 등 14개 산 목록, 김천100명산 프로젝트 설명"
+  },
+  {
+   "url": "https://www.imaeil.com/page/view/2020112414595963434",
+   "note": "10회(끝) 기타 단맥·여맥 7개 산"
+  },
+  {
+   "url": "http://207.kimcheon.co.kr/default/index_view_page.php?idx=57583",
+   "note": "김천신문: 단지봉·박석산 정상석 및 100명산 정상안내판 24개소 설치, 단지봉=증산면 수도리/거창군 가북면 경계"
+  },
+  {
+   "url": "https://www.metroseoul.co.kr/article/20240129500675",
+   "note": "2023 완등 인증서 수여식: 시 승격 70주년 기념 100개 선정, 밴드 인증 방식, 누적 290명 완등"
+  },
+  {
+   "url": "https://blog.naver.com/jpp1202/224181209540",
+   "note": "개인 블로그(김천100산 3년 연속 완등자) 2023~2026 인증 산행기 83편 — 2020년 목록 이후 추가/변경된 인증 봉우리 확인용(비공식). '인증지에 국사봉이 5산', '내년부터 앱 인증으로 변경 예정' 언급"
+  },
+  {
+   "url": "https://blog.naver.com/leekj5853/222512994494",
+   "note": "개인 블로그(2021): 지례면 태봉·사건점산·천왕봉·사발봉·매봉산 등 '김천의 100명산'으로 산행, 김천시 정상 표지판 존재"
+  },
+  {
+   "url": "https://overpass.private.coffee/api/interpreter",
+   "note": "OpenStreetMap Overpass API (natural=peak 노드) — 정상 좌표 출처. OSM 표고와 기사 표고가 30m 이내로 일치할 때만 채택"
+  },
+  {
+   "url": "https://nominatim.openstreetmap.org/",
+   "note": "좌표의 역지오코딩(행정구역) — 기사에 읍면 명시가 없을 때만 사용"
+  }
+ ],
+ "officialListFound": false,
+ "officialListNote": "김천시가 배포하는 공식 100명산 목록(안내책자/지도, 산림녹지과)의 원문 텍스트나 PDF는 웹에서 찾지 못함. 대신 매일신문 '김천의 100산 100설'(2020.3~11, 10회) 연재가 2020년 5월 시의 100명산 재지정 이후 각 산줄기별 '100산' 목록 박스를 싣고 있어, 이를 2020년판 공식 목록의 대리 자료로 사용함 — 98개 봉우리 확인(2개 미확인). 2021~2026 인증 블로그를 보면 목록이 이후 개정된 것으로 보임: 태봉산·수정봉·우무이산·대왕봉·장군봉(대덕면)·갈미봉·깃대봉·청운봉·영암산북봉·필봉산·천상봉·천룡봉·밧줄봉·사건점산·갈비봉 등이 인증 봉우리로 등장하고, 월매산·새목양지·비봉산 등은 최근 인증기에서 보이지 않음. 이 항목들은 onOfficialList=false(미확인)로 표기. 명칭 변경 사례: 노고봉→노고산, 감문산→취적봉, 봉우산→거말산, 망월봉→망봉, 백운산(삼방산)→백운삼방산, 신선봉(서봉)→수도산신선봉, 들기산→들기봉. 좌표는 OSM 정상 노드이며 국토지리정보원 지명 좌표와 다를 수 있음. 공식 최신 목록은 김천시 산림녹지과(054-420-6324) 또는 '김천100명산프로젝트' 밴드에서 확인 필요.",
+ "peaks": [
+  {
+   "name": "신선봉",
+   "peakName": null,
+   "hanja": "神仙峰",
+   "heightM": 927,
+   "region": "김천시 운수리",
+   "regionSource": "Nominatim reverse geocode of OSM summit node (정상 좌표가 경계선상이면 인접 시군이 나올 수 있음)",
+   "border": null,
+   "ridge": "백두덕대단맥",
+   "lat": 36.103733,
+   "lng": 127.980197,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 1859789904, name '신선봉', ele 944",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020032317105856669"
+   ]
+  },
+  {
+   "name": "진밭산",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 723,
+   "region": null,
+   "regionSource": null,
+   "border": null,
+   "ridge": "백두덕대단맥",
+   "lat": null,
+   "lng": null,
+   "coordSource": null,
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020032317105856669"
+   ]
+  },
+  {
+   "name": "바래봉",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 584,
+   "region": "김천시 운수리",
+   "regionSource": "Nominatim reverse geocode of OSM summit node (정상 좌표가 경계선상이면 인접 시군이 나올 수 있음)",
+   "border": null,
+   "ridge": "백두덕대단맥",
+   "lat": 36.090042,
+   "lng": 128.001522,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10250643339, name '바래봉', ele 584",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020032317105856669"
+   ]
+  },
+  {
+   "name": "동구지산",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 655,
+   "region": "김천시 대성리",
+   "regionSource": "Nominatim reverse geocode of OSM summit node (정상 좌표가 경계선상이면 인접 시군이 나올 수 있음)",
+   "border": null,
+   "ridge": "백두덕대단맥",
+   "lat": 36.094636,
+   "lng": 128.019358,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10250643275, name '동구지산', ele 655.8",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020032317105856669"
+   ]
+  },
+  {
+   "name": "덕대산",
+   "peakName": null,
+   "hanja": "德大山",
+   "heightM": 811,
+   "region": "김천시 덕전리",
+   "regionSource": "Nominatim reverse geocode of OSM summit node (정상 좌표가 경계선상이면 인접 시군이 나올 수 있음)",
+   "border": null,
+   "ridge": "백두덕대단맥",
+   "lat": 36.087504,
+   "lng": 128.038583,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 6414159040, name '덕대산', ele 811",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020032317105856669"
+   ]
+  },
+  {
+   "name": "고성산",
+   "peakName": null,
+   "hanja": "高城山",
+   "heightM": 482,
+   "region": "김천시 부곡동",
+   "regionSource": "Nominatim reverse geocode of OSM summit node (정상 좌표가 경계선상이면 인접 시군이 나올 수 있음)",
+   "border": null,
+   "ridge": "백두덕대단맥",
+   "lat": 36.106133,
+   "lng": 128.094453,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10250643359, name '고성산', ele 482.3",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020032317105856669"
+   ]
+  },
+  {
+   "name": "백운산",
+   "peakName": "삼방산",
+   "hanja": null,
+   "heightM": 631,
+   "region": "감문면",
+   "regionSource": "article/blog text",
+   "border": "상주시·구미시 경계 인접(기사: 상주시와 경계를 따라 하산)",
+   "ridge": "백두기양지맥",
+   "lat": 36.253288,
+   "lng": 128.131695,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10142074265, name '백운산', ele 631",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020042815410347975"
+   ]
+  },
+  {
+   "name": "백운산",
+   "peakName": "속문산",
+   "hanja": "白雲山(俗門山)",
+   "heightM": 618,
+   "region": "감문면 (송북리 들머리)",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "기양백운단맥",
+   "lat": 36.243864,
+   "lng": 128.138828,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10250637008, name '백운산', ele 617.7",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020042815410347975"
+   ]
+  },
+  {
+   "name": "대양산",
+   "peakName": null,
+   "hanja": "大陽山",
+   "heightM": 309,
+   "region": "감문면 (남전2리)",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "기양백운단맥",
+   "lat": 36.200011,
+   "lng": 128.177978,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10250650885, name '대양산', ele 309.9",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020042815410347975"
+   ]
+  },
+  {
+   "name": "보산",
+   "peakName": null,
+   "hanja": "寶山",
+   "heightM": 311,
+   "region": "감문면 (금라리)",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "기양백운단맥",
+   "lat": 36.218164,
+   "lng": 128.154917,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10250650921, name '보산', ele 311.8",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020042815410347975"
+   ]
+  },
+  {
+   "name": "감문산",
+   "peakName": "취적봉",
+   "hanja": "甘文山(吹笛奉)",
+   "heightM": 320,
+   "region": "개령면",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "기양백운단맥",
+   "lat": 36.1771,
+   "lng": 128.179507,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 6442717357, name '취적봉', ele 300",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020042815410347975"
+   ]
+  },
+  {
+   "name": "미모산",
+   "peakName": null,
+   "hanja": "美貌山",
+   "heightM": 478,
+   "region": "김천시 삼성리",
+   "regionSource": "Nominatim reverse geocode of OSM summit node (정상 좌표가 경계선상이면 인접 시군이 나올 수 있음)",
+   "border": "구미시 선산읍 경계(서남재 들머리)",
+   "ridge": "기양미모단맥",
+   "lat": 36.242806,
+   "lng": 128.186756,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10250636963, name '미모산', ele 478",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020042815410347975"
+   ]
+  },
+  {
+   "name": "우태산",
+   "peakName": null,
+   "hanja": "牛泰山",
+   "heightM": 492,
+   "region": "김천시 삼성리",
+   "regionSource": "Nominatim reverse geocode of OSM summit node (정상 좌표가 경계선상이면 인접 시군이 나올 수 있음)",
+   "border": null,
+   "ridge": "기양미모단맥",
+   "lat": 36.238496,
+   "lng": 128.187351,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 7972724246, name '우태산', ele 490",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020042815410347975"
+   ]
+  },
+  {
+   "name": "광덕산",
+   "peakName": null,
+   "hanja": "廣德山",
+   "heightM": 393,
+   "region": "감문면 (광덕리)",
+   "regionSource": "article/blog text",
+   "border": "구미시 경계 능선 인접",
+   "ridge": "기양미모단맥",
+   "lat": 36.227283,
+   "lng": 128.2158,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 7972716209, name '광덕산', ele 394",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020042815410347975"
+   ]
+  },
+  {
+   "name": "문암봉",
+   "peakName": "문암산",
+   "hanja": "門岩峰",
+   "heightM": 597,
+   "region": "어모면·봉산면 경계",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "백두난함단맥",
+   "lat": 36.176392,
+   "lng": 128.079961,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10250650532, name '문암봉', ele 597.7",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020060215335939269"
+   ]
+  },
+  {
+   "name": "내남산",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 667,
+   "region": "어모면 (능치리·옥계리·도암리)",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "백두난함단맥 인접",
+   "lat": 36.211793,
+   "lng": 128.069358,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10250650946, name '내남산', ele 665.9",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020060215335939269"
+   ]
+  },
+  {
+   "name": "구화산",
+   "peakName": "오파산/구봉산",
+   "hanja": "九華山",
+   "heightM": 328,
+   "region": "김천시 문당동",
+   "regionSource": "Nominatim reverse geocode of OSM summit node (정상 좌표가 경계선상이면 인접 시군이 나올 수 있음)",
+   "border": null,
+   "ridge": "백두난함단맥",
+   "lat": 36.159708,
+   "lng": 128.106392,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10250650527, name '구화산', ele 328.3",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020060215335939269"
+   ]
+  },
+  {
+   "name": "달봉산",
+   "peakName": "청룡산/당산/부춘산",
+   "hanja": null,
+   "heightM": 306,
+   "region": "김천시 교동",
+   "regionSource": "Nominatim reverse geocode of OSM summit node (정상 좌표가 경계선상이면 인접 시군이 나올 수 있음)",
+   "border": null,
+   "ridge": "백두난함단맥",
+   "lat": 36.142269,
+   "lng": 128.108832,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10250643374, name '달봉산', ele 306.3",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020060215335939269"
+   ]
+  },
+  {
+   "name": "애기봉",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 440,
+   "region": "어모면 (옥률리 방면)",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "백두문암여맥",
+   "lat": null,
+   "lng": null,
+   "coordSource": null,
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020060215335939269"
+   ]
+  },
+  {
+   "name": "연석산",
+   "peakName": null,
+   "hanja": "蓮石山",
+   "heightM": 599,
+   "region": "조마면",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "금오연석단맥",
+   "lat": 35.980189,
+   "lng": 128.111058,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10250620528, name '연석봉', ele 599.5",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020062217132183965"
+   ]
+  },
+  {
+   "name": "동대산",
+   "peakName": null,
+   "hanja": "東大山",
+   "heightM": 566,
+   "region": "조마면",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "금오연석단맥",
+   "lat": 35.988636,
+   "lng": 128.11625,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10213644640, name '동대산', ele 566",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020062217132183965"
+   ]
+  },
+  {
+   "name": "신달이산",
+   "peakName": "백계산",
+   "hanja": null,
+   "heightM": 469,
+   "region": "조마면",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "금오연석단맥",
+   "lat": 35.999295,
+   "lng": 128.11582,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10213644639, name '신달이산', ele 469",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020062217132183965"
+   ]
+  },
+  {
+   "name": "불두산",
+   "peakName": null,
+   "hanja": "佛頭山",
+   "heightM": 428,
+   "region": "조마면",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "금오연석단맥",
+   "lat": 36.019509,
+   "lng": 128.104923,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10213642823, name '볼두산', ele 429",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020062217132183965"
+   ]
+  },
+  {
+   "name": "거북바위봉",
+   "peakName": "금오산 제1전망대",
+   "hanja": null,
+   "heightM": 697,
+   "region": "남면 (부상리 들머리)",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "금오지맥(금오산)/금오운남단맥 분기",
+   "lat": null,
+   "lng": null,
+   "coordSource": null,
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020062217132183965"
+   ]
+  },
+  {
+   "name": "절골산",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 330,
+   "region": "남면",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "금오운남단맥",
+   "lat": 36.102011,
+   "lng": 128.228514,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10250643274, name '절골산', ele 330.6",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020062217132183965"
+   ]
+  },
+  {
+   "name": "운남산",
+   "peakName": null,
+   "hanja": "雲南山",
+   "heightM": 376,
+   "region": "남면",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "금오운남단맥",
+   "lat": 36.114493,
+   "lng": 128.211068,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10250643350, name '운남산', ele 382.6",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020062217132183965"
+   ]
+  },
+  {
+   "name": "노고봉",
+   "peakName": "노고산",
+   "hanja": null,
+   "heightM": 364,
+   "region": "남면",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "금오운남단맥",
+   "lat": 36.110167,
+   "lng": 128.203394,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10250643277, name '노고봉', ele 364",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020062217132183965"
+   ]
+  },
+  {
+   "name": "봉화산",
+   "peakName": null,
+   "hanja": "烽火山",
+   "heightM": 349,
+   "region": "남면(혁신도시 인근)",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "금오운남단맥",
+   "lat": null,
+   "lng": null,
+   "coordSource": null,
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020062217132183965"
+   ]
+  },
+  {
+   "name": "문의봉",
+   "peakName": null,
+   "hanja": "文義峰",
+   "heightM": 455,
+   "region": "지례면",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "금오문의단맥",
+   "lat": 35.972158,
+   "lng": 128.033508,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10250619597, name '문의봉', ele 455.7",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020062217132183965"
+   ]
+  },
+  {
+   "name": "문필봉",
+   "peakName": null,
+   "hanja": "文筆峰",
+   "heightM": 482,
+   "region": "지례면",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "금오문의단맥",
+   "lat": null,
+   "lng": null,
+   "coordSource": null,
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020062217132183965"
+   ]
+  },
+  {
+   "name": "궁을산",
+   "peakName": null,
+   "hanja": "弓乙山",
+   "heightM": 365,
+   "region": "지례면 (관덕리)",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "금오궁을단맥",
+   "lat": 35.96017,
+   "lng": 128.01915,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10250619607, name '궁을산', ele 366",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020062217132183965"
+   ]
+  },
+  {
+   "name": "초점산",
+   "peakName": "삼도봉",
+   "hanja": null,
+   "heightM": 1249,
+   "region": "대덕면",
+   "regionSource": "article/blog text",
+   "border": "경남 거창군 경계(기사 명시), 3도 인접",
+   "ridge": "백두대간",
+   "lat": 35.9146,
+   "lng": 127.887962,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 1856167452, name '삼도봉(초점산)', ele 1249",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020072720082380466"
+   ]
+  },
+  {
+   "name": "대덕산",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 1290,
+   "region": "김천시 덕산리",
+   "regionSource": "Nominatim reverse geocode of OSM summit node (정상 좌표가 경계선상이면 인접 시군이 나올 수 있음)",
+   "border": "백두대간 구간(김천시-충북 영동군/전북 무주군 경계, 매일신문 1회 총론)",
+   "ridge": "백두대간",
+   "lat": 35.924789,
+   "lng": 127.883682,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 1856162171, name '대덕산', ele 1290.7",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020072720082380466"
+   ]
+  },
+  {
+   "name": "백수리산",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 1034,
+   "region": "김천시 하대리",
+   "regionSource": "Nominatim reverse geocode of OSM summit node (정상 좌표가 경계선상이면 인접 시군이 나올 수 있음)",
+   "border": "백두대간 구간(김천시-충북 영동군/전북 무주군 경계, 매일신문 1회 총론)",
+   "ridge": "백두대간",
+   "lat": 35.985617,
+   "lng": 127.8947,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10250620557, name '백수리산', ele 1034.2",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020072720082380466"
+   ]
+  },
+  {
+   "name": "박석산",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 1170,
+   "region": "무주군 설천면 미천리",
+   "regionSource": "Nominatim reverse geocode of OSM summit node (정상 좌표가 경계선상이면 인접 시군이 나올 수 있음)",
+   "border": "백두대간 구간(김천시-충북 영동군/전북 무주군 경계, 매일신문 1회 총론)",
+   "ridge": "백두대간",
+   "lat": 35.999362,
+   "lng": 127.87583,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10289835337, name '박석산', ele 1171",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020072720082380466"
+   ]
+  },
+  {
+   "name": "삼도봉",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 1177,
+   "region": "영동군",
+   "regionSource": "Nominatim reverse geocode of OSM summit node (정상 좌표가 경계선상이면 인접 시군이 나올 수 있음)",
+   "border": "김천시·전북 무주군·충북 영동군 3도 경계(기사 명시)",
+   "ridge": "백두대간",
+   "lat": 36.022689,
+   "lng": 127.876777,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 1856167449, name '삼도봉', ele 1177",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020072720082380466"
+   ]
+  },
+  {
+   "name": "감투봉",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 1123,
+   "region": null,
+   "regionSource": null,
+   "border": "백두대간 구간(김천시-충북 영동군/전북 무주군 경계, 매일신문 1회 총론)",
+   "ridge": "백두대간",
+   "lat": null,
+   "lng": null,
+   "coordSource": null,
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020072720082380466"
+   ]
+  },
+  {
+   "name": "푯대봉",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 1172,
+   "region": null,
+   "regionSource": null,
+   "border": "백두대간 구간(김천시-충북 영동군/전북 무주군 경계, 매일신문 1회 총론)",
+   "ridge": "백두대간",
+   "lat": null,
+   "lng": null,
+   "coordSource": null,
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020072720082380466"
+   ]
+  },
+  {
+   "name": "석교산",
+   "peakName": "화주봉",
+   "hanja": null,
+   "heightM": 1207,
+   "region": "영동군 흥덕리",
+   "regionSource": "Nominatim reverse geocode of OSM summit node (정상 좌표가 경계선상이면 인접 시군이 나올 수 있음)",
+   "border": "백두대간 구간(김천시-충북 영동군/전북 무주군 경계, 매일신문 1회 총론)",
+   "ridge": "백두대간",
+   "lat": 36.05205,
+   "lng": 127.928581,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 1856162198, name '석교산', ele 1207",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020072720082380466"
+   ]
+  },
+  {
+   "name": "삼성산",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 984,
+   "region": "영동군 흥덕리",
+   "regionSource": "Nominatim reverse geocode of OSM summit node (정상 좌표가 경계선상이면 인접 시군이 나올 수 있음)",
+   "border": "백두대간 구간(김천시-충북 영동군/전북 무주군 경계, 매일신문 1회 총론)",
+   "ridge": "백두대간",
+   "lat": 36.082843,
+   "lng": 127.961467,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 1859789916, name '삼성산', ele 985.3",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020072720082380466",
+    "https://www.imaeil.com/page/view/2020072723222542617"
+   ]
+  },
+  {
+   "name": "여정봉",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 1032,
+   "region": "영동군 궁촌리",
+   "regionSource": "Nominatim reverse geocode of OSM summit node (정상 좌표가 경계선상이면 인접 시군이 나올 수 있음)",
+   "border": "백두대간 구간(김천시-충북 영동군/전북 무주군 경계, 매일신문 1회 총론)",
+   "ridge": "백두대간",
+   "lat": 36.095111,
+   "lng": 127.957771,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 1859789863, name '여정봉', ele 1020",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020072720082380466",
+    "https://www.imaeil.com/page/view/2020072723222542617"
+   ]
+  },
+  {
+   "name": "형제봉",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 1022,
+   "region": "김천시 운수리",
+   "regionSource": "Nominatim reverse geocode of OSM summit node (정상 좌표가 경계선상이면 인접 시군이 나올 수 있음)",
+   "border": "백두대간 구간(김천시-충북 영동군/전북 무주군 경계, 매일신문 1회 총론)",
+   "ridge": "백두대간",
+   "lat": 36.111251,
+   "lng": 127.967308,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 1859787924, name '형제봉', ele 1044.5",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020072720082380466",
+    "https://www.imaeil.com/page/view/2020072723222542617"
+   ]
+  },
+  {
+   "name": "황악산",
+   "peakName": "비로봉",
+   "hanja": null,
+   "heightM": 1111,
+   "region": "영동군 어촌리",
+   "regionSource": "Nominatim reverse geocode of OSM summit node (정상 좌표가 경계선상이면 인접 시군이 나올 수 있음)",
+   "border": "백두대간 구간(김천시-충북 영동군/전북 무주군 경계, 매일신문 1회 총론)",
+   "ridge": "백두대간",
+   "lat": 36.118049,
+   "lng": 127.966796,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 1859787923, name '황악산', ele 1111",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020072720082380466",
+    "https://www.imaeil.com/page/view/2020072723222542617"
+   ]
+  },
+  {
+   "name": "운수봉",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 668,
+   "region": null,
+   "regionSource": null,
+   "border": null,
+   "ridge": "백두대간",
+   "lat": null,
+   "lng": null,
+   "coordSource": null,
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020072720082380466",
+    "https://www.imaeil.com/page/view/2020072723222542617"
+   ]
+  },
+  {
+   "name": "여시골산",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 620,
+   "region": "김천시 복전리",
+   "regionSource": "Nominatim reverse geocode of OSM summit node (정상 좌표가 경계선상이면 인접 시군이 나올 수 있음)",
+   "border": "백두대간 구간(김천시-충북 영동군/전북 무주군 경계, 매일신문 1회 총론)",
+   "ridge": "백두대간",
+   "lat": 36.140826,
+   "lng": 127.987365,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 1859789849, name '여시골산', ele 621.1",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020072720082380466",
+    "https://www.imaeil.com/page/view/2020072723222542617"
+   ]
+  },
+  {
+   "name": "가성산",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 729,
+   "region": "김천시 신암리",
+   "regionSource": "Nominatim reverse geocode of OSM summit node (정상 좌표가 경계선상이면 인접 시군이 나올 수 있음)",
+   "border": "백두대간 구간(김천시-충북 영동군/전북 무주군 경계, 매일신문 1회 총론)",
+   "ridge": "백두대간",
+   "lat": 36.17723,
+   "lng": 127.984817,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 1859787919, name '가성산', ele 730",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020072720082380466",
+    "https://www.imaeil.com/page/view/2020072723222542617"
+   ]
+  },
+  {
+   "name": "장군봉",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 627,
+   "region": "김천시 광천리",
+   "regionSource": "Nominatim reverse geocode of OSM summit node (정상 좌표가 경계선상이면 인접 시군이 나올 수 있음)",
+   "border": "백두대간 구간(김천시-충북 영동군/전북 무주군 경계, 매일신문 1회 총론)",
+   "ridge": "백두대간",
+   "lat": 36.184131,
+   "lng": 127.978884,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 1859787926, name '장군봉', ele 624.8",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020072720082380466",
+    "https://www.imaeil.com/page/view/2020072723222542617"
+   ]
+  },
+  {
+   "name": "눌의산",
+   "peakName": "선계봉",
+   "hanja": null,
+   "heightM": 743,
+   "region": "김천시 광천리",
+   "regionSource": "Nominatim reverse geocode of OSM summit node (정상 좌표가 경계선상이면 인접 시군이 나올 수 있음)",
+   "border": "백두대간 구간(김천시-충북 영동군/전북 무주군 경계, 매일신문 1회 총론)",
+   "ridge": "백두대간",
+   "lat": 36.19609,
+   "lng": 127.981788,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 1859789834, name '눌의산', ele 744.4",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020072720082380466",
+    "https://www.imaeil.com/page/view/2020072723222542617"
+   ]
+  },
+  {
+   "name": "들기산",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 501,
+   "region": "영동군 작점리",
+   "regionSource": "Nominatim reverse geocode of OSM summit node (정상 좌표가 경계선상이면 인접 시군이 나올 수 있음)",
+   "border": "백두대간 구간(김천시-충북 영동군/전북 무주군 경계, 매일신문 1회 총론)",
+   "ridge": "백두대간",
+   "lat": 36.206031,
+   "lng": 128.02536,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 1859789884, name '들기산', ele 502",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020072720082380466",
+    "https://www.imaeil.com/page/view/2020072723222542617"
+   ]
+  },
+  {
+   "name": "난함산",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 733,
+   "region": "김천시 상금리",
+   "regionSource": "Nominatim reverse geocode of OSM summit node (정상 좌표가 경계선상이면 인접 시군이 나올 수 있음)",
+   "border": "백두대간 구간(김천시-충북 영동군/전북 무주군 경계, 매일신문 1회 총론)",
+   "ridge": "백두대간",
+   "lat": 36.195836,
+   "lng": 128.061864,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10250650879, name '난함산', ele 733.4",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020072720082380466",
+    "https://www.imaeil.com/page/view/2020072723222542617"
+   ]
+  },
+  {
+   "name": "무좌골산",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 473,
+   "region": "김천시 능치리",
+   "regionSource": "Nominatim reverse geocode of OSM summit node (정상 좌표가 경계선상이면 인접 시군이 나올 수 있음)",
+   "border": "백두대간 구간(김천시-충북 영동군/전북 무주군 경계, 매일신문 1회 총론)",
+   "ridge": "백두대간",
+   "lat": 36.21743,
+   "lng": 128.042175,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 1859789870, name '무좌골산', ele 473.7",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020072720082380466",
+    "https://www.imaeil.com/page/view/2020072723222542617"
+   ]
+  },
+  {
+   "name": "용문산",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 710,
+   "region": null,
+   "regionSource": null,
+   "border": "경북 상주시 경계(기사 명시)",
+   "ridge": "백두대간",
+   "lat": null,
+   "lng": null,
+   "coordSource": null,
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020072720082380466",
+    "https://www.imaeil.com/page/view/2020072723222542617",
+    "https://www.imaeil.com/page/view/2020030218151602009"
+   ]
+  },
+  {
+   "name": "국사봉",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 875,
+   "region": "대덕면",
+   "regionSource": "article/blog text",
+   "border": "경남 거창군 경계 산줄기(가야수도지맥, 기사 총론)",
+   "ridge": "가야수도지맥",
+   "lat": 35.894601,
+   "lng": 127.921923,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 6375906022, name '국사봉', ele 875",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020082416123118341"
+   ]
+  },
+  {
+   "name": "봉우산",
+   "peakName": "거말산",
+   "hanja": null,
+   "heightM": 902,
+   "region": null,
+   "regionSource": null,
+   "border": "경남 거창군 경계 산줄기(가야수도지맥, 기사 총론)",
+   "ridge": "가야수도지맥",
+   "lat": null,
+   "lng": null,
+   "coordSource": null,
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020082416123118341"
+   ]
+  },
+  {
+   "name": "시코봉",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 1237,
+   "region": "거창군 중촌리",
+   "regionSource": "Nominatim reverse geocode of OSM summit node (정상 좌표가 경계선상이면 인접 시군이 나올 수 있음)",
+   "border": "경남 거창군 경계 산줄기(가야수도지맥, 기사 총론)",
+   "ridge": "가야수도지맥",
+   "lat": 35.85137,
+   "lng": 127.97031,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10250606755, name '시코봉', ele 1237",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020082416123118341"
+   ]
+  },
+  {
+   "name": "신선봉",
+   "peakName": "수도산 서봉",
+   "hanja": null,
+   "heightM": 1313,
+   "region": "김천시 대리",
+   "regionSource": "Nominatim reverse geocode of OSM summit node (정상 좌표가 경계선상이면 인접 시군이 나올 수 있음)",
+   "border": "경남 거창군 경계 산줄기(가야수도지맥, 기사 총론)",
+   "ridge": "가야수도지맥",
+   "lat": 35.859096,
+   "lng": 127.981593,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10076431088, name '신선봉', ele 1313",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020082416123118341"
+   ]
+  },
+  {
+   "name": "수도산",
+   "peakName": null,
+   "hanja": "修道山",
+   "heightM": 1317,
+   "region": "김천시 수도리",
+   "regionSource": "Nominatim reverse geocode of OSM summit node (정상 좌표가 경계선상이면 인접 시군이 나올 수 있음)",
+   "border": "경남 거창군 경계 산줄기(가야수도지맥, 기사 총론)",
+   "ridge": "가야수도지맥",
+   "lat": 35.857992,
+   "lng": 127.984385,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10076431087, name '수도산', ele 1317.3",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020082416123118341"
+   ]
+  },
+  {
+   "name": "단지봉",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 1327,
+   "region": "증산면 (수도리)",
+   "regionSource": "article/blog text",
+   "border": "경남 거창군 가북면 경계(김천신문 명시)",
+   "ridge": "가야수도지맥",
+   "lat": 35.828953,
+   "lng": 128.011838,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 5750036010, name '단지봉', ele 1327",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020082416123118341",
+    "http://207.kimcheon.co.kr/default/index_view_page.php?idx=57583"
+   ]
+  },
+  {
+   "name": "좌대곡령",
+   "peakName": "좌일곡령",
+   "hanja": null,
+   "heightM": 1257,
+   "region": "김천시 황점리",
+   "regionSource": "Nominatim reverse geocode of OSM summit node (정상 좌표가 경계선상이면 인접 시군이 나올 수 있음)",
+   "border": "경남 거창군 경계 산줄기(가야수도지맥, 기사 총론)",
+   "ridge": "가야수도지맥",
+   "lat": 35.83558,
+   "lng": 128.03143,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10250606712, name '좌일곡령', ele 1258",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020082416123118341"
+   ]
+  },
+  {
+   "name": "용두암봉",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 1125,
+   "region": "거창군 용암리",
+   "regionSource": "Nominatim reverse geocode of OSM summit node (정상 좌표가 경계선상이면 인접 시군이 나올 수 있음)",
+   "border": "경남 거창군 경계 산줄기(가야수도지맥, 기사 총론)",
+   "ridge": "가야수도지맥",
+   "lat": 35.82928,
+   "lng": 128.05076,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10250606665, name '용두암봉', ele 1126",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020082416123118341"
+   ]
+  },
+  {
+   "name": "목통령",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 975,
+   "region": "증산면 (황점마을)",
+   "regionSource": "article/blog text",
+   "border": "경남 거창군 경계 산줄기(가야수도지맥, 기사 총론)",
+   "ridge": "가야수도지맥",
+   "lat": null,
+   "lng": null,
+   "coordSource": null,
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020082416123118341"
+   ]
+  },
+  {
+   "name": "성만재",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 1132,
+   "region": null,
+   "regionSource": null,
+   "border": "가야수도지맥(김천-거창 경계 산줄기, 기사 총론)",
+   "ridge": "가야수도지맥",
+   "lat": null,
+   "lng": null,
+   "coordSource": null,
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020082416123118341"
+   ]
+  },
+  {
+   "name": "삼방산",
+   "peakName": "고드름산",
+   "hanja": null,
+   "heightM": 865,
+   "region": "증산면",
+   "regionSource": "article/blog text",
+   "border": "금오지맥 시 경계(기사 총론)",
+   "ridge": "금오지맥",
+   "lat": 35.929477,
+   "lng": 128.004335,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 6162275147, name '삼방산', ele 864",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020092210505443351"
+   ]
+  },
+  {
+   "name": "염속산",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 870,
+   "region": "성주군 금수강면 무학리",
+   "regionSource": "Nominatim reverse geocode of OSM summit node (정상 좌표가 경계선상이면 인접 시군이 나올 수 있음)",
+   "border": "경북 성주군 경계(1회 기사 명시)",
+   "ridge": "금오지맥",
+   "lat": 35.959589,
+   "lng": 128.118775,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 6324684523, name '염속산', ele 872.5",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020092210505443351",
+    "https://www.imaeil.com/page/view/2020030218151602009"
+   ]
+  },
+  {
+   "name": "염속봉산",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 679,
+   "region": "성주군 금수강면 후평리",
+   "regionSource": "Nominatim reverse geocode of OSM summit node (정상 좌표가 경계선상이면 인접 시군이 나올 수 있음)",
+   "border": "금오지맥 시 경계(기사: 증산면에서 갈라진 산줄기는 시 경계를 이루며)",
+   "ridge": "금오지맥",
+   "lat": 35.96609,
+   "lng": 128.151178,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 9375750491, name '염속봉산', ele 679.2",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020092210505443351"
+   ]
+  },
+  {
+   "name": "연봉산",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 704,
+   "region": "김천시 대방리",
+   "regionSource": "Nominatim reverse geocode of OSM summit node (정상 좌표가 경계선상이면 인접 시군이 나올 수 있음)",
+   "border": "금오지맥 시 경계(기사 총론)",
+   "ridge": "금오지맥",
+   "lat": 35.973383,
+   "lng": 128.150414,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10250620511, name '연봉산', ele 704.9",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020092210505443351"
+   ]
+  },
+  {
+   "name": "글씨산",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 757,
+   "region": null,
+   "regionSource": null,
+   "border": "경북 성주군 경계(1회 기사 명시)",
+   "ridge": "금오지맥",
+   "lat": null,
+   "lng": null,
+   "coordSource": null,
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020092210505443351",
+    "https://www.imaeil.com/page/view/2020030218151602009"
+   ]
+  },
+  {
+   "name": "빌무산",
+   "peakName": "별미산",
+   "hanja": null,
+   "heightM": 783,
+   "region": "김천시 대방리",
+   "regionSource": "Nominatim reverse geocode of OSM summit node (정상 좌표가 경계선상이면 인접 시군이 나올 수 있음)",
+   "border": "경북 성주군 경계(1회 기사 명시)",
+   "ridge": "금오지맥",
+   "lat": 35.993371,
+   "lng": 128.170196,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 6324686338, name '빌무산', ele 768",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020092210505443351",
+    "https://www.imaeil.com/page/view/2020030218151602009"
+   ]
+  },
+  {
+   "name": "칫솔산",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 536,
+   "region": "성주군 벽진면 용암리",
+   "regionSource": "Nominatim reverse geocode of OSM summit node (정상 좌표가 경계선상이면 인접 시군이 나올 수 있음)",
+   "border": "금오지맥 시 경계(기사 총론)",
+   "ridge": "금오지맥",
+   "lat": 36.013999,
+   "lng": 128.173174,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10213574537, name '칫솔봉', ele 536",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020092210505443351"
+   ]
+  },
+  {
+   "name": "고당산",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 603,
+   "region": "감천면",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "금오지맥",
+   "lat": 36.033631,
+   "lng": 128.161203,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10213823878, name '고당산', ele 604",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020092210505443351",
+    "https://www.imaeil.com/page/view/2020062217132183965"
+   ]
+  },
+  {
+   "name": "백마산",
+   "peakName": "갈수산",
+   "hanja": null,
+   "heightM": 716,
+   "region": "농소면 (봉곡2리 들머리)",
+   "regionSource": "article/blog text",
+   "border": "금오지맥 시 경계(기사 총론)",
+   "ridge": "금오지맥",
+   "lat": null,
+   "lng": null,
+   "coordSource": null,
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020092210505443351"
+   ]
+  },
+  {
+   "name": "금오산",
+   "peakName": "서봉",
+   "hanja": null,
+   "heightM": 887,
+   "region": "남면",
+   "regionSource": "article/blog text",
+   "border": "시 경계 능선(기사: 시 경계를 따라 성안전위봉)",
+   "ridge": "금오지맥",
+   "lat": 36.085794,
+   "lng": 128.289236,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 8566325105, name '금오산 서봉', ele None",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020092210505443351"
+   ]
+  },
+  {
+   "name": "금오산",
+   "peakName": "성안전위봉",
+   "hanja": null,
+   "heightM": 852,
+   "region": "남면",
+   "regionSource": "article/blog text",
+   "border": "시 경계 능선(기사: 시 경계를 따라 성안전위봉)",
+   "ridge": "금오지맥",
+   "lat": null,
+   "lng": null,
+   "coordSource": null,
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020092210505443351"
+   ]
+  },
+  {
+   "name": "제석봉",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 512,
+   "region": "아포읍 (제석리)",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "금오지맥",
+   "lat": null,
+   "lng": null,
+   "coordSource": null,
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020092210505443351"
+   ]
+  },
+  {
+   "name": "국사봉",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 480,
+   "region": "아포읍",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "금오지맥",
+   "lat": 36.139488,
+   "lng": 128.252632,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10055870808, name '국사봉', ele 480.2",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020092210505443351"
+   ]
+  },
+  {
+   "name": "효자봉",
+   "peakName": "백마산",
+   "hanja": null,
+   "heightM": 433,
+   "region": "아포읍",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "금오지맥",
+   "lat": null,
+   "lng": null,
+   "coordSource": null,
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020092210505443351"
+   ]
+  },
+  {
+   "name": "송천산",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 397,
+   "region": "아포읍 (송천리)",
+   "regionSource": "article/blog text",
+   "border": "구미시 다봉산으로 이어짐(기사)",
+   "ridge": "금오지맥",
+   "lat": null,
+   "lng": null,
+   "coordSource": null,
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020092210505443351"
+   ]
+  },
+  {
+   "name": "호초당산",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 894,
+   "region": "구성면 (마산리 들머리)",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "백두호초당단맥",
+   "lat": 36.054564,
+   "lng": 127.980094,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10101202620, name '호초당산', ele 894.4",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020102116123623443"
+   ]
+  },
+  {
+   "name": "필산",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 850,
+   "region": "구성면",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "백두호초당단맥",
+   "lat": 36.061443,
+   "lng": 127.976376,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10101202528, name '필산', ele 850",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020102116123623443"
+   ]
+  },
+  {
+   "name": "삼악산",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 490,
+   "region": "구성면 (작내리)",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "백두호초당단맥",
+   "lat": 36.039261,
+   "lng": 128.014828,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10250643110, name '삼악산', ele 490",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020102116123623443"
+   ]
+  },
+  {
+   "name": "주악산",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 342,
+   "region": "지례면",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "백두주악단맥",
+   "lat": 35.9944,
+   "lng": 128.02313,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10250620552, name '주악산', ele 343",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020102116123623443"
+   ]
+  },
+  {
+   "name": "구산",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 368,
+   "region": "지례면",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "백두주악단맥",
+   "lat": 35.98857,
+   "lng": 128.01962,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10250620550, name '구산봉', ele 368",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020102116123623443"
+   ]
+  },
+  {
+   "name": "극락산",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 498,
+   "region": "봉산면",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "백두극락여맥",
+   "lat": null,
+   "lng": null,
+   "coordSource": null,
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020102116123623443"
+   ]
+  },
+  {
+   "name": "만천산",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 256,
+   "region": "봉산면",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "백두극락여맥",
+   "lat": null,
+   "lng": null,
+   "coordSource": null,
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020102116123623443"
+   ]
+  },
+  {
+   "name": "황울산",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 257,
+   "region": "봉산면 (덕천리)",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "백두극락여맥",
+   "lat": null,
+   "lng": null,
+   "coordSource": null,
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020102116123623443"
+   ]
+  },
+  {
+   "name": "망월봉",
+   "peakName": "망봉",
+   "hanja": null,
+   "heightM": 576,
+   "region": "대항면 (직지사)",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "백두신선여맥",
+   "lat": 36.109862,
+   "lng": 127.992721,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10250643294, name '망월봉', ele 580.4",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020102116123623443"
+   ]
+  },
+  {
+   "name": "모성산",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 293,
+   "region": "지례면",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "백두덕대여맥",
+   "lat": null,
+   "lng": null,
+   "coordSource": null,
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020102116123623443"
+   ]
+  },
+  {
+   "name": "중봉",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 413,
+   "region": "지례면",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "백두덕대여맥",
+   "lat": 36.050922,
+   "lng": 128.039748,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10250643156, name '중봉', ele 416.6",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020102116123623443"
+   ]
+  },
+  {
+   "name": "소물산",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 417,
+   "region": "대항면",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "백두덕대여맥",
+   "lat": 36.110459,
+   "lng": 128.036857,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10213863547, name '소물산', ele 418",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020102116123623443"
+   ]
+  },
+  {
+   "name": "매봉산",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 320,
+   "region": "구성면 (흥평리)",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "백두매봉여맥",
+   "lat": 36.068308,
+   "lng": 128.065983,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10250643244, name '매봉산', ele 320.9",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020102116123623443"
+   ]
+  },
+  {
+   "name": "비봉산",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 623,
+   "region": "대덕면 (조룡리 들머리)",
+   "regionSource": "article/blog text",
+   "border": "대덕면·부항면 경계",
+   "ridge": "백두대덕여맥",
+   "lat": null,
+   "lng": null,
+   "coordSource": null,
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020102116123623443"
+   ]
+  },
+  {
+   "name": "월출산",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 755,
+   "region": "증산면",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "금오천상여맥",
+   "lat": null,
+   "lng": null,
+   "coordSource": null,
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020112414595963434"
+   ]
+  },
+  {
+   "name": "석항산",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 1010,
+   "region": "증산면 (장전리)",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "수도독용단맥",
+   "lat": null,
+   "lng": null,
+   "coordSource": null,
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020112414595963434"
+   ]
+  },
+  {
+   "name": "월매산",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 1026,
+   "region": "대덕면 (추량리·대리)",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "수도월매단맥",
+   "lat": 35.878924,
+   "lng": 127.964374,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 6375889857, name '월매산', ele 1027",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020112414595963434"
+   ]
+  },
+  {
+   "name": "가제산",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 682,
+   "region": "조마면",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "금오가제단맥",
+   "lat": null,
+   "lng": null,
+   "coordSource": null,
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020112414595963434"
+   ]
+  },
+  {
+   "name": "송림산",
+   "peakName": null,
+   "hanja": "松林山",
+   "heightM": 560,
+   "region": "지례면·구성면",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "금오송림단맥",
+   "lat": 36.006228,
+   "lng": 128.053323,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 7972716227, name '송림산', ele 561",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020112414595963434"
+   ]
+  },
+  {
+   "name": "까치산",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 279,
+   "region": "지좌동·덕곡동",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "금오까치여맥",
+   "lat": null,
+   "lng": null,
+   "coordSource": null,
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020112414595963434"
+   ]
+  },
+  {
+   "name": "새목양지",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 985,
+   "region": "증산면 (용추폭포 인근)",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": null,
+   "lat": 35.868361,
+   "lng": 128.024973,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 6375866883, name '새목양지', ele 986",
+   "onOfficialList": true,
+   "listEvidence": "매일신문 '김천의 100산 100설'(2020, 김천시 100명산 재지정 목록 기준 연재) 산 목록 박스",
+   "sources": [
+    "https://www.imaeil.com/page/view/2020112414595963434"
+   ]
+  },
+  {
+   "name": "태봉산",
+   "peakName": null,
+   "hanja": null,
+   "heightM": null,
+   "region": "대덕면",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "백두태백단맥(현장 표지 기준)",
+   "lat": 35.946396,
+   "lng": 127.927308,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 13728699197, name '태봉산', ele None",
+   "onOfficialList": false,
+   "listEvidence": "2021~2026 개인 등산 블로그에서 '김천100산/김천100명산 인증' 봉우리로 기록(시 공식 목록 원문 미확인)",
+   "sources": [
+    "https://blog.naver.com/jpp1202/224181209540",
+    "https://blog.naver.com/jpp1202/223126209520"
+   ]
+  },
+  {
+   "name": "수정봉",
+   "peakName": null,
+   "hanja": null,
+   "heightM": null,
+   "region": "대덕면",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": null,
+   "lat": 35.927885,
+   "lng": 127.953851,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 13728699050, name '수정봉', ele None",
+   "onOfficialList": false,
+   "listEvidence": "2021~2026 개인 등산 블로그에서 '김천100산/김천100명산 인증' 봉우리로 기록(시 공식 목록 원문 미확인)",
+   "sources": [
+    "https://blog.naver.com/jpp1202/224181209540"
+   ]
+  },
+  {
+   "name": "우무이산",
+   "peakName": null,
+   "hanja": null,
+   "heightM": null,
+   "region": "대덕면",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": null,
+   "lat": 35.92421,
+   "lng": 127.951344,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 13728699049, name '우무이산', ele None",
+   "onOfficialList": false,
+   "listEvidence": "2021~2026 개인 등산 블로그에서 '김천100산/김천100명산 인증' 봉우리로 기록(시 공식 목록 원문 미확인)",
+   "sources": [
+    "https://blog.naver.com/jpp1202/224181209540",
+    "https://blog.naver.com/jpp1202/224124054813"
+   ]
+  },
+  {
+   "name": "국사봉",
+   "peakName": "대덕면 덕산재 부근",
+   "hanja": null,
+   "heightM": null,
+   "region": "대덕면",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "백두대간 인근",
+   "lat": null,
+   "lng": null,
+   "coordSource": null,
+   "onOfficialList": false,
+   "listEvidence": "2021~2026 개인 등산 블로그에서 '김천100산/김천100명산 인증' 봉우리로 기록(시 공식 목록 원문 미확인)",
+   "sources": [
+    "https://blog.naver.com/jpp1202/224181209540"
+   ]
+  },
+  {
+   "name": "신선봉",
+   "peakName": "대덕면 덕산재 부근",
+   "hanja": null,
+   "heightM": null,
+   "region": "대덕면",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "백두대간 인근",
+   "lat": null,
+   "lng": null,
+   "coordSource": null,
+   "onOfficialList": false,
+   "listEvidence": "2021~2026 개인 등산 블로그에서 '김천100산/김천100명산 인증' 봉우리로 기록(시 공식 목록 원문 미확인)",
+   "sources": [
+    "https://blog.naver.com/jpp1202/224181209540"
+   ]
+  },
+  {
+   "name": "장군봉",
+   "peakName": "대덕면",
+   "hanja": null,
+   "heightM": null,
+   "region": "대덕면",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "수도국사여맥",
+   "lat": null,
+   "lng": null,
+   "coordSource": null,
+   "onOfficialList": false,
+   "listEvidence": "2021~2026 개인 등산 블로그에서 '김천100산/김천100명산 인증' 봉우리로 기록(시 공식 목록 원문 미확인)",
+   "sources": [
+    "https://blog.naver.com/jpp1202/224123460505"
+   ]
+  },
+  {
+   "name": "대왕봉",
+   "peakName": null,
+   "hanja": null,
+   "heightM": null,
+   "region": "대덕면",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "수도국사여맥",
+   "lat": 35.915494,
+   "lng": 127.947795,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 13190019552, name '대왕봉', ele None",
+   "onOfficialList": false,
+   "listEvidence": "2021~2026 개인 등산 블로그에서 '김천100산/김천100명산 인증' 봉우리로 기록(시 공식 목록 원문 미확인)",
+   "sources": [
+    "https://blog.naver.com/jpp1202/224123460505"
+   ]
+  },
+  {
+   "name": "갈미봉",
+   "peakName": null,
+   "hanja": null,
+   "heightM": null,
+   "region": "봉산면",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "백두갈미여맥",
+   "lat": 36.184311,
+   "lng": 128.029219,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10250650850, name '갈미봉', ele 538",
+   "onOfficialList": false,
+   "listEvidence": "2021~2026 개인 등산 블로그에서 '김천100산/김천100명산 인증' 봉우리로 기록(시 공식 목록 원문 미확인)",
+   "sources": [
+    "https://blog.naver.com/jpp1202/224197587071"
+   ]
+  },
+  {
+   "name": "매봉산",
+   "peakName": "봉산면",
+   "hanja": null,
+   "heightM": null,
+   "region": "봉산면",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "백두갈미여맥",
+   "lat": null,
+   "lng": null,
+   "coordSource": null,
+   "onOfficialList": false,
+   "listEvidence": "2021~2026 개인 등산 블로그에서 '김천100산/김천100명산 인증' 봉우리로 기록(시 공식 목록 원문 미확인)",
+   "sources": [
+    "https://blog.naver.com/jpp1202/224197587071"
+   ]
+  },
+  {
+   "name": "깃대봉",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 842.5,
+   "region": "대항면",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": null,
+   "lat": null,
+   "lng": null,
+   "coordSource": null,
+   "onOfficialList": false,
+   "listEvidence": "2021~2026 개인 등산 블로그에서 '김천100산/김천100명산 인증' 봉우리로 기록(시 공식 목록 원문 미확인)",
+   "sources": [
+    "https://blog.naver.com/jpp1202/223932902402"
+   ]
+  },
+  {
+   "name": "청운봉",
+   "peakName": "청운산",
+   "hanja": null,
+   "heightM": null,
+   "region": null,
+   "regionSource": null,
+   "border": null,
+   "ridge": "백두대간 인근(용문산 구간)",
+   "lat": null,
+   "lng": null,
+   "coordSource": null,
+   "onOfficialList": false,
+   "listEvidence": "2021~2026 개인 등산 블로그에서 '김천100산/김천100명산 인증' 봉우리로 기록(시 공식 목록 원문 미확인)",
+   "sources": [
+    "https://blog.naver.com/jpp1202/224107845940",
+    "https://blog.naver.com/jpp1202/223142608110"
+   ]
+  },
+  {
+   "name": "영암산북봉",
+   "peakName": null,
+   "hanja": null,
+   "heightM": null,
+   "region": null,
+   "regionSource": null,
+   "border": "경북 칠곡군/성주군 방면(영암산)",
+   "ridge": null,
+   "lat": null,
+   "lng": null,
+   "coordSource": null,
+   "onOfficialList": false,
+   "listEvidence": "2021~2026 개인 등산 블로그에서 '김천100산/김천100명산 인증' 봉우리로 기록(시 공식 목록 원문 미확인)",
+   "sources": [
+    "https://blog.naver.com/jpp1202/223737590530"
+   ]
+  },
+  {
+   "name": "필봉산",
+   "peakName": null,
+   "hanja": null,
+   "heightM": null,
+   "region": "구성면",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": null,
+   "lat": null,
+   "lng": null,
+   "coordSource": null,
+   "onOfficialList": false,
+   "listEvidence": "2021~2026 개인 등산 블로그에서 '김천100산/김천100명산 인증' 봉우리로 기록(시 공식 목록 원문 미확인)",
+   "sources": [
+    "https://blog.naver.com/jpp1202/223936683810"
+   ]
+  },
+  {
+   "name": "천상봉",
+   "peakName": null,
+   "hanja": null,
+   "heightM": null,
+   "region": "증산면",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "금오지맥",
+   "lat": 35.938327,
+   "lng": 128.051616,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 6324683011, name '천상봉', ele 820",
+   "onOfficialList": false,
+   "listEvidence": "2021~2026 개인 등산 블로그에서 '김천100산/김천100명산 인증' 봉우리로 기록(시 공식 목록 원문 미확인)",
+   "sources": [
+    "https://blog.naver.com/jpp1202/224274734217"
+   ]
+  },
+  {
+   "name": "천룡봉",
+   "peakName": null,
+   "hanja": null,
+   "heightM": null,
+   "region": "대항면",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": "백두운수여맥",
+   "lat": null,
+   "lng": null,
+   "coordSource": null,
+   "onOfficialList": false,
+   "listEvidence": "2021~2026 개인 등산 블로그에서 '김천100산/김천100명산 인증' 봉우리로 기록(시 공식 목록 원문 미확인)",
+   "sources": [
+    "https://blog.naver.com/jpp1202/224184423941"
+   ]
+  },
+  {
+   "name": "밧줄봉",
+   "peakName": null,
+   "hanja": null,
+   "heightM": null,
+   "region": null,
+   "regionSource": null,
+   "border": null,
+   "ridge": "백두덕대단맥",
+   "lat": null,
+   "lng": null,
+   "coordSource": null,
+   "onOfficialList": false,
+   "listEvidence": "2021~2026 개인 등산 블로그에서 '김천100산/김천100명산 인증' 봉우리로 기록(시 공식 목록 원문 미확인)",
+   "sources": [
+    "https://blog.naver.com/jpp1202/224232875659"
+   ]
+  },
+  {
+   "name": "사건점산",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 389.1,
+   "region": "지례면",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": null,
+   "lat": 35.95573,
+   "lng": 128.0196,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10250619583, name '사건점산', ele 396",
+   "onOfficialList": false,
+   "listEvidence": "2021~2026 개인 등산 블로그에서 '김천100산/김천100명산 인증' 봉우리로 기록(시 공식 목록 원문 미확인)",
+   "sources": [
+    "https://blog.naver.com/jpp1202/223898606017",
+    "https://blog.naver.com/leekj5853/222512994494"
+   ]
+  },
+  {
+   "name": "갈비봉",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 369,
+   "region": "어모면",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": null,
+   "lat": 36.232483,
+   "lng": 128.109958,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10250661925, name '갈비봉', ele 369",
+   "onOfficialList": false,
+   "listEvidence": "2021~2026 개인 등산 블로그에서 '김천100산/김천100명산 인증' 봉우리로 기록(시 공식 목록 원문 미확인)",
+   "sources": [
+    "https://blog.naver.com/jpp1202/223935208022"
+   ]
+  },
+  {
+   "name": "태봉",
+   "peakName": "지례면",
+   "hanja": null,
+   "heightM": 265,
+   "region": "지례면",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": null,
+   "lat": null,
+   "lng": null,
+   "coordSource": null,
+   "onOfficialList": false,
+   "listEvidence": "2021~2026 개인 등산 블로그에서 '김천100산/김천100명산 인증' 봉우리로 기록(시 공식 목록 원문 미확인)",
+   "sources": [
+    "https://blog.naver.com/leekj5853/222512994494"
+   ]
+  },
+  {
+   "name": "천왕봉",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 465.2,
+   "region": "지례면",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": null,
+   "lat": null,
+   "lng": null,
+   "coordSource": null,
+   "onOfficialList": false,
+   "listEvidence": "2021~2026 개인 등산 블로그에서 '김천100산/김천100명산 인증' 봉우리로 기록(시 공식 목록 원문 미확인)",
+   "sources": [
+    "https://blog.naver.com/leekj5853/222512994494"
+   ]
+  },
+  {
+   "name": "사발봉",
+   "peakName": null,
+   "hanja": null,
+   "heightM": 577.1,
+   "region": "지례면 (거물리)",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": null,
+   "lat": 35.96156,
+   "lng": 128.04631,
+   "coordSource": "OpenStreetMap natural=peak node (Overpass API, ODbL), id 10250619536, name '사발봉', ele 577",
+   "onOfficialList": false,
+   "listEvidence": "2021~2026 개인 등산 블로그에서 '김천100산/김천100명산 인증' 봉우리로 기록(시 공식 목록 원문 미확인)",
+   "sources": [
+    "https://blog.naver.com/leekj5853/222512994494"
+   ]
+  },
+  {
+   "name": "매봉산",
+   "peakName": "지례면",
+   "hanja": null,
+   "heightM": 479.3,
+   "region": "지례면",
+   "regionSource": "article/blog text",
+   "border": null,
+   "ridge": null,
+   "lat": null,
+   "lng": null,
+   "coordSource": null,
+   "onOfficialList": false,
+   "listEvidence": "2021~2026 개인 등산 블로그에서 '김천100산/김천100명산 인증' 봉우리로 기록(시 공식 목록 원문 미확인)",
+   "sources": [
+    "https://blog.naver.com/leekj5853/222512994494"
+   ]
+  }
+ ]
+}

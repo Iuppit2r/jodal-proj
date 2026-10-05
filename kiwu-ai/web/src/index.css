@@ -1,0 +1,55 @@
+@import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
+@import "tailwindcss";
+
+/* 경인여자대학교 CI 기반 토큰
+   - brand: 홈페이지 포인트 컬러(#fd3148). 흰 글자 대비 3.68:1 → 장식·대형 요소 전용
+   - brand-strong: 버튼·텍스트용(#d4152d, 대비 5.32:1, KWCAG 4.5:1 충족)
+   - navy: 보조 컬러(#003876) */
+@theme {
+  --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-mono: "Pretendard Variable", Pretendard, ui-monospace, monospace;
+
+  --color-brand: #fd3148;
+  --color-brand-strong: #d4152d;
+  --color-brand-deep: #a80f22;
+  --color-brand-soft: #fff1f3;
+  --color-brand-line: #ffd3d9;
+
+  --color-navy: #003876;
+  --color-navy-soft: #eef3fa;
+
+  --color-esg-e: #0f7a4d;
+  --color-esg-s: #1d5fbf;
+  --color-esg-g: #7a4bc2;
+
+  --color-ink: #1f2328;
+  --color-ink-2: #4d5560;
+  --color-ink-3: #6b7380;
+  --color-line: #e3e6ea;
+  --color-canvas: #f6f7f9;
+}
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; }
+  body { @apply bg-white text-ink font-sans antialiased; word-break: keep-all; }
+
+  /* 키보드 포커스 표시 (접근성) */
+  :focus-visible { outline: 3px solid #003876; outline-offset: 2px; }
+}
+
+.sr-only-focusable:not(:focus) { @apply sr-only; }
+
+@keyframes kiwu-pop { from { opacity: 0; transform: translateY(12px) scale(.98); } to { opacity: 1; transform: none; } }
+@keyframes drawer-in { from { transform: translateX(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+.drawer-in { animation: drawer-in .2s ease-out both; }
+@keyframes kiwu-dot { 0%, 80%, 100% { opacity: .25; } 40% { opacity: 1; } }
+.anim-pop { animation: kiwu-pop .22s ease-out both; }
+.typing-dot { animation: kiwu-dot 1.2s infinite ease-in-out; }
+.typing-dot:nth-child(2) { animation-delay: .15s; }
+.typing-dot:nth-child(3) { animation-delay: .3s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-pop, .typing-dot, .drawer-in { animation: none; }
+}
+
+.scroll-thin { scrollbar-width: thin; scrollbar-color: #cfd4da transparent; }

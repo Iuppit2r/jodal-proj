@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>김천 산악 완등 · 앱 목업</title>
+  <link rel="icon" href="app/favicon.png">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <style>
+    :root {
+      --navy: #02347D;
+      --navy-deep: #01245A;
+      --sun-y: #F3B603;
+      --sun-o: #E6800D;
+      --sun-r: #C60023;
+      --bi-cyan: #30A8C0;
+      --text: #191F28;
+      --sub: #4E5968;
+      --mute: #8B95A1;
+      --line: #E2E7EF;
+      --bg: #EEF2F8;
+
+      --screen-w: 390px;
+      --screen-h: 844px;
+      --bezel: 12px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; }
+    body {
+      font-family: 'Pretendard', -apple-system, 'Malgun Gothic', sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(900px 600px at 85% -10%, rgba(243, 182, 3, .18), transparent 60%),
+        radial-gradient(800px 700px at -10% 110%, rgba(48, 168, 192, .16), transparent 60%),
+        var(--bg);
+      overflow: hidden;
+    }
+
+    .stage {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 72px;
+      padding: 24px;
+    }
+
+    /* ── 안내 패널 ───────────────────────────── */
+    .panel { width: 340px; flex-shrink: 0; }
+    .panel .logo { height: 34px; display: block; }
+    .panel h1 {
+      margin: 28px 0 10px;
+      font-size: 34px;
+      line-height: 1.25;
+      letter-spacing: -1.2px;
+      font-weight: 800;
+      color: var(--navy);
+    }
+    .panel p.lead { margin: 0 0 28px; color: var(--sub); font-size: 16px; line-height: 1.6; letter-spacing: -.3px; }
+    .chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 28px; }
+    .chip {
+      font-size: 12px; font-weight: 700; padding: 5px 10px; border-radius: 999px;
+      background: #fff; border: 1px solid var(--line); color: var(--sub);
+    }
+    .chip.sun { background: linear-gradient(90deg, var(--sun-y), var(--sun-o), var(--sun-r)); color: #fff; border: 0; }
+    .chip.navy { background: var(--navy); color: #fff; border: 0; }
+
+    .guide { background: #fff; border-radius: 18px; padding: 18px 20px; margin-bottom: 16px; box-shadow: 0 4px 16px rgba(2, 52, 125, .06); }
+    .guide h2 { margin: 0 0 10px; font-size: 14px; color: var(--navy); letter-spacing: -.2px; }
+    .guide ol { margin: 0; padding-left: 18px; color: var(--sub); font-size: 14px; line-height: 1.75; letter-spacing: -.2px; }
+    .guide b { color: var(--text); }
+
+    .modes-label { font-size: 13px; font-weight: 700; color: var(--mute); margin: 0 0 8px 2px; }
+    .modes {
+      display: flex; padding: 4px; gap: 4px; margin-bottom: 10px;
+      background: #fff; border: 1px solid var(--line); border-radius: 16px;
+    }
+    .mode {
+      flex: 1; height: 44px; border: 0; border-radius: 12px; background: transparent;
+      font: inherit; font-size: 14px; font-weight: 700; color: var(--sub); cursor: pointer;
+      transition: background .15s ease, color .15s ease;
+    }
+    .mode:hover { background: #F4F6FA; }
+    .mode[aria-pressed="true"] { background: var(--navy); color: #fff; }
+    .actions { display: flex; gap: 8px; }
+    .btn {
+      flex: 1; height: 48px; border-radius: 14px; border: 1px solid var(--line);
+      background: #fff; color: var(--navy); font: inherit; font-weight: 700; font-size: 15px;
+      cursor: pointer; transition: transform .08s ease, background .15s ease;
+    }
+    .btn:hover { background: #F7F9FD; }
+    .btn:active { transform: scale(.98); }
+    .btn.primary { background: var(--navy); color: #fff; border-color: var(--navy); }
+    .btn.primary:hover { background: var(--navy-deep); }
+    .foot { margin-top: 22px; display: flex; align-items: center; gap: 12px; }
+    .foot img { height: 30px; }
+    .foot span { font-size: 12px; color: var(--mute); }
+
+    /* ── 폰 목업 (border로 구성) ────────────────── */
+    .phone-wrap { flex-shrink: 0; transform-origin: center center; }
+    .phone {
+      position: relative;
+      width: calc(var(--screen-w) + var(--bezel) * 2);
+      height: calc(var(--screen-h) + var(--bezel) * 2);
+      border: var(--bezel) solid #111318;
+      border-radius: 62px;
+      background: #000;
+      box-shadow:
+        0 0 0 2px #3a3d44,               /* 금속 프레임 */
+        0 0 0 3px #1b1d22,
+        0 40px 80px -20px rgba(1, 36, 90, .45),
+        0 20px 40px -10px rgba(0, 0, 0, .25);
+    }
+    /* 측면 버튼 */
+    .phone::before, .phone::after {
+      content: ''; position: absolute; width: 4px; border-radius: 2px; background: #2a2d33;
+    }
+    .phone::before { left: calc(-1 * var(--bezel) - 6px); top: 170px; height: 64px; box-shadow: 0 84px 0 #2a2d33; }
+    .phone::after { right: calc(-1 * var(--bezel) - 6px); top: 220px; height: 96px; }
+
+    .screen {
+      position: absolute; inset: 0;
+      border-radius: 50px;
+      overflow: hidden;
+      background: #fff;
+    }
+    .screen iframe { position: relative; z-index: 1; width: 100%; height: 100%; border: 0; display: block; background: transparent; }
+
+    /* 다이내믹 아일랜드 */
+    .island {
+      position: absolute; top: 11px; left: 50%; transform: translateX(-50%);
+      width: 124px; height: 36px; border-radius: 20px; background: #000; z-index: 3;
+      pointer-events: none;
+    }
+    /* 상태표시줄 – 배경색에 따라 자동 반전 */
+    .statusbar {
+      position: absolute; top: 0; left: 0; right: 0; height: 47px; z-index: 2;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 4px 30px 0 44px;
+      color: #fff; mix-blend-mode: difference;
+      font-size: 16px; font-weight: 700; letter-spacing: -.2px;
+      pointer-events: none;
+    }
+    .statusbar .icons { display: flex; align-items: center; gap: 6px; }
+    .statusbar svg { display: block; fill: currentColor; }
+    .home-indicator {
+      position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+      width: 136px; height: 5px; border-radius: 3px; background: #fff; mix-blend-mode: difference;
+      z-index: 2; pointer-events: none;
+    }
+
+    .loading {
+      position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 18px; background: #fff; z-index: 0;
+    }
+    .loading img { height: 64px; }
+    .loading .bar { width: 120px; height: 4px; border-radius: 2px; background: var(--line); overflow: hidden; }
+    .loading .bar::after {
+      content: ''; display: block; height: 100%; width: 40%;
+      background: linear-gradient(90deg, var(--sun-y), var(--sun-r));
+      animation: load 1s ease-in-out infinite;
+    }
+    @keyframes load { from { transform: translateX(-100%); } to { transform: translateX(250%); } }
+
+    @media (max-width: 900px) {
+      .panel { display: none; }
+      .stage { gap: 0; padding: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <aside class="panel">
+      <img class="logo" src="app/assets/assets/brand/logo_gimcheon.png" alt="김천시">
+      <h1>김천 산악 완등<br>인증 앱</h1>
+      <p class="lead">김천시 산악 완등 인증시스템 구축 사업<br>사용자 모바일 앱 UI 시안 (Android · iOS)</p>
+      <div class="chips">
+        <span class="chip navy">CI #02347D</span>
+        <span class="chip sun">CI 태양 그라데이션</span>
+        <span class="chip">BI Central Gimcheon</span>
+      </div>
+
+      <div class="guide">
+        <h2>둘러보기</h2>
+        <ol>
+          <li><b>로그인 전</b>: 스플래시 → 권한 안내 → 본인인증</li>
+          <li><b>로그인 후</b>: 하단 가운데 <b>카메라 버튼</b> →<br><b>정상 도착 시뮬레이션</b> 켜고 촬영·등록</li>
+          <li><b>전체 완등</b>: 나의 완등에서 <b>인증 신청서</b> 작성</li>
+        </ol>
+      </div>
+
+      <p class="modes-label">시작 상태</p>
+      <div class="modes" role="group" aria-label="시작 상태">
+        <button class="mode" data-start="">로그인 전</button>
+        <button class="mode" data-start="home">로그인 후</button>
+        <button class="mode" data-start="complete">전체 완등</button>
+      </div>
+      <div class="actions">
+        <button class="btn primary" id="restart">다시 시작</button>
+        <button class="btn" id="fit">화면 맞춤</button>
+      </div>
+
+      <div class="foot">
+        <img src="app/assets/assets/brand/slogan_central_gimcheon.png" alt="Central Gimcheon">
+        <span>샘플 데이터 · 기능 연동 전 시안</span>
+      </div>
+    </aside>
+
+    <div class="phone-wrap" id="phoneWrap">
+      <div class="phone">
+        <div class="screen">
+          <div class="island"></div>
+          <div class="statusbar">
+            <span id="clock">9:41</span>
+            <span class="icons" aria-hidden="true">
+              <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+              <svg width="16" height="12" viewBox="0 0 16 12"><path d="M8 2.2c2.3 0 4.4.9 6 2.4l1.2-1.3A10.5 10.5 0 0 0 8 .4 10.5 10.5 0 0 0 .8 3.3L2 4.6a8.7 8.7 0 0 1 6-2.4Zm0 3.6c1.3 0 2.5.5 3.4 1.3l1.2-1.3A6.8 6.8 0 0 0 8 4 6.8 6.8 0 0 0 3.4 5.8l1.2 1.3c.9-.8 2.1-1.3 3.4-1.3Zm0 3.5c-.5 0-1 .2-1.3.5L8 11.2l1.3-1.4c-.3-.3-.8-.5-1.3-.5Z"/></svg>
+              <svg width="27" height="13" viewBox="0 0 27 13"><rect x=".5" y=".5" width="23" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".5"/><rect x="2" y="2" width="20" height="9" rx="2"/><rect x="24.5" y="4.5" width="1.8" height="4" rx=".9" opacity=".5"/></svg>
+            </span>
+          </div>
+          <div class="loading" id="loading">
+            <img src="app/assets/assets/brand/symbol_mark.png" alt="">
+            <div class="bar"></div>
+          </div>
+          <!-- 로딩 표시는 iframe 뒤에 깔려 있고, Flutter가 첫 화면을 그리면 자연스럽게 가려진다 -->
+          <iframe id="app" title="김천 산악 완등 앱" allowtransparency="true"></iframe>
+          <div class="home-indicator"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const frame = document.getElementById('app');
+    const wrap = document.getElementById('phoneWrap');
+
+    // 시작 상태: 로그인 전('') / 로그인 후('home') / 전체 완등('complete')
+    // 우선순위: 페이지 URL ?start= → 마지막 선택 → 로그인 후
+    const MODES = ['', 'home', 'complete'];
+    const modeButtons = document.querySelectorAll('.mode');
+    let mode = new URLSearchParams(location.search).get('start');
+    if (!MODES.includes(mode)) {
+      try { mode = localStorage.getItem('gc-mock-start'); } catch (e) { mode = null; }
+      if (!MODES.includes(mode)) mode = 'home';
+    }
+
+    function load() {
+      modeButtons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.start === mode)));
+      const q = new URLSearchParams({ device: 'mock', t: Date.now() });
+      if (mode) q.set('start', mode);
+      frame.src = 'app/index.html?' + q;
+      // 공유 가능한 주소로 반영
+      const url = new URL(location.href);
+      url.searchParams.set('start', mode); // ?start= (빈 값) 은 로그인 전
+      history.replaceState(null, '', url);
+      try { localStorage.setItem('gc-mock-start', mode); } catch (e) {}
+    }
+    modeButtons.forEach((b) => b.addEventListener('click', () => { mode = b.dataset.start; load(); }));
+    document.getElementById('restart').addEventListener('click', load);
+    load();
+
+    // 뷰포트 높이에 맞춰 폰 크기 조절
+    let fitOn = true;
+    function fit() {
+      const h = 844 + 24 + 40;
+      const w = 390 + 24 + 20;
+      const s = fitOn ? Math.min(1, (window.innerHeight - 32) / h, (window.innerWidth - 24) / w) : 1;
+      wrap.style.transform = `scale(${s})`;
+      wrap.style.margin = `${-(1 - s) * h / 2}px ${-(1 - s) * w / 2}px`;
+    }
+    document.getElementById('fit').addEventListener('click', (e) => {
+      fitOn = !fitOn;
+      e.target.textContent = fitOn ? '화면 맞춤' : '실제 크기';
+      document.body.style.overflow = fitOn ? 'hidden' : 'auto';
+      fit();
+    });
+    window.addEventListener('resize', fit);
+    fit();
+
+    function tick() {
+      const d = new Date();
+      document.getElementById('clock').textContent = `${d.getHours() % 12 || 12}:${String(d.getMinutes()).padStart(2, '0')}`;
+    }
+    tick(); setInterval(tick, 30000);
+  </script>
+</body>
+</html>

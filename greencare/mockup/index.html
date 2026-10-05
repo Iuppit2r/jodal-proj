@@ -1,0 +1,951 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>그린케어 모바일 UI</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{
+  --g:#0E9F6E; --g2:#0B7F58; --g-soft:#E7F6EF; --g-line:#BFE6D3;
+  --ink:#111827; --ink2:#4B5563; --ink3:#9CA3AF; --line:#E5E7EB; --bg:#F5F7F8; --card:#fff;
+  --warn:#F59E0B; --warn-soft:#FEF3C7; --red:#E5484D; --red-soft:#FDECEC; --blue:#2F6BFF; --blue-soft:#EAF0FF;
+  --navy:#0F2A3D; --stage:#E9EDF1;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic Neo",sans-serif;background:var(--stage);color:var(--ink);-webkit-font-smoothing:antialiased;transition:background .2s}
+body.bg-dark{--stage:#15181C}
+body.bg-green{--stage:#0E3B2C}
+body.bg-white{--stage:#FFFFFF}
+body.bg-soft{--stage:linear-gradient(135deg,#E8F5EE,#EEF2F7)}
+body.bg-soft{background:linear-gradient(135deg,#E3F3EA,#EDF1F7)}
+
+/* ---------- toolbar ---------- */
+.toolbar{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;padding:12px 24px;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid #dde2e7;font-size:13px}
+.toolbar b{font-size:15px;margin-right:6px}
+.toolbar .grp{display:flex;gap:4px;align-items:center}
+.toolbar .grp>span{color:#6b7280;margin-right:4px}
+.toolbar button{border:1px solid #d6dbe1;background:#fff;border-radius:8px;padding:6px 10px;font:inherit;cursor:pointer;color:#374151}
+.toolbar button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.toolbar input[type=range]{width:110px}
+.toolbar .hint{color:#6b7280;margin-left:auto}
+body.capture .toolbar{display:none}
+
+/* ---------- stage ---------- */
+.section{padding:36px 24px 8px}
+.section h2{font-size:22px;letter-spacing:-.02em;color:var(--ink);margin:0 0 4px 8px}
+.section p.sub{font-size:14px;color:#6b7280;margin:0 0 20px 8px}
+body.bg-dark .section h2,body.bg-green .section h2{color:#fff}
+body.bg-dark .section p.sub,body.bg-green .section p.sub{color:#9aa4ae}
+.grid{display:flex;flex-wrap:wrap;gap:40px 36px;padding:0 8px 30px}
+.cell{display:flex;flex-direction:column;align-items:center;gap:14px;zoom:var(--z,.8)}
+.cap{font-size:15px;font-weight:600;color:#374151;text-align:center}
+.cap small{display:block;font-weight:400;color:#6b7280;font-size:13px;margin-top:2px}
+body.bg-dark .cap,body.bg-green .cap{color:#e5e7eb}
+body.bg-dark .cap small,body.bg-green .cap small{color:#9aa4ae}
+body.nolabel .cap,body.nolabel .section h2,body.nolabel .section p.sub{display:none}
+.cell .phone{cursor:zoom-in}
+
+/* solo overlay */
+.solo{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;background:var(--stage)}
+body.bg-soft .solo{background:linear-gradient(135deg,#E3F3EA,#EDF1F7)}
+.solo.on{display:flex}
+.solo .holder{zoom:var(--sz,1)}
+.solo .x{position:fixed;top:16px;right:20px;font-size:13px;color:#6b7280;background:#fff;border:1px solid #ddd;border-radius:8px;padding:6px 10px;cursor:pointer}
+.solo .nav{position:fixed;top:50%;transform:translateY(-50%);font-size:26px;background:#fff;border:1px solid #ddd;border-radius:50%;width:44px;height:44px;cursor:pointer;color:#374151}
+.solo .prev{left:20px}.solo .next{right:20px}
+body.capture .solo .x,body.capture .solo .nav{display:none}
+
+/* ---------- iPhone ---------- */
+.phone{position:relative;width:417px;height:876px;border-radius:66px;padding:12px;background:#1b1c1f;box-shadow:inset 0 0 0 2px #3a3b3f,inset 0 0 0 5px #0a0a0b,0 30px 60px -20px rgba(15,23,42,.35),0 12px 24px -12px rgba(15,23,42,.25)}
+.phone::before{content:"";position:absolute;left:-3px;top:180px;width:3px;height:64px;border-radius:2px 0 0 2px;background:#2a2b2f;box-shadow:0 84px 0 #2a2b2f,0 -60px 0 0 #2a2b2f}
+.phone::after{content:"";position:absolute;right:-3px;top:250px;width:3px;height:100px;border-radius:0 2px 2px 0;background:#2a2b2f}
+.screen{position:relative;width:393px;height:852px;border-radius:54px;overflow:hidden;background:var(--bg);display:flex;flex-direction:column}
+.island{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:124px;height:36px;background:#000;border-radius:20px;z-index:20}
+.status{flex:none;height:54px;padding:19px 30px 0 44px;display:flex;justify-content:space-between;align-items:flex-start;font-weight:600;font-size:16.5px;letter-spacing:-.01em;z-index:5}
+.status .r{display:flex;gap:6px;align-items:center;padding-top:2px}
+.status.lt{color:#fff}
+.homebar{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:136px;height:5px;border-radius:3px;background:#111;z-index:30}
+.homebar.lt{background:#fff}
+.body{flex:1;overflow-y:auto;overflow-x:hidden;scrollbar-width:none}
+.body::-webkit-scrollbar{display:none}
+
+/* ---------- common UI ---------- */
+.nav-h{display:flex;align-items:center;gap:10px;padding:6px 20px 12px;font-size:18px;font-weight:700;letter-spacing:-.02em}
+.nav-h .back{width:24px;height:24px}
+.nav-h .sp{flex:1}
+.pad{padding:0 20px}
+.card{background:var(--card);border-radius:20px;padding:18px;margin:0 16px 12px}
+.row{display:flex;align-items:center;gap:10px}
+.between{display:flex;justify-content:space-between;align-items:center}
+.muted{color:var(--ink2)}.faint{color:var(--ink3)}
+.t12{font-size:12px}.t13{font-size:13px}.t14{font-size:14px}.t15{font-size:15px}.t16{font-size:16px}.t18{font-size:18px}.t20{font-size:20px}.t22{font-size:22px}.t26{font-size:26px}
+.b{font-weight:700}.sb{font-weight:600}
+.mt4{margin-top:4px}.mt8{margin-top:8px}.mt12{margin-top:12px}.mt16{margin-top:16px}
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;padding:4px 9px;border-radius:999px;background:var(--g-soft);color:var(--g2)}
+.chip.gray{background:#F1F3F5;color:var(--ink2)}
+.chip.warn{background:var(--warn-soft);color:#B45309}
+.chip.red{background:var(--red-soft);color:#C2292E}
+.chip.blue{background:var(--blue-soft);color:#2350C8}
+.chip.navy{background:#E6EDF3;color:var(--navy)}
+.btn{display:flex;align-items:center;justify-content:center;height:56px;border-radius:16px;font-size:17px;font-weight:700;background:var(--g);color:#fff;letter-spacing:-.01em}
+.btn.ghost{background:#F1F3F5;color:var(--ink)}
+.btn.dis{background:#E5E7EB;color:#9CA3AF}
+.cta{flex:none;padding:12px 16px 34px;background:linear-gradient(to top,var(--bg) 70%,transparent)}
+.cta.row{gap:8px}
+.cta.row .btn{flex:1}
+.hr{height:1px;background:var(--line);margin:14px 0}
+.sec-t{font-size:17px;font-weight:700;letter-spacing:-.02em;padding:14px 20px 10px;display:flex;justify-content:space-between;align-items:baseline}
+.sec-t a{font-size:13px;color:var(--ink3);font-weight:500}
+.ic{width:20px;height:20px;flex:none}
+.tabbar{flex:none;height:86px;padding:8px 10px 0;background:#fff;border-top:1px solid #EEF0F2;display:flex;justify-content:space-around}
+.tabbar div{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;font-weight:500;color:#A0A6AE;width:64px}
+.tabbar div.on{color:var(--ink)}
+.tabbar svg{width:24px;height:24px}
+.notice{display:flex;gap:8px;align-items:flex-start;font-size:13px;line-height:1.5;color:var(--ink2);background:#F1F3F5;border-radius:14px;padding:12px 14px}
+.notice.g{background:var(--g-soft);color:#14593F}
+.notice.w{background:var(--warn-soft);color:#8A4B06}
+.notice .ic{width:18px;height:18px;margin-top:1px}
+
+/* photos */
+.ph{position:relative;border-radius:12px;overflow:hidden;aspect-ratio:1/1;background:linear-gradient(160deg,#cfd6dd,#9aa5b1)}
+.ph svg.car{position:absolute;left:8%;bottom:14%;width:84%}
+.ph.before::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 30% 70%,rgba(110,80,40,.45) 0 10%,transparent 11%),radial-gradient(circle at 62% 64%,rgba(110,80,40,.4) 0 7%,transparent 8%),radial-gradient(circle at 75% 76%,rgba(110,80,40,.35) 0 6%,transparent 7%),linear-gradient(0deg,rgba(120,90,50,.25),transparent 60%)}
+.ph.after{background:linear-gradient(160deg,#dbe7f0,#a9bccb)}
+.ph.after::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.55) 45%,transparent 55%)}
+.ph .tag{position:absolute;left:6px;top:6px;z-index:2;font-size:10px;font-weight:700;padding:2px 6px;border-radius:6px;background:rgba(17,24,39,.72);color:#fff}
+.ph .meta{position:absolute;left:0;right:0;bottom:0;z-index:2;font-size:9px;color:#fff;padding:10px 6px 4px;background:linear-gradient(transparent,rgba(0,0,0,.55))}
+.slot{border-radius:12px;aspect-ratio:1/1;border:2px dashed #C9CED4;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:#8A919A;font-size:12px;font-weight:600;background:#fff}
+.slot svg{width:26px;height:26px}
+
+/* ---------- consumer ---------- */
+.c-top{display:flex;align-items:center;justify-content:space-between;padding:6px 20px 14px}
+.logo{display:flex;align-items:center;gap:7px;font-size:20px;font-weight:800;letter-spacing:-.04em;color:var(--g2)}
+.logo i{width:26px;height:26px;border-radius:8px;background:var(--g);display:grid;place-items:center}
+.sub-card{margin:0 16px 12px;border-radius:24px;padding:20px;background:linear-gradient(140deg,#0E9F6E,#0A7A6B);color:#fff;position:relative;overflow:hidden}
+.sub-card::after{content:"";position:absolute;right:-40px;top:-40px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.08)}
+.sub-card .bar{height:6px;border-radius:3px;background:rgba(255,255,255,.25);margin-top:14px;overflow:hidden}
+.sub-card .bar i{display:block;height:100%;width:58%;background:#fff;border-radius:3px}
+.ai-box{margin:0 16px 12px;border-radius:20px;padding:16px;background:#fff;border:1.5px solid var(--g-line)}
+.ai-input{margin-top:10px;display:flex;align-items:center;gap:8px;background:#F4F7F6;border-radius:14px;padding:12px 12px 12px 14px;font-size:14px;color:#8A919A}
+.ai-input .send{margin-left:auto;width:32px;height:32px;border-radius:10px;background:var(--g);display:grid;place-items:center}
+.quick{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:0 16px 12px}
+.quick div{background:#fff;border-radius:18px;padding:14px 0 12px;display:flex;flex-direction:column;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--ink)}
+.quick i{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--g-soft)}
+.quick i svg{width:22px;height:22px}
+.bubble{max-width:82%;padding:12px 15px;border-radius:20px;font-size:15px;line-height:1.5}
+.bubble.me{margin-left:auto;background:var(--g);color:#fff;border-bottom-right-radius:6px}
+.field{display:flex;align-items:center;padding:11px 0;border-bottom:1px solid #F1F3F5;font-size:14px}
+.field:last-child{border-bottom:0}
+.field .k{width:74px;color:var(--ink3);flex:none;font-size:13px}
+.field .v{flex:1;font-weight:600}
+.ok{width:18px;height:18px;border-radius:50%;background:var(--g);display:grid;place-items:center;flex:none}
+.ok svg{width:11px;height:11px}
+.ok.w{background:var(--warn)}
+.steps{display:flex;gap:6px;padding:0 20px 16px}
+.steps div{flex:1;text-align:center;font-size:11.5px;font-weight:600;color:var(--ink3)}
+.steps div::before{content:"";display:block;height:4px;border-radius:2px;background:#E1E5E9;margin-bottom:6px}
+.steps div.done::before,.steps div.on::before{background:var(--g)}
+.steps div.on{color:var(--g2)}
+.seg{display:flex;background:#EEF0F2;border-radius:12px;padding:4px}
+.seg div{flex:1;text-align:center;padding:9px 0;border-radius:9px;font-size:14px;font-weight:600;color:var(--ink2)}
+.seg div.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.days div{height:44px;border-radius:12px;display:grid;place-items:center;font-size:15px;font-weight:600;background:#F4F6F7}
+.days div.on{background:var(--g);color:#fff}
+.days div.x{color:#C6CBD1;text-decoration:line-through}
+.slots{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.slots div{border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;font-size:15px;font-weight:600}
+.slots div small{display:block;font-size:12px;font-weight:500;color:var(--ink3);margin-top:2px}
+.slots div.on{border-color:var(--g);background:var(--g-soft);color:var(--g2)}
+.slots div.on small{color:var(--g)}
+.slots div.x{color:#C6CBD1;background:#FAFAFB}
+.slots div.x small{color:#D0D4D9}
+.sched{display:flex;align-items:center;gap:12px;padding:10px 0}
+.sched .n{width:30px;height:30px;border-radius:10px;background:var(--g-soft);color:var(--g2);font-size:12px;font-weight:700;display:grid;place-items:center}
+.tl{position:relative;padding-left:34px}
+.tl .it{position:relative;padding-bottom:20px}
+.tl .it::before{content:"";position:absolute;left:-23px;top:22px;bottom:-2px;width:2px;background:var(--g)}
+.tl .it.pend::before,.tl .it:last-child::before{background:#E1E5E9}
+.tl .it:last-child::before{display:none}
+.tl .dot{position:absolute;left:-32px;top:0;width:20px;height:20px;border-radius:50%;background:var(--g);display:grid;place-items:center}
+.tl .dot svg{width:11px;height:11px}
+.tl .it.cur .dot{background:#fff;border:3px solid var(--g);box-shadow:0 0 0 5px rgba(14,159,110,.18)}
+.tl .it.pend .dot{background:#E1E5E9}
+.tl .it.pend{color:var(--ink3)}
+.av{width:44px;height:44px;border-radius:50%;background:linear-gradient(140deg,#cfe9dc,#9fd3bb);display:grid;place-items:center;font-weight:700;color:var(--g2);flex:none}
+
+/* ---------- worker (high contrast) ---------- */
+.wk{--bg:#F2F4F5}
+.wk-h{background:#0C2A20;color:#fff;padding:0 20px 18px}
+.wk-h .t{font-size:24px;font-weight:800;letter-spacing:-.03em}
+.sync{display:flex;align-items:center;gap:8px;margin:12px 16px;padding:12px 14px;border-radius:14px;background:#FFF4D6;color:#7A4A00;font-size:14px;font-weight:600}
+.map{position:relative;margin:0 16px 12px;height:200px;border-radius:20px;overflow:hidden;background:#E8EEE9}
+.map svg{width:100%;height:100%;display:block}
+.job{background:#fff;border-radius:20px;margin:0 16px 10px;padding:16px;display:flex;gap:14px;border:2px solid transparent}
+.job.cur{border-color:var(--g);box-shadow:0 6px 18px -8px rgba(14,159,110,.5)}
+.job .num{width:34px;height:34px;border-radius:50%;background:#0C2A20;color:#fff;font-weight:800;display:grid;place-items:center;flex:none;font-size:16px}
+.job.done{opacity:.55}
+.job.done .num{background:#9CA3AF}
+.bigbtn{height:64px;border-radius:18px;font-size:19px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--g);color:#fff}
+.bigbtn.dis{background:#D9DDE1;color:#7B838C}
+.hstep{display:flex;margin:0 16px 12px;background:#fff;border-radius:18px;padding:14px 8px}
+.hstep div{flex:1;text-align:center;font-size:12px;font-weight:700;color:#A3AAB2;position:relative}
+.hstep div i{display:grid;place-items:center;margin:0 auto 6px;width:28px;height:28px;border-radius:50%;background:#E5E8EB;color:#fff;font-style:normal;font-size:13px;position:relative;z-index:2}
+.hstep div::before{content:"";position:absolute;top:13px;left:-50%;width:100%;height:3px;background:#E5E8EB;z-index:1}
+.hstep div:first-child::before{display:none}
+.hstep div.done{color:#0C2A20}.hstep div.done i{background:var(--g)}
+.hstep div.done::before,.hstep div.on::before{background:var(--g)}
+.hstep div.on{color:var(--g2)}.hstep div.on i{background:#fff;border:3px solid var(--g);color:var(--g2)}
+.kv{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 16px 12px}
+.kv div{background:#fff;border-radius:16px;padding:14px}
+.kv small{display:block;font-size:12.5px;color:#6B7280;font-weight:600}
+.kv b{font-size:19px;letter-spacing:-.02em}
+.chk{background:#fff;border-radius:18px;margin:0 16px 10px;padding:16px}
+.chk .q{font-size:16.5px;font-weight:700;letter-spacing:-.02em;display:flex;gap:8px}
+.tri{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:12px}
+.tri div{height:48px;border-radius:12px;border:2px solid #E1E5E9;display:grid;place-items:center;font-size:15px;font-weight:700;color:#6B7280}
+.tri div.ok{border-color:var(--g);background:var(--g-soft);color:var(--g2);width:auto;height:48px;border-radius:12px}
+.tri div.na{border-color:#6B7280;background:#F1F3F5;color:#374151}
+.tri div.bad{border-color:var(--red);background:var(--red-soft);color:#C2292E}
+.memo{margin-top:10px;border-radius:12px;background:#FFF7F7;border:1.5px solid #F7C9CA;padding:12px;font-size:14px}
+.prog{height:10px;border-radius:5px;background:#E1E5E9;overflow:hidden}
+.prog i{display:block;height:100%;background:var(--g);border-radius:5px}
+.vch{display:flex;gap:6px;padding:0 16px 12px;overflow:hidden}
+.vch div{flex:none;padding:9px 13px;border-radius:12px;background:#fff;font-size:14px;font-weight:700;color:#6B7280;border:2px solid transparent}
+.vch div.on{border-color:#0C2A20;color:#0C2A20}
+.vch div.dn{color:var(--g2)}
+.reason{display:flex;align-items:center;gap:12px;padding:15px 16px;border-radius:16px;background:#fff;border:2px solid #E5E8EB;margin-bottom:8px;font-size:16px;font-weight:700}
+.reason .rd{width:24px;height:24px;border-radius:50%;border:2px solid #C9CED4;flex:none}
+.reason.on{border-color:var(--g);background:var(--g-soft)}
+.reason.on .rd{border:7px solid var(--g)}
+.reason small{display:block;font-size:13px;font-weight:500;color:#6B7280;margin-top:2px}
+.etype{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:0 16px 14px}
+.etype div{background:#fff;border-radius:16px;padding:14px;border:2px solid #E5E8EB;font-size:16px;font-weight:800;display:flex;align-items:center;gap:10px}
+.etype div i{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:#F1F3F5}
+.etype div.on{border-color:#0C2A20;background:#0C2A20;color:#fff}
+.etype div.on i{background:rgba(255,255,255,.15)}
+
+/* ---------- corporate ---------- */
+.bz{--bg:#F3F5F8}
+.bz-h{padding:4px 20px 14px}
+.sel{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #E1E5EA;border-radius:12px;padding:9px 12px;font-size:14px;font-weight:600}
+.stat4{display:grid;grid-template-columns:repeat(4,1fr);gap:0;background:#fff;border-radius:20px;margin:0 16px 12px;padding:16px 4px}
+.stat4 div{text-align:center;border-right:1px solid #F0F2F5}
+.stat4 div:last-child{border:0}
+.stat4 small{display:block;font-size:12px;color:var(--ink3);font-weight:600}
+.stat4 b{font-size:24px;letter-spacing:-.03em}
+.br-row{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid #F1F3F5}
+.br-row:last-child{border:0}
+.mini{flex:1;height:6px;border-radius:3px;background:#EEF0F3;overflow:hidden;display:flex}
+.mini i{display:block;height:100%}
+.bill{font-size:14px}
+.bill .ln{display:flex;justify-content:space-between;padding:9px 0}
+.bill .ln.sub{padding:6px 0 6px 12px;font-size:13px;color:var(--ink2)}
+.bill .tot{display:flex;justify-content:space-between;align-items:baseline;padding-top:14px;margin-top:6px;border-top:1.5px dashed #D9DEE4}
+.link{color:var(--blue);font-weight:600}
+.bars{display:flex;align-items:flex-end;gap:12px;height:130px;padding:10px 4px 0}
+.bars div{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;color:var(--ink3);font-weight:600;height:100%;justify-content:flex-end}
+.bars div i{width:100%;border-radius:8px 8px 4px 4px;background:#CDEBDD;display:block}
+.bars div.on i{background:var(--g)}
+.bars div.on{color:var(--ink)}
+.basis{display:grid;grid-template-columns:auto 1fr;gap:8px 14px;font-size:13px}
+.basis dt{color:var(--ink3)}
+.basis dd{font-weight:600;text-align:right}
+
+/* lucide round icons + pretendard */
+body{stroke-width:2}
+button,input,textarea,select,kbd{font-family:inherit}
+.ok svg,.tl .dot svg{color:#fff;stroke-width:3.5}
+.send svg{color:#fff;stroke-width:2.6}
+
+/* line-height rhythm */
+body{line-height:1.5}
+.t12,.t13{line-height:1.55}
+.t14,.t15,.t16{line-height:1.5}
+.t18{line-height:1.42}
+.t20,.t22,.t26{line-height:1.36}
+.mt4{margin-top:5px}
+.chip,.pill,.btn,.bigbtn,.tabbar div,.seg div,.days div,.tri div,.status,.sel{line-height:1.2}
+.stat4 b,.kv b,.dates div b{line-height:1.25;display:block}
+.stat4 small,.kv small{margin-bottom:2px}
+.field{padding:12px 0}
+.field .v{line-height:1.45}
+.notice{line-height:1.6}
+.sched{padding:11px 0}
+.tl .it{padding-bottom:22px}
+.slots div small,.opt small,.reason small{margin-top:3px;line-height:1.4}
+.job .t18.b.mt4{margin-top:4px}
+</style>
+</head>
+<body class="bg-soft">
+
+<!-- SVG sprites -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="car" viewBox="0 0 200 80">
+      <path d="M18 56 C18 44 26 40 40 38 L62 22 C68 18 76 16 86 16 L128 16 C138 16 146 19 152 25 L166 38 C180 40 190 44 190 56 L190 60 C190 63 188 64 186 64 L14 64 C12 64 10 62 10 60 Z" fill="#F3F5F7"/>
+      <path d="M66 25 L84 21 L106 21 L106 38 L52 38 Z" fill="#7F93A6"/><path d="M112 21 L130 21 C138 21 143 24 147 28 L156 38 L112 38 Z" fill="#7F93A6"/>
+      <circle cx="50" cy="64" r="13" fill="#2A2F36"/><circle cx="50" cy="64" r="6" fill="#B8C1CB"/>
+      <circle cx="154" cy="64" r="13" fill="#2A2F36"/><circle cx="154" cy="64" r="6" fill="#B8C1CB"/>
+      <rect x="176" y="44" width="10" height="5" rx="2" fill="#FFD27A"/>
+    </symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><svg class="lucide lucide-check" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M20 6 9 17l-5-5"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><svg class="lucide lucide-chevron-left" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m15 18-6-6 6-6"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><svg class="lucide lucide-bell" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M10.268 21a2 2 0 0 0 3.464 0"/> <path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><svg class="lucide lucide-sparkles" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/> <path d="M20 2v4"/> <path d="M22 4h-4"/> <circle cx="4" cy="20" r="2"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><svg class="lucide lucide-arrow-up" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m5 12 7-7 7 7"/> <path d="M12 19V5"/></symbol>
+    <symbol id="i-cal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><svg class="lucide lucide-calendar" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M8 2v3"/> <path d="M16 2v3"/> <rect x="3" y="3" width="18" height="18" rx="2"/> <path d="M3 9h18"/></symbol>
+    <symbol id="i-car" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><svg class="lucide lucide-car" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/> <circle cx="7" cy="17" r="2"/> <path d="M9 17h6"/> <circle cx="17" cy="17" r="2"/></symbol>
+    <symbol id="i-drop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><svg class="lucide lucide-droplet" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><svg class="lucide lucide-map-pin" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/> <circle cx="12" cy="10" r="3"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><svg class="lucide lucide-list" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M3 5h.01"/> <path d="M3 12h.01"/> <path d="M3 19h.01"/> <path d="M8 5h13"/> <path d="M8 12h13"/> <path d="M8 19h13"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><svg class="lucide lucide-house" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/> <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><svg class="lucide lucide-user" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/> <circle cx="12" cy="7" r="4"/></symbol>
+    <symbol id="i-cam" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><svg class="lucide lucide-camera" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z"/> <circle cx="12" cy="13" r="3"/></symbol>
+    <symbol id="i-warn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><svg class="lucide lucide-triangle-alert" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/> <path d="M12 9v4"/> <path d="M12 17h.01"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><svg class="lucide lucide-info" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="12" cy="12" r="10"/> <path d="M12 16v-4"/> <path d="M12 8h.01"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><svg class="lucide lucide-chevron-right" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m9 18 6-6-6-6"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><svg class="lucide lucide-chevron-down" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-cloud" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><svg class="lucide lucide-cloud-upload" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M12 13v8"/> <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/> <path d="m8 17 4-4 4 4"/></symbol>
+    <symbol id="i-rain" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><svg class="lucide lucide-cloud-rain" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/> <path d="M16 14v6"/> <path d="M8 14v6"/> <path d="M12 16v6"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><svg class="lucide lucide-x" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M18 6 6 18"/> <path d="m6 6 12 12"/></symbol>
+    <symbol id="i-redo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><svg class="lucide lucide-rotate-cw" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/> <path d="M21 3v5h-5"/></symbol>
+    <symbol id="i-leaf" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><svg class="lucide lucide-leaf" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M11 20a10 10 0 0010-10 25.9 25.9 0 00-1.04-7.281 1 1 0 00-1.755-.325C15.833 5.5 13 5.5 9.8 6.1A7 7 0 0011 20"/> <path d="M2 21a5 5 0 012.911-4.544C7.613 15.212 8.351 15.24 11 13"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><svg class="lucide lucide-file-text" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/> <path d="M14 2v5a1 1 0 0 0 1 1h5"/> <path d="M10 9H8"/> <path d="M16 13H8"/> <path d="M16 17H8"/></symbol>
+    <symbol id="i-won" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><svg class="lucide lucide-wallet" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/> <path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></symbol>
+    <symbol id="i-receipt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><svg class="lucide lucide-receipt" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M12 17V7"/> <path d="M16 8h-6a2 2 0 0 0 0 4h4a2 2 0 0 1 0 4H8"/> <path d="M4 3a1 1 0 0 1 1-1 1.3 1.3 0 0 1 .7.2l.933.6a1.3 1.3 0 0 0 1.4 0l.934-.6a1.3 1.3 0 0 1 1.4 0l.933.6a1.3 1.3 0 0 0 1.4 0l.933-.6a1.3 1.3 0 0 1 1.4 0l.934.6a1.3 1.3 0 0 0 1.4 0l.933-.6A1.3 1.3 0 0 1 19 2a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1 1.3 1.3 0 0 1-.7-.2l-.933-.6a1.3 1.3 0 0 0-1.4 0l-.934.6a1.3 1.3 0 0 1-1.4 0l-.933-.6a1.3 1.3 0 0 0-1.4 0l-.933.6a1.3 1.3 0 0 1-1.4 0l-.934-.6a1.3 1.3 0 0 0-1.4 0l-.933.6a1.3 1.3 0 0 1-.7.2 1 1 0 0 1-1-1z"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><svg class="lucide lucide-shield-check" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/> <path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-card" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><svg class="lucide lucide-credit-card" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="20" height="14" x="2" y="5" rx="2"/> <line x1="2" x2="22" y1="10" y2="10"/> <path d="M6 14h2"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><svg class="lucide lucide-message-square" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><svg class="lucide lucide-plus" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M5 12h14"/> <path d="M12 5v14"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><svg class="lucide lucide-settings" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/> <circle cx="12" cy="12" r="3"/></symbol>
+  </defs>
+</svg>
+
+<template id="sbar-dark"><div class="status"><span>9:41</span><span class="r"><svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1" fill="currentColor"/><rect x="5" y="5.5" width="3" height="6.5" rx="1" fill="currentColor"/><rect x="10" y="3" width="3" height="9" rx="1" fill="currentColor"/><rect x="15" y="0" width="3" height="12" rx="1" fill="currentColor"/></svg><svg width="16" height="12" viewBox="0 0 16 12"><path d="M8 11.5l2.4-2.6a3.4 3.4 0 00-4.8 0zM3.6 6.9a6.2 6.2 0 018.8 0l1.5-1.6a8.4 8.4 0 00-11.8 0zM.6 3.7a10.6 10.6 0 0114.8 0L16 3a11.5 11.5 0 00-16 0z" fill="currentColor"/></svg><svg width="27" height="13" viewBox="0 0 27 13"><rect x=".5" y=".5" width="23" height="12" rx="3.5" fill="none" stroke="currentColor" stroke-width="1" opacity=".4"/><rect x="2" y="2" width="20" height="9" rx="2" fill="currentColor"/><path d="M25 4.5v4c.8-.3 1.3-1 1.3-2s-.5-1.7-1.3-2z" fill="currentColor" opacity=".45"/></svg></span></div></template>
+
+<div class="toolbar">
+  <b>그린케어 모바일 UI</b>
+  <div class="grp" id="f-ch"><span>채널</span>
+    <button data-v="all" class="on">전체</button><button data-v="c">소비자</button><button data-v="w">작업자</button><button data-v="b">법인고객</button>
+  </div>
+  <div class="grp" id="f-bg"><span>배경</span>
+    <button data-v="bg-soft" class="on">그라데이션</button><button data-v="bg-white">흰색</button><button data-v="bg-dark">다크</button><button data-v="bg-green">그린</button>
+  </div>
+  <div class="grp"><span>크기</span><input type="range" id="zoom" min="0.5" max="1.2" step="0.05" value="0.8"></div>
+  <div class="grp"><button id="t-label">라벨 숨기기</button></div>
+  <span class="hint">폰 클릭 → 단독 보기 · <kbd>C</kbd> 캡처 모드(툴바 숨김) · ←/→ 이동 · Esc 닫기</span>
+</div>
+
+<!-- ================= 소비자 ================= -->
+<section class="section" data-ch="c">
+  <h2>소비자 채널 · 반응형 웹 / Android·iOS 앱</h2>
+  <p class="sub">정기 구독과 1회 출장세차 신청 흐름 분리 · AI 자연어 신청 + 운영규칙 재검증 · 작업상태 5단계 타임라인</p>
+  <div class="grid">
+
+    <!-- C1 홈 -->
+    <div class="cell"><div class="phone"><div class="screen">
+      <div class="island"></div><div data-sbar></div>
+      <div class="body">
+        <div class="c-top">
+          <div class="logo"><i><svg width="16" height="16"><use href="#i-drop" style="color:#fff"/></svg></i>그린케어</div>
+          <svg class="ic" style="width:26px;height:26px"><use href="#i-bell"/></svg>
+        </div>
+        <div class="pad t22 b" style="letter-spacing:-.03em;line-height:1.35;margin-bottom:16px">김지현님,<br>다음 세차는 <span style="color:var(--g)">토요일</span>이에요</div>
+        <div class="sub-card">
+          <div class="between"><span class="t13" style="opacity:.85">스탠다드 정기세차 · 격주</span><span class="chip" style="background:rgba(255,255,255,.2);color:#fff">구독중</span></div>
+          <div class="t22 b mt8" style="letter-spacing:-.02em">10월 4일 (토) 10:00–12:00</div>
+          <div class="t14 mt4" style="opacity:.9">12가 3456 · 아이오닉 5 · 자택 지상주차장</div>
+          <div class="bar"><i></i></div>
+          <div class="between t12 mt8" style="opacity:.85"><span>이번 구독 7 / 12회차</span><span>다음 결제 10.11</span></div>
+        </div>
+        <div class="ai-box">
+          <div class="row t15 b"><svg class="ic" style="color:var(--g)"><use href="#i-spark"/></svg>말로 신청하기 <span class="chip" style="margin-left:auto">AI</span></div>
+          <div class="ai-input">“다음 주 화요일 오전에 회사에서 세차해줘”<span class="send"><svg width="18" height="18"><use href="#i-send"/></svg></span></div>
+        </div>
+        <div class="quick">
+          <div><i><svg style="color:var(--g2)"><use href="#i-cal"/></svg></i>정기구독</div>
+          <div><i><svg style="color:var(--g2)"><use href="#i-pin"/></svg></i>출장세차</div>
+          <div><i><svg style="color:var(--g2)"><use href="#i-car"/></svg></i>내 차량</div>
+          <div><i><svg style="color:var(--g2)"><use href="#i-list"/></svg></i>이용내역</div>
+        </div>
+        <div class="sec-t">진행 중인 작업 <a>전체보기</a></div>
+        <div class="card row" style="gap:14px">
+          <div class="ph before" style="width:64px;flex:none;border-radius:14px"><svg class="car"><use href="#car"/></svg></div>
+          <div style="flex:1">
+            <div class="row"><span class="chip">작업중</span><span class="t12 faint">10:24 시작</span></div>
+            <div class="t15 b mt4">출장세차 · 외부+실내</div>
+            <div class="t13 muted">박준호 매니저 · 예상 완료 11:20</div>
+          </div>
+          <svg class="ic faint"><use href="#i-chev"/></svg>
+        </div>
+      </div>
+      <div class="tabbar">
+        <div class="on"><svg><use href="#i-home"/></svg>홈</div>
+        <div><svg><use href="#i-cal"/></svg>예약</div>
+        <div><svg><use href="#i-list"/></svg>이력</div>
+        <div><svg><use href="#i-bell"/></svg>알림</div>
+        <div><svg><use href="#i-user"/></svg>내 정보</div>
+      </div>
+      <div class="homebar"></div>
+    </div></div><div class="cap">홈<small>구독 현황 · AI 신청 진입 · 진행 작업</small></div></div>
+
+    <!-- C2 AI 신청 -->
+    <div class="cell"><div class="phone"><div class="screen" style="--bg:#F4F6F5">
+      <div class="island"></div><div data-sbar></div>
+      <div class="nav-h"><svg class="back"><use href="#i-back"/></svg>AI로 신청하기<span class="sp"></span><span class="chip">AI 초안</span></div>
+      <div class="body">
+        <div class="pad" style="padding-bottom:14px"><div class="bubble me">다음 주 화요일 오전에 회사 지하주차장에서 아이오닉 세차 부탁해요. 실내도 같이요!</div></div>
+        <div class="card" style="padding:16px 18px 8px">
+          <div class="row t15 b"><svg class="ic" style="color:var(--g)"><use href="#i-spark"/></svg>신청서 초안을 만들었어요</div>
+          <div class="t13 muted mt4">틀린 항목은 눌러서 바로 고칠 수 있어요</div>
+          <div class="hr" style="margin:12px 0 2px"></div>
+          <div class="field"><span class="k">서비스</span><span class="v">1회 출장세차 · 외부+실내</span><span class="ok"><svg><use href="#i-check"/></svg></span></div>
+          <div class="field"><span class="k">차량</span><span class="v">12가 3456 · 아이오닉 5 <span class="chip gray">등록차량</span></span><span class="ok"><svg><use href="#i-check"/></svg></span></div>
+          <div class="field"><span class="k">희망일시</span><span class="v">10월 13일 (화) 오전</span><span class="ok"><svg><use href="#i-check"/></svg></span></div>
+          <div class="field"><span class="k">장소</span><span class="v">강남구 테헤란로 152<br><span class="t12 muted">지하 2층 · 회사(최근 주소)</span></span><span class="ok"><svg><use href="#i-check"/></svg></span></div>
+        </div>
+        <div class="card">
+          <div class="row t15 b"><svg class="ic" style="color:var(--g2)"><use href="#i-shield"/></svg>운영규칙 확인</div>
+          <div class="row t14 mt12"><span class="ok"><svg><use href="#i-check"/></svg></span>서비스 가능 지역이에요</div>
+          <div class="row t14 mt8"><span class="ok"><svg><use href="#i-check"/></svg></span>요금 59,000원 (외부+실내 · 중형)</div>
+          <div class="row t14 mt8"><span class="ok w"><svg><use href="#i-check"/></svg></span><span>09:00–11:00은 <b>마감</b>되어 대체 시간을 골라 주세요</span></div>
+          <div class="row mt12" style="gap:6px;flex-wrap:wrap">
+            <span class="chip" style="padding:8px 12px;font-size:13px;background:var(--g);color:#fff">10:00–12:00</span>
+            <span class="chip gray" style="padding:8px 12px;font-size:13px">13:00–15:00</span>
+            <span class="chip gray" style="padding:8px 12px;font-size:13px">10.14(수) 09:00</span>
+          </div>
+        </div>
+        <div class="pad" style="padding-bottom:10px"><div class="notice"><svg class="ic"><use href="#i-info"/></svg>AI는 신청서 작성만 도와드려요. 고객님이 확인하신 뒤에 예약이 확정됩니다.</div></div>
+      </div>
+      <div class="cta row"><div class="btn ghost" style="flex:.6">수정</div><div class="btn">확인하고 결제하기</div></div>
+      <div class="homebar"></div>
+    </div></div><div class="cap">AI 자연어 신청<small>항목 자동 채움 → 운영규칙 재검증 → 고객 확인 후 확정</small></div></div>
+
+    <!-- C3 정기구독 일정 -->
+    <div class="cell"><div class="phone"><div class="screen" style="--bg:#fff">
+      <div class="island"></div><div data-sbar></div>
+      <div class="nav-h"><svg class="back"><use href="#i-back"/></svg>정기구독 신청</div>
+      <div class="steps"><div class="done">차량</div><div class="on">일정</div><div>장소</div><div>확인</div><div>결제</div></div>
+      <div class="body">
+        <div style="margin:0 16px 18px;padding:14px 16px;border-radius:16px;background:var(--g-soft)" class="between">
+          <div><div class="t12 sb" style="color:var(--g2)">선택한 상품</div><div class="t16 b mt4">스탠다드 정기세차 · 월 2회</div></div>
+          <div class="t16 b">79,000원<span class="t12 muted" style="font-weight:500">/월</span></div>
+        </div>
+        <div class="pad">
+          <div class="t15 b" style="margin-bottom:10px">주기</div>
+          <div class="seg"><div>매주</div><div class="on">격주</div><div>월 1회</div></div>
+          <div class="t15 b" style="margin:22px 0 10px">요일</div>
+          <div class="days"><div>월</div><div>화</div><div class="x">수</div><div>목</div><div>금</div><div class="on">토</div><div class="x">일</div></div>
+          <div class="t12 faint mt8">수·일요일은 이 지역 운영일이 아니에요</div>
+          <div class="t15 b" style="margin:22px 0 10px">시간대</div>
+          <div class="slots">
+            <div>08:00–10:00<small>여유</small></div>
+            <div class="on">10:00–12:00<small>선택됨</small></div>
+            <div class="x">12:00–14:00<small>마감</small></div>
+            <div>14:00–16:00<small>2자리 남음</small></div>
+            <div>16:00–18:00<small>여유</small></div>
+          </div>
+          <div class="notice w mt16"><svg class="ic"><use href="#i-info"/></svg><span>일정 변경·취소는 작업일 <b>2일 전 18:00</b>까지 가능해요</span></div>
+        </div>
+      </div>
+      <div class="cta"><div class="btn">다음</div></div>
+      <div class="homebar"></div>
+    </div></div><div class="cap">정기구독 · 일정 선택<small>주기·요일·시간대 · 관리자 운영설정 규칙 노출</small></div></div>
+
+    <!-- C4 구독 확인 -->
+    <div class="cell"><div class="phone"><div class="screen" style="--bg:#F4F6F7">
+      <div class="island"></div><div data-sbar></div>
+      <div class="nav-h"><svg class="back"><use href="#i-back"/></svg>신청 내용 확인</div>
+      <div class="steps"><div class="done">차량</div><div class="done">일정</div><div class="done">장소</div><div class="on">확인</div><div>결제</div></div>
+      <div class="body">
+        <div class="card">
+          <div class="between"><span class="t15 b">회차 일정 미리보기</span><span class="t13 faint">격주 토 10–12시</span></div>
+          <div class="hr" style="margin:10px 0 2px"></div>
+          <div class="sched"><span class="n">1회</span><span class="t15 sb" style="flex:1">10월 11일 (토)</span><span class="chip">첫 방문</span></div>
+          <div class="sched"><span class="n">2회</span><span class="t15 sb" style="flex:1">10월 25일 (토)</span></div>
+          <div class="sched"><span class="n">3회</span><span class="t15 sb" style="flex:1">11월 8일 (토)</span><span class="chip blue">결제</span></div>
+          <div class="sched"><span class="n">4회</span><span class="t15 sb" style="flex:1">11월 22일 (토)</span></div>
+        </div>
+        <div class="card">
+          <div class="field"><span class="k">차량</span><span class="v">12가 3456 · 아이오닉 5</span></div>
+          <div class="field"><span class="k">장소</span><span class="v">마포구 월드컵북로 21 지상</span></div>
+          <div class="field"><span class="k">결제수단</span><span class="v">신한카드 ****1234</span></div>
+          <div class="field"><span class="k">다음 결제일</span><span class="v">10월 11일 · 79,000원</span></div>
+        </div>
+        <div class="card">
+          <div class="between t15 b">해지·환불 기준<svg class="ic faint"><use href="#i-down"/></svg></div>
+          <div class="t13 muted mt8" style="line-height:1.6">· 다음 결제일 전날까지 해지하면 추가 결제되지 않아요<br>· 이미 결제한 달의 미이용 회차는 회차 단가 기준으로 환불돼요<br>· 기상예외로 연기된 회차는 일정을 다시 잡아드려요</div>
+        </div>
+        <div class="pad row t14 sb" style="padding:4px 22px 12px"><span class="ok" style="width:22px;height:22px"><svg><use href="#i-check"/></svg></span>정기결제 및 해지·환불 기준에 동의합니다</div>
+      </div>
+      <div class="cta"><div class="btn">79,000원 정기결제 등록</div></div>
+      <div class="homebar"></div>
+    </div></div><div class="cap">구독 신청 확인<small>회차 미리보기 · 다음 결제일 · 해지·환불 기준 고지</small></div></div>
+
+    <!-- C5 작업상태 -->
+    <div class="cell"><div class="phone"><div class="screen" style="--bg:#F4F6F7">
+      <div class="island"></div><div data-sbar></div>
+      <div class="nav-h"><svg class="back"><use href="#i-back"/></svg>작업 진행 현황</div>
+      <div class="body">
+        <div class="card">
+          <div class="row" style="gap:12px"><div class="av">박</div><div style="flex:1"><div class="t16 b">박준호 매니저</div><div class="t13 muted">출장세차 · 외부+실내</div></div><span class="chip" style="font-size:13px;padding:6px 11px">작업중</span></div>
+          <div class="hr"></div>
+          <div class="between"><span class="t13 muted">예상 완료</span><span class="t20 b" style="color:var(--g2)">11:20</span></div>
+        </div>
+        <div class="card" style="padding:20px 18px 6px">
+          <div class="tl">
+            <div class="it"><span class="dot"><svg><use href="#i-check"/></svg></span><div class="t15 b">배정 완료</div><div class="t12 faint">10.04 09:12 · 담당 작업자 확정</div></div>
+            <div class="it"><span class="dot"><svg><use href="#i-check"/></svg></span><div class="t15 b">이동 중</div><div class="t12 faint">10:02 출발</div></div>
+            <div class="it"><span class="dot"><svg><use href="#i-check"/></svg></span><div class="t15 b">도착</div><div class="t12 faint">10:18 · 위치 확인 완료</div></div>
+            <div class="it cur pend" style="color:var(--ink)"><span class="dot"></span><div class="t15 b" style="color:var(--g2)">작업 중</div><div class="t12 faint">10:24 시작 · 안전점검 완료</div></div>
+            <div class="it pend"><span class="dot"></span><div class="t15 b">완료</div><div class="t12">전·후 사진과 함께 알려드릴게요</div></div>
+          </div>
+        </div>
+        <div class="sec-t" style="padding-top:6px">작업 사진 <a>작업 전 3 · 작업 후 0</a></div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 16px 12px">
+          <div class="ph before"><span class="tag">전</span><svg class="car"><use href="#car"/></svg></div>
+          <div class="ph before" style="background:linear-gradient(200deg,#cfd6dd,#8f9ba8)"><span class="tag">전</span><svg class="car" style="transform:scaleX(-1)"><use href="#car"/></svg></div>
+          <div class="slot" style="background:#fff"><svg><use href="#i-cam"/></svg>작업 후</div>
+        </div>
+      </div>
+      <div class="homebar"></div>
+    </div></div><div class="cap">작업상태 추적<small>배정·이동·도착·작업중·완료 5단계 · 전후 사진</small></div></div>
+
+    <!-- C6 이력 -->
+    <div class="cell"><div class="phone"><div class="screen" style="--bg:#F4F6F7">
+      <div class="island"></div><div data-sbar></div>
+      <div class="nav-h">이용 이력<span class="sp"></span></div>
+      <div class="pad row" style="gap:6px;padding-bottom:14px">
+        <span class="chip" style="background:var(--ink);color:#fff;padding:7px 12px;font-size:13px">전체 차량</span>
+        <span class="chip gray" style="padding:7px 12px;font-size:13px;background:#fff">최근 3개월 <svg width="14" height="14"><use href="#i-down"/></svg></span>
+      </div>
+      <div class="body">
+        <div class="card">
+          <div class="between"><span class="t13 faint">09.27 (토) · 정기 6회차</span><span class="chip">완료</span></div>
+          <div class="t16 b mt4">스탠다드 정기세차</div>
+          <div class="t13 muted">12가 3456 · 박준호 매니저</div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:12px">
+            <div class="ph before"><span class="tag">전</span><svg class="car"><use href="#car"/></svg></div>
+            <div class="ph before" style="background:linear-gradient(200deg,#cfd6dd,#8f9ba8)"><span class="tag">전</span><svg class="car" style="transform:scaleX(-1)"><use href="#car"/></svg></div>
+            <div class="ph after"><span class="tag" style="background:var(--g)">후</span><svg class="car"><use href="#car"/></svg></div>
+            <div class="ph after" style="background:linear-gradient(200deg,#dbe7f0,#a2b6c6)"><span class="tag" style="background:var(--g)">후</span><svg class="car" style="transform:scaleX(-1)"><use href="#car"/></svg></div>
+          </div>
+          <div class="hr" style="margin:12px 0 10px"></div>
+          <div class="between t13"><span class="muted">체크리스트 14/14 · 추가작업 없음</span><span class="link">증빙 보기</span></div>
+        </div>
+        <div class="card">
+          <div class="between"><span class="t13 faint">09.13 (토) · 정기 5회차</span><span class="chip warn">기상예외 → 09.14 완료</span></div>
+          <div class="t16 b mt4">스탠다드 정기세차</div>
+          <div class="t13 muted">강우로 일정 재지정 · 추가 비용 없음</div>
+        </div>
+        <div class="card">
+          <div class="between"><span class="t13 faint">08.30 (토) · 출장 1회</span><span class="chip gray">환불완료</span></div>
+          <div class="t16 b mt4">출장세차 · 외부</div>
+          <div class="between mt8 t13"><span class="muted">취소 요청 08.28 → 환불 08.29</span><span class="b">39,000원</span></div>
+        </div>
+        <div class="card">
+          <div class="between"><span class="t13 faint">09.11 · 정기결제</span><span class="chip blue">결제완료</span></div>
+          <div class="between mt4"><span class="t16 b">9월 구독료</span><span class="t16 b">79,000원</span></div>
+        </div>
+      </div>
+      <div class="tabbar">
+        <div><svg><use href="#i-home"/></svg>홈</div>
+        <div><svg><use href="#i-cal"/></svg>예약</div>
+        <div class="on"><svg><use href="#i-list"/></svg>이력</div>
+        <div><svg><use href="#i-bell"/></svg>알림</div>
+        <div><svg><use href="#i-user"/></svg>내 정보</div>
+      </div>
+      <div class="homebar"></div>
+    </div></div><div class="cap">작업·결제 이력<small>차량·기간별 조회 · 증빙 사진 · 예외·환불 내역</small></div></div>
+
+  </div>
+</section>
+
+<!-- ================= 작업자 ================= -->
+<section class="section" data-ch="w">
+  <h2>현장 작업자 채널 · 모바일 앱</h2>
+  <p class="sub">고대비·큰 글씨·넓은 터치 영역 · 다음 단계 버튼 하나만 활성화 · 안전점검/필수 사진 미충족 시 진행 불가 · 오프라인 임시저장</p>
+  <div class="grid">
+
+    <!-- W1 오늘 작업 -->
+    <div class="cell"><div class="phone"><div class="screen wk">
+      <div class="island"></div>
+      <div style="background:#0C2A20"><div data-sbar="lt"></div></div>
+      <div class="wk-h">
+        <div class="between"><span class="t14" style="opacity:.75">10월 4일 (토) · 박준호</span><svg class="ic" style="width:24px;height:24px"><use href="#i-bell"/></svg></div>
+        <div class="t mt8">오늘 작업 5건</div>
+        <div class="row t14 mt4" style="opacity:.85;gap:14px"><span>완료 1</span><span>진행 1</span><span>대기 3</span></div>
+      </div>
+      <div class="body">
+        <div class="sync"><svg class="ic"><use href="#i-cloud"/></svg>전송 대기 2건 · 연결되면 자동 전송</div>
+        <div class="map">
+          <svg viewBox="0 0 361 200" preserveAspectRatio="xMidYMid slice">
+            <rect width="361" height="200" fill="#E6ECE7"/>
+            <path d="M0 60 H361 M0 140 H361 M90 0 V200 M220 0 V200 M300 0 V200" stroke="#fff" stroke-width="10"/>
+            <path d="M0 100 C80 90 140 120 361 80" stroke="#F7E3A6" stroke-width="12" fill="none"/>
+            <rect x="110" y="10" width="90" height="40" rx="6" fill="#D6E4D9"/><rect x="235" y="150" width="55" height="40" rx="6" fill="#D6E4D9"/>
+            <path d="M40 160 L90 140 L150 100 L220 60 L300 112 L330 40" stroke="#0E9F6E" stroke-width="4" fill="none" stroke-dasharray="2 7" stroke-linecap="round"/>
+            <g font-family="Pretendard Variable, Pretendard, sans-serif" font-weight="800" font-size="13" text-anchor="middle">
+              <circle cx="40" cy="160" r="13" fill="#9CA3AF"/><text x="40" y="165" fill="#fff">1</text>
+              <circle cx="150" cy="100" r="16" fill="#0E9F6E" stroke="#fff" stroke-width="3"/><text x="150" y="105" fill="#fff">2</text>
+              <circle cx="220" cy="60" r="13" fill="#0C2A20"/><text x="220" y="65" fill="#fff">3</text>
+              <circle cx="300" cy="112" r="13" fill="#0C2A20"/><text x="300" y="117" fill="#fff">4</text>
+              <circle cx="330" cy="40" r="13" fill="#0C2A20"/><text x="330" y="45" fill="#fff">5</text>
+            </g>
+          </svg>
+        </div>
+        <div class="job done"><span class="num">1</span><div style="flex:1"><div class="between"><span class="t13 b">08:00</span><span class="chip gray">검수대기</span></div><div class="t18 b mt4">(주)한빛물류 강서지점</div><div class="t14 muted">법인 정기 · 차량 12대</div></div></div>
+        <div class="job cur"><span class="num" style="background:var(--g)">2</span><div style="flex:1"><div class="between"><span class="t13 b">10:00–12:00</span><span class="chip">작업중</span></div><div class="t18 b mt4">김지현 고객</div><div class="t14 muted">출장 · 아이오닉 5 · 외부+실내</div></div></div>
+        <div class="job"><span class="num">3</span><div style="flex:1"><div class="between"><span class="t13 b">13:00</span><span class="chip navy">법인 정기</span></div><div class="t18 b mt4">그린모빌리티 상암센터</div><div class="t14 muted">차량 8대 · 경비실 출입증 수령</div></div></div>
+      </div>
+      <div class="tabbar" style="height:86px">
+        <div class="on"><svg><use href="#i-list"/></svg>오늘</div>
+        <div><svg><use href="#i-cal"/></svg>주간</div>
+        <div><svg><use href="#i-won"/></svg>정산</div>
+        <div><svg><use href="#i-user"/></svg>내 정보</div>
+      </div>
+      <div class="homebar"></div>
+    </div></div><div class="cap">당일 작업목록 · 동선<small>배차 확정 건만 노출 · 방문 순서 지도 · 지연 전송 표시</small></div></div>
+
+    <!-- W2 작업상세 -->
+    <div class="cell"><div class="phone"><div class="screen wk">
+      <div class="island"></div><div data-sbar></div>
+      <div class="nav-h"><svg class="back"><use href="#i-back"/></svg>작업 상세<span class="sp"></span><span class="chip navy">법인 정기</span></div>
+      <div class="body">
+        <div class="pad" style="padding-bottom:14px">
+          <div class="t22 b" style="letter-spacing:-.03em">그린모빌리티 상암센터</div>
+          <div class="row t14 muted mt4"><svg class="ic" style="width:16px;height:16px"><use href="#i-pin"/></svg>마포구 상암산로 76 · 지하 3층</div>
+        </div>
+        <div class="hstep">
+          <div class="done"><i>✓</i>배정</div><div class="done"><i>✓</i>이동</div><div class="on"><i>3</i>도착</div><div><i>4</i>작업 중</div><div><i>5</i>완료요청</div>
+        </div>
+        <div class="kv">
+          <div><small>차량 수</small><b>8대</b></div>
+          <div><small>작업 유형</small><b>외부+실내</b></div>
+        </div>
+        <div class="card" style="margin-bottom:12px">
+          <div class="t13 b muted">고객 요청사항</div>
+          <div class="t16 sb mt4" style="line-height:1.5">경비실에서 출입증 수령 후 B3 동편 법인 전용구역. 전기차 4대는 충전 중일 수 있음</div>
+        </div>
+        <div class="card row" style="background:#E3F6EC;gap:12px">
+          <span class="ok" style="width:30px;height:30px"><svg style="width:16px;height:16px"><use href="#i-check"/></svg></span>
+          <div><div class="t16 b" style="color:#0B5E40">도착 확인됨 · 13:02</div><div class="t13" style="color:#2E7A5B">지점 좌표 반경 38m 이내</div></div>
+        </div>
+        <div class="row" style="gap:8px;margin:0 16px">
+          <div class="btn ghost" style="flex:1;height:52px;font-size:15px;background:#fff">배정 반려 요청</div>
+          <div class="btn ghost" style="flex:1;height:52px;font-size:15px;background:#fff;color:#C2292E">예외 등록</div>
+        </div>
+      </div>
+      <div class="cta" style="--bg:#F2F4F5"><div class="bigbtn">안전점검 시작</div></div>
+      <div class="homebar"></div>
+    </div></div><div class="cap">작업 상세 · 상태 전환<small>다음 단계 버튼 하나만 활성 · 도착 좌표 대조</small></div></div>
+
+    <!-- W3 안전점검 -->
+    <div class="cell"><div class="phone"><div class="screen wk">
+      <div class="island"></div><div data-sbar></div>
+      <div class="nav-h"><svg class="back"><use href="#i-back"/></svg>안전점검 · 공정 체크</div>
+      <div class="pad" style="padding-bottom:14px">
+        <div class="between t14 b"><span>안전점검</span><span style="color:var(--g2)">4 / 6 완료</span></div>
+        <div class="prog mt8"><i style="width:66%"></i></div>
+      </div>
+      <div class="body">
+        <div class="chk"><div class="q">1. 작업 구역 차량 통행 차단 표지 설치</div><div class="tri"><div class="ok">완료</div><div>해당없음</div><div>이상</div></div></div>
+        <div class="chk"><div class="q">2. 전기차 충전 케이블 분리 확인</div><div class="tri"><div>완료</div><div class="na">해당없음</div><div>이상</div></div></div>
+        <div class="chk"><div class="q">3. 기존 차량 손상 여부 확인</div><div class="tri"><div>완료</div><div>해당없음</div><div class="bad">이상</div></div>
+          <div class="memo"><div class="t13 b" style="color:#C2292E">특이사항 · 기존 차량 손상</div><div class="row mt8" style="gap:10px"><div class="ph before" style="width:56px;flex:none"><svg class="car"><use href="#car"/></svg></div><div class="t14" style="line-height:1.45">34나 7788 조수석 뒷문 스크래치 (작업 전 기존 손상)</div></div></div>
+        </div>
+        <div class="chk"><div class="q">4. 배수·오수 처리 장비 점검</div><div class="tri"><div class="ok">완료</div><div>해당없음</div><div>이상</div></div></div>
+        <div class="chk"><div class="q">5. 보호장갑·미끄럼방지화 착용</div><div class="tri"><div>완료</div><div>해당없음</div><div>이상</div></div></div>
+      </div>
+      <div class="cta" style="--bg:#F2F4F5"><div class="bigbtn dis">작업 시작 · 2개 남음</div></div>
+      <div class="homebar"></div>
+    </div></div><div class="cap">안전점검 · 체크리스트<small>완료/해당없음/이상 3택 · 이상 시 특이사항 · 미완료 시 작업중 전환 불가</small></div></div>
+
+    <!-- W4 전후 촬영 -->
+    <div class="cell"><div class="phone"><div class="screen wk">
+      <div class="island"></div><div data-sbar></div>
+      <div class="nav-h"><svg class="back"><use href="#i-back"/></svg>전·후 사진 증빙<span class="sp"></span><span class="t14 muted">3 / 8대</span></div>
+      <div class="vch"><div class="dn">✓ 12가 3456</div><div class="dn">✓ 34나 7788</div><div class="on">56다 1020</div><div>78라 4411</div></div>
+      <div class="body">
+        <div class="card">
+          <div class="between"><span class="t16 b">작업 전</span><span class="chip">4 / 4 완료</span></div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:12px">
+            <div class="ph before"><svg class="car"><use href="#car"/></svg><span class="meta">13:08</span></div>
+            <div class="ph before" style="background:linear-gradient(200deg,#cfd6dd,#8f9ba8)"><svg class="car" style="transform:scaleX(-1)"><use href="#car"/></svg><span class="meta">13:08</span></div>
+            <div class="ph before" style="background:linear-gradient(120deg,#c6ced6,#8d99a6)"><svg class="car"><use href="#car"/></svg><span class="meta">13:09</span></div>
+            <div class="ph before" style="background:linear-gradient(90deg,#d3d9df,#a0abb6)"><svg class="car" style="transform:scaleX(-1)"><use href="#car"/></svg><span class="meta">13:09</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="between"><span class="t16 b">작업 후</span><span class="chip warn">2 / 4</span></div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:12px">
+            <div class="ph after"><svg class="car"><use href="#car"/></svg><span class="meta">13:41</span></div>
+            <div class="ph after" style="background:linear-gradient(200deg,#dbe7f0,#a2b6c6)"><svg class="car" style="transform:scaleX(-1)"><use href="#car"/></svg><span class="meta" style="background:linear-gradient(transparent,rgba(180,83,9,.85))">재전송 대기</span></div>
+            <div class="slot" style="border-color:var(--g);color:var(--g2)"><svg><use href="#i-cam"/></svg>촬영</div>
+            <div class="slot"><svg><use href="#i-cam"/></svg>촬영</div>
+          </div>
+          <div class="t12 faint mt8">작업 ID · 차량 · 촬영 시각 · 위치가 사진마다 자동 기록돼요</div>
+        </div>
+        <div class="card row" style="gap:12px">
+          <div style="flex:1"><div class="t13 b muted">추가작업</div><div class="t16 b mt4">휠·타이어 세정</div><div class="t13" style="color:#B45309">법인 담당자 승인 대기 · 승인 전 청구 제외</div></div>
+          <span class="chip warn">승인요청</span>
+        </div>
+      </div>
+      <div class="cta" style="--bg:#F2F4F5"><div class="bigbtn dis">완료 요청 · 사진 2장 남음</div></div>
+      <div class="homebar"></div>
+    </div></div><div class="cap">전·후 사진 촬영<small>필수 매수 진행 표시 · 메타데이터 자동 기록 · 추가작업 승인요청</small></div></div>
+
+    <!-- W5 예외 등록 -->
+    <div class="cell"><div class="phone"><div class="screen wk">
+      <div class="island"></div><div data-sbar></div>
+      <div class="nav-h"><svg class="back"><use href="#i-back"/></svg>예외 등록</div>
+      <div class="body">
+        <div class="pad t14 muted" style="padding-bottom:12px">그린모빌리티 상암센터 · 10.04 13:00</div>
+        <div class="etype">
+          <div><i><svg class="ic"><use href="#i-x"/></svg></i>미완료</div>
+          <div><i><svg class="ic"><use href="#i-redo"/></svg></i>재방문</div>
+          <div class="on"><i><svg class="ic"><use href="#i-rain"/></svg></i>기상예외</div>
+          <div><i><svg class="ic" style="color:var(--red)"><use href="#i-warn"/></svg></i>사고</div>
+        </div>
+        <div class="pad">
+          <div class="t15 b" style="margin-bottom:10px">사유 선택</div>
+          <div class="reason on"><span class="rd"></span><div>강우<small>기상청 강수 발생 · 실외 작업 불가</small></div></div>
+          <div class="reason"><span class="rd"></span><div>강풍<small>풍속 기준 초과</small></div></div>
+          <div class="reason"><span class="rd"></span><div>결빙·한파<small>세정수 결빙 우려</small></div></div>
+          <div class="t15 b" style="margin:18px 0 10px">현장 사진 · 메모</div>
+          <div class="row" style="gap:8px">
+            <div class="ph" style="width:76px;flex:none;background:linear-gradient(180deg,#8e9aa6,#5f6c79)"><svg class="car" style="opacity:.8"><use href="#car"/></svg></div>
+            <div class="slot" style="width:76px;flex:none"><svg><use href="#i-cam"/></svg>추가</div>
+          </div>
+          <div class="notice mt16"><svg class="ic"><use href="#i-info"/></svg>관리자 승인 후 일정이 다시 잡히고, 고객·법인 담당자에게 알림이 발송돼요. 해당 회차는 청구에서 제외됩니다.</div>
+        </div>
+      </div>
+      <div class="cta" style="--bg:#F2F4F5"><div class="bigbtn" style="background:#0C2A20">예외 등록 요청</div></div>
+      <div class="homebar"></div>
+    </div></div><div class="cap">예외 등록<small>미완료·재방문·기상예외·사고 · 사유코드 → 관리자 승인</small></div></div>
+
+    <!-- W6 정산 -->
+    <div class="cell"><div class="phone"><div class="screen wk">
+      <div class="island"></div><div data-sbar></div>
+      <div class="nav-h">10월 정산<span class="sp"></span><span class="sel" style="padding:6px 10px">2026.10 <svg width="14" height="14"><use href="#i-down"/></svg></span></div>
+      <div class="body">
+        <div class="card" style="background:#0C2A20;color:#fff">
+          <div class="t14" style="opacity:.75">정산 예정액 (10.01–10.04)</div>
+          <div class="t26 b mt4" style="font-size:32px;letter-spacing:-.03em">412,500원</div>
+          <div class="row t13 mt12" style="gap:16px;opacity:.9"><span>검수완료 <b>29건</b></span><span>검수대기 <b>12건</b></span><span>미산입 <b>1건</b></span></div>
+        </div>
+        <div class="pad"><div class="notice g"><svg class="ic"><use href="#i-shield"/></svg>관리자 완료검수를 통과한 작업만 정산 건수에 들어가요</div></div>
+        <div class="sec-t">작업별 내역</div>
+        <div class="card" style="padding:4px 18px">
+          <div class="br-row"><div style="flex:1"><div class="t15 b">한빛물류 강서지점</div><div class="t12 faint">10.04 · 법인 정기 12대</div></div><span class="chip gray">검수대기</span></div>
+          <div class="br-row"><div style="flex:1"><div class="t15 b">김지현 · 출장</div><div class="t12 faint">10.03 · 외부+실내</div></div><b class="t15">17,500원</b></div>
+          <div class="br-row"><div style="flex:1"><div class="t15 b">그린모빌리티 상암센터</div><div class="t12 faint">10.02 · 법인 정기 8대</div></div><b class="t15">96,000원</b></div>
+          <div class="br-row"><div style="flex:1"><div class="t15 b">한빛물류 강서지점</div><div class="t12" style="color:#C2292E">10.01 · 미완료 3대 · 사유: 고객 부재</div></div><span class="t14 b" style="color:#C2292E">미산입</span></div>
+          <div class="br-row"><div style="flex:1"><div class="t15 b">이수민 · 출장</div><div class="t12 faint">10.01 · 재작업(민원) 완료</div></div><b class="t15">0원</b></div>
+        </div>
+      </div>
+      <div class="tabbar">
+        <div><svg><use href="#i-list"/></svg>오늘</div>
+        <div><svg><use href="#i-cal"/></svg>주간</div>
+        <div class="on"><svg><use href="#i-won"/></svg>정산</div>
+        <div><svg><use href="#i-user"/></svg>내 정보</div>
+      </div>
+      <div class="homebar"></div>
+    </div></div><div class="cap">작업자 정산<small>검수완료 건만 집계 · 예외 건 미산입 사유 표시</small></div></div>
+
+  </div>
+</section>
+
+<!-- ================= 법인 ================= -->
+<section class="section" data-ch="b">
+  <h2>법인고객 채널 · 법인 담당자 (모바일 웹)</h2>
+  <p class="sub">본사/지점 조회 범위 분리 · 작업자 완료 보고를 원천으로 월간보고·청구 생성 · 원 작업 연결 차감 · ESG 산출 근거 공개</p>
+  <div class="grid">
+
+    <!-- B1 작업현황 -->
+    <div class="cell"><div class="phone"><div class="screen bz">
+      <div class="island"></div><div data-sbar></div>
+      <div class="bz-h between">
+        <div><div class="t13 faint sb">(주)한빛물류 · 본사 담당자</div><div class="t22 b mt4" style="letter-spacing:-.03em">오늘 작업현황</div></div>
+        <svg class="ic" style="width:26px;height:26px"><use href="#i-bell"/></svg>
+      </div>
+      <div class="pad row" style="gap:8px;padding-bottom:12px"><span class="sel">전 지점 (6) <svg width="14" height="14"><use href="#i-down"/></svg></span><span class="sel">10.04 (토) <svg width="14" height="14"><use href="#i-down"/></svg></span></div>
+      <div class="body">
+        <div class="stat4">
+          <div><small>예정</small><b>48</b></div>
+          <div><small>진행</small><b style="color:var(--blue)">9</b></div>
+          <div><small>완료</small><b style="color:var(--g)">36</b></div>
+          <div><small>예외</small><b style="color:var(--red)">3</b></div>
+        </div>
+        <div class="card row" style="background:#FFF6F6;gap:12px;border:1px solid #F8D7D8">
+          <svg class="ic" style="color:var(--red);width:22px;height:22px"><use href="#i-warn"/></svg>
+          <div style="flex:1"><div class="t14 b">예외 3건 처리 중</div><div class="t12 muted">미완료 1 · 기상예외 1 · 추가작업 승인대기 1</div></div>
+          <svg class="ic faint"><use href="#i-chev"/></svg>
+        </div>
+        <div class="sec-t">지점별 진행 <a>차량 기준</a></div>
+        <div class="card" style="padding:6px 18px">
+          <div class="br-row"><div style="width:96px"><div class="t15 b">강서지점</div><div class="t12 faint">12대</div></div><div class="mini"><i style="width:75%;background:var(--g)"></i><i style="width:8%;background:var(--red)"></i></div><span class="t13 b" style="width:44px;text-align:right">9/12</span></div>
+          <div class="br-row"><div style="width:96px"><div class="t15 b">김포센터</div><div class="t12 faint">10대</div></div><div class="mini"><i style="width:100%;background:var(--g)"></i></div><span class="t13 b" style="width:44px;text-align:right">10/10</span></div>
+          <div class="br-row"><div style="width:96px"><div class="t15 b">평택허브</div><div class="t12 faint">9대</div></div><div class="mini"><i style="width:55%;background:var(--g)"></i><i style="width:45%;background:var(--blue)"></i></div><span class="t13 b" style="width:44px;text-align:right">5/9</span></div>
+          <div class="br-row"><div style="width:96px"><div class="t15 b">인천항만</div><div class="t12 faint">8대</div></div><div class="mini"><i style="width:100%;background:#F4C9CB"></i></div><span class="t13 b" style="width:44px;text-align:right;color:var(--red)">연기</span></div>
+          <div class="br-row"><div style="width:96px"><div class="t15 b">동탄센터</div><div class="t12 faint">5대</div></div><div class="mini"><i style="width:100%;background:var(--g)"></i></div><span class="t13 b" style="width:44px;text-align:right">5/5</span></div>
+        </div>
+      </div>
+      <div class="tabbar">
+        <div class="on"><svg><use href="#i-home"/></svg>현황</div>
+        <div><svg><use href="#i-doc"/></svg>월간보고</div>
+        <div><svg><use href="#i-won"/></svg>청구</div>
+        <div><svg><use href="#i-leaf"/></svg>ESG</div>
+      </div>
+      <div class="homebar"></div>
+    </div></div><div class="cap">법인 작업현황<small>본사 전 지점 / 지점 소속 데이터 · 예정·진행·완료·예외</small></div></div>
+
+    <!-- B2 추가작업 승인 -->
+    <div class="cell"><div class="phone"><div class="screen bz">
+      <div class="island"></div><div data-sbar></div>
+      <div class="nav-h"><svg class="back"><use href="#i-back"/></svg>추가작업 승인</div>
+      <div class="body">
+        <div class="card">
+          <div class="between"><span class="chip warn">승인 대기</span><span class="t12 faint">10.04 13:46 요청</span></div>
+          <div class="t20 b mt8">휠·타이어 세정</div>
+          <div class="t14 muted mt4">강서지점 · 56다 1020 · 박준호 작업자</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px">
+            <div class="ph before" style="aspect-ratio:4/3"><span class="tag">현장 사진</span><svg class="car"><use href="#car"/></svg></div>
+            <div class="ph before" style="aspect-ratio:4/3;background:linear-gradient(200deg,#c7cfd7,#7f8b98)"><span class="tag">휠 오염</span><svg class="car" style="transform:scaleX(-1) scale(1.3);transform-origin:center"><use href="#car"/></svg></div>
+          </div>
+          <div class="notice mt12" style="background:#F5F7F9">“앞·뒤 휠에 브레이크 분진이 심해 일반 공정으로 제거되지 않습니다.”</div>
+          <div class="hr"></div>
+          <div class="field"><span class="k">단가</span><span class="v">12,000원 <span class="t12 muted" style="font-weight:500">(계약 단가표 기준)</span></span></div>
+          <div class="field"><span class="k">청구 반영</span><span class="v">2026년 10월 청구 · 원 작업 연결</span></div>
+        </div>
+        <div class="pad"><div class="notice"><svg class="ic"><use href="#i-info"/></svg>승인한 추가작업만 청구에 반영됩니다. 반려 시 작업자에게 즉시 알림이 갑니다.</div></div>
+      </div>
+      <div class="cta row" style="--bg:#F3F5F8"><div class="btn ghost" style="flex:.6;background:#fff;color:#C2292E">반려</div><div class="btn" style="background:var(--navy)">승인</div></div>
+      <div class="homebar"></div>
+    </div></div><div class="cap">추가작업 승인<small>현장 등록 → 법인 승인 건만 청구 반영</small></div></div>
+
+    <!-- B3 월간보고·청구 -->
+    <div class="cell"><div class="phone"><div class="screen bz">
+      <div class="island"></div><div data-sbar></div>
+      <div class="nav-h">월간보고 · 청구<span class="sp"></span><span class="t14 link">PDF 출력</span></div>
+      <div class="pad row" style="gap:8px;padding-bottom:12px"><span class="sel">2026년 9월 <svg width="14" height="14"><use href="#i-down"/></svg></span><span class="sel">전 지점 <svg width="14" height="14"><use href="#i-down"/></svg></span><span class="chip navy" style="margin-left:auto">확정</span></div>
+      <div class="body">
+        <div class="stat4">
+          <div><small>예정</small><b>248</b></div>
+          <div><small>완료</small><b style="color:var(--g)">239</b></div>
+          <div><small>예외</small><b style="color:var(--red)">9</b></div>
+          <div><small>완료율</small><b>96%</b></div>
+        </div>
+        <div class="card">
+          <div class="between"><span class="t16 b">청구 내역</span><span class="chip blue">입금대기</span></div>
+          <div class="bill mt8">
+            <div class="ln"><span>원 작업 (239건)</span><b>5,736,000</b></div>
+            <div class="ln sub"><span>법인 정기세차 · 외부+실내</span><span>239 × 24,000</span></div>
+            <div class="ln" style="color:#C2292E"><span>차감 · 미완료 (원 작업 연결)</span><b>−72,000</b></div>
+            <div class="ln sub"><span>강서 09.17 · 고객 부재 3대</span><span class="link">증빙</span></div>
+            <div class="ln" style="color:#C2292E"><span>차감 · 민원 조정</span><b>−12,000</b></div>
+            <div class="ln"><span>추가작업 (승인 4건)</span><b>+48,000</b></div>
+            <div class="ln faint"><span>기상예외 5건</span><span>청구 제외</span></div>
+            <div class="tot"><span class="t15 b">청구액 (VAT 별도)</span><span class="t22 b">5,700,000원</span></div>
+          </div>
+        </div>
+        <div class="card row" style="gap:12px">
+          <svg class="ic" style="color:var(--blue)"><use href="#i-doc"/></svg>
+          <div style="flex:1"><div class="t14 b">금액을 누르면 근거까지 확인</div><div class="t12 muted">작업 건 → 전·후 사진 → 체크리스트</div></div>
+          <svg class="ic faint"><use href="#i-chev"/></svg>
+        </div>
+        <div class="card"><div class="t13 muted">입금 계좌 (가상계좌)</div><div class="t15 b mt4">국민 9012-3456-7788-01</div><div class="t12 faint mt4">입금 기한 10.20 · 입금 확인 시 매출 확정</div></div>
+      </div>
+      <div class="tabbar">
+        <div><svg><use href="#i-home"/></svg>현황</div>
+        <div class="on"><svg><use href="#i-doc"/></svg>월간보고</div>
+        <div><svg><use href="#i-won"/></svg>청구</div>
+        <div><svg><use href="#i-leaf"/></svg>ESG</div>
+      </div>
+      <div class="homebar"></div>
+    </div></div><div class="cap">월간보고 · 청구자료<small>원 작업·차감·추가 분리 · 금액 → 증빙 역조회</small></div></div>
+
+    <!-- B4 ESG -->
+    <div class="cell"><div class="phone"><div class="screen bz">
+      <div class="island"></div><div data-sbar></div>
+      <div class="nav-h">ESG 실적<span class="sp"></span><span class="sel" style="padding:6px 10px">2026 <svg width="14" height="14"><use href="#i-down"/></svg></span></div>
+      <div class="body">
+        <div class="card" style="background:linear-gradient(140deg,#0E9F6E,#0A6B5E);color:#fff">
+          <div class="row t13" style="opacity:.85"><svg class="ic" style="width:16px;height:16px"><use href="#i-leaf"/></svg>9월 물 사용 절감량</div>
+          <div class="mt4" style="font-size:34px;font-weight:800;letter-spacing:-.03em">28,680 L</div>
+          <div class="t13 mt4" style="opacity:.9">누적 (1–9월) 214,300 L · 전월 대비 +4.2%</div>
+        </div>
+        <div class="kv" style="margin-bottom:12px">
+          <div><small>CO₂ 저감 (9월)</small><b>412 kg</b></div>
+          <div><small>대상 차량</small><b>239대·회</b></div>
+        </div>
+        <div class="card">
+          <div class="between"><span class="t15 b">월별 절감량</span><span class="t12 faint">단위 kL</span></div>
+          <div class="bars">
+            <div><i style="height:58%"></i>4월</div><div><i style="height:64%"></i>5월</div><div><i style="height:70%"></i>6월</div><div><i style="height:66%"></i>7월</div><div><i style="height:80%"></i>8월</div><div class="on"><i style="height:86%"></i>9월</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="t15 b" style="margin-bottom:12px">산출 근거</div>
+          <dl class="basis">
+            <dt>산출 기간</dt><dd>2026.09.01 – 09.30</dd>
+            <dt>대상 작업</dt><dd>검수완료 239건</dd>
+            <dt>적용 계수</dt><dd>120 L / 대·회 (외부+실내)</dd>
+            <dt>계수 적용일</dt><dd>2026.07.01 ~</dd>
+          </dl>
+          <div class="t12 faint mt12">계수는 운영설정에 등록된 값이며, 변경 이력은 감사이력으로 관리됩니다.</div>
+        </div>
+      </div>
+      <div class="tabbar">
+        <div><svg><use href="#i-home"/></svg>현황</div>
+        <div><svg><use href="#i-doc"/></svg>월간보고</div>
+        <div><svg><use href="#i-won"/></svg>청구</div>
+        <div class="on"><svg><use href="#i-leaf"/></svg>ESG</div>
+      </div>
+      <div class="homebar"></div>
+    </div></div><div class="cap">ESG 실적<small>검수완료 작업 × 운영설정 계수 · 산출 근거 공개</small></div></div>
+
+  </div>
+</section>
+
+<div class="solo" id="solo"><div class="holder" id="holder"></div>
+  <button class="nav prev" id="prev">‹</button><button class="nav next" id="next">›</button>
+  <button class="x" id="close">닫기 (Esc) · C 캡처모드</button>
+</div>
+
+<script>
+// status bars
+const tpl=document.getElementById('sbar-dark').innerHTML;
+document.querySelectorAll('[data-sbar]').forEach(el=>{
+  el.outerHTML = el.dataset.sbar==='lt' ? tpl.replace('class="status"','class="status lt"') : tpl;
+});
+document.querySelectorAll('.screen.wk').forEach(s=>{ if(s.querySelector('.status.lt')) s.querySelector('.homebar').classList.add('dark') });
+
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+function seg(id,fn){ $$('#'+id+' button').forEach(b=>b.onclick=()=>{ $$('#'+id+' button').forEach(x=>x.classList.remove('on')); b.classList.add('on'); fn(b.dataset.v); }); }
+seg('f-ch',v=>$$('.section').forEach(s=>s.style.display=(v==='all'||s.dataset.ch===v)?'':'none'));
+seg('f-bg',v=>{ document.body.classList.remove('bg-soft','bg-white','bg-dark','bg-green'); document.body.classList.add(v); });
+const zoom=$('#zoom'); const applyZoom=()=>document.documentElement.style.setProperty('--z',zoom.value); zoom.oninput=applyZoom; applyZoom();
+$('#t-label').onclick=e=>{ document.body.classList.toggle('nolabel'); e.target.textContent=document.body.classList.contains('nolabel')?'라벨 보이기':'라벨 숨기기'; };
+
+// solo view
+let idx=-1;
+const visible=()=>$$('.cell').filter(c=>c.closest('.section').style.display!=='none');
+function fit(){ const h=window.innerHeight-60; $('#holder').style.setProperty('--sz',Math.min(1.1,h/876).toFixed(3)); }
+function open(i){ const cells=visible(); idx=(i+cells.length)%cells.length; $('#holder').innerHTML=cells[idx].querySelector('.phone').outerHTML; fit(); $('#solo').classList.add('on'); }
+function close(){ $('#solo').classList.remove('on'); document.body.classList.remove('capture'); idx=-1; }
+$$('.cell .phone').forEach(p=>p.onclick=()=>open(visible().indexOf(p.closest('.cell'))));
+$('#prev').onclick=()=>open(idx-1); $('#next').onclick=()=>open(idx+1); $('#close').onclick=close;
+window.onresize=fit;
+document.addEventListener('keydown',e=>{
+  if(e.key==='c'||e.key==='C') document.body.classList.toggle('capture');
+  if(idx<0) return;
+  if(e.key==='Escape') close();
+  if(e.key==='ArrowRight') open(idx+1);
+  if(e.key==='ArrowLeft') open(idx-1);
+});
+</script>
+</body>
+</html>
