@@ -1,0 +1,67 @@
+/* Analyze 화면 전용 보조 스타일. 모든 선택자는 .pg-az- 접두사를 사용한다. */
+
+.pg-az-fasta {
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.85;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  max-height: 200px;
+  overflow-y: auto;
+  word-break: break-all;
+  color: var(--text-2);
+}
+.pg-az-fasta .pg-az-d-wt { background: #dbeafe; color: #1e3a8a; }
+.pg-az-fasta .pg-az-d-des { background: #ffedd5; color: #9a3412; }
+.pg-az-fasta .pg-az-d-hi { background: #99f6e4; color: #0b6f7b; font-weight: 600; }
+
+.pg-az-md {
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.8;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  max-height: 440px;
+  overflow: auto;
+  white-space: pre-wrap;
+  color: var(--text-2);
+}
+
+.pg-az-rend { max-height: 440px; overflow: auto; }
+.pg-az-rend .pg-az-h { font-weight: 600; color: var(--text); margin: 14px 0 4px; }
+.pg-az-rend .pg-az-h:first-child { margin-top: 0; }
+.pg-az-rend p { margin: 2px 0; color: var(--text-2); }
+.pg-az-rend ul { margin: 4px 0 4px 18px; padding: 0; color: var(--text-2); }
+.pg-az-rend .pg-az-tbl-line { font-family: var(--mono); color: var(--text-2); }
+
+.pg-az-scroll { max-height: 460px; overflow: auto; }
+.pg-az-scroll-sm { max-height: 300px; overflow: auto; }
+
+.pg-az-legend { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; color: var(--text-2); }
+.pg-az-legend i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; margin-right: 6px; vertical-align: -2px; }
+
+.pg-az-bar { display: inline-block; width: 70px; height: 6px; border-radius: 99px; background: var(--surface-3); overflow: hidden; margin-left: 10px; vertical-align: 1px; }
+.pg-az-bar > i { display: block; height: 100%; background: var(--brand); border-radius: 99px; }
+
+.pg-az-sortable { cursor: pointer; user-select: none; }
+
+.pg-az-pass > td { background: var(--ok-soft); }
+.pg-az-na > td { background: var(--surface-2); color: var(--text-3); }
+.pg-az-wt > td { background: var(--accent-soft); }
+.pg-az-sel > td { background: var(--brand-soft); }
+
+/* 점수 설정: 컷오프 슬라이더는 넓게, 숫자 입력은 같은 폭으로 한 줄 */
+.pg-az-weights { display: grid; grid-template-columns: minmax(240px, 2fr) repeat(4, minmax(120px, 1fr)); gap: 16px 20px; align-items: start; }
+.pg-az-weights input[type=range] { width: 100%; margin: 10px 0 4px; accent-color: var(--brand); }
+@media (max-width: 1100px) { .pg-az-weights { grid-template-columns: repeat(2, minmax(0, 1fr)); } .pg-az-weights > :first-child { grid-column: 1 / -1; } }
+
+/* Hit List 표: 셀 줄바꿈 금지(행 높이 들쭉날쭉 방지), 작업 열은 오른쪽에 고정 */
+.pg-az-hits td { white-space: nowrap; padding-top: 9px; padding-bottom: 9px; }
+.pg-az-hits th:last-child, .pg-az-hits td:last-child { position: sticky; right: 0; background: var(--surface); box-shadow: -1px 0 0 var(--line); }
+.pg-az-hits th:last-child { background: var(--surface-2); z-index: 2; }
+.pg-az-hits thead th { position: sticky; top: 0; z-index: 1; }
+.pg-az-nowrap td { white-space: nowrap; }

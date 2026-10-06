@@ -1,0 +1,5 @@
+/* 실행 모니터 전용 보조 스타일. 선택자는 .pg-mn- 접두사를 쓴다. */
+
+/* 단계 되돌리기 한 줄: 고르는 칸과 버튼의 높이를 맞춰 세로로 어긋나지 않게 둔다. */
+.pg-mn-rerun { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.pg-mn-rerun > select { width: 220px; flex: none; }

@@ -1,7 +1,7 @@
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { CANDIDATES, FIXED_SITES, MUTATION_SITES, WT_SEQ, type Candidate } from '../data/mock'
 
-/* ---------------- 3D 구조 뷰어 (UIR-004) ---------------- */
+/* ---------------- 3D 구조 뷰어 ---------------- */
 type ColorMode = 'plddt' | 'chain' | 'conservation'
 
 function ribbonPath(seed: number, turns: number) {
@@ -42,7 +42,7 @@ export function StructureViewer({ label, seed = 3, height = 300, overlay }: {
   const chains = useMemo(() => [ribbonPath(seed, 60), ribbonPath(seed + 4, 44)], [seed])
   const palette = mode === 'plddt' ? PLDDT_COLORS : mode === 'chain' ? CHAIN_COLORS : CONS_COLORS
   const legend = mode === 'plddt'
-    ? ['>90 매우 높음', '70–90 높음', '50–70 보통', '<50 낮음']
+    ? ['>90 매우 높음', '70~90 높음', '50~70 보통', '<50 낮음']
     : mode === 'chain' ? ['Chain A', 'Chain B', 'Ligand'] : ['보존 tier70', 'tier50', 'tier30', '가변']
 
   return (
@@ -105,52 +105,86 @@ export function StructureViewer({ label, seed = 3, height = 300, overlay }: {
 }
 
 /* ---------------- 산점도 ---------------- */
-export function Scatter({ data, x, y, height = 230, xLabel, yLabel, cutoffX, selected, onPick }: {
+/* 차트 컨테이너의 실제 폭(px). viewBox 를 화면 폭에 맞춰 늘리면 글자가 함께 커지므로
+   폭을 재서 그 크기 그대로 그린다. */
+export function useWidth<T extends HTMLElement>(fallback = 640) {
+  const ref = useRef<T>(null)
+  const [w, setW] = useState(fallback)
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const ro = new ResizeObserver(([e]) => setW(Math.max(280, Math.round(e.contentRect.width))))
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
+  return [ref, w] as const
+}
+
+export function Scatter({ data, x, y, height = 320, xLabel, yLabel, cutoffX, selected, onPick }: {
   data: Candidate[]; x: keyof Candidate; y: keyof Candidate; height?: number
   xLabel: string; yLabel: string; cutoffX?: number; selected?: string | null; onPick?: (id: string) => void
 }) {
-  const W = 420, H = height, PAD = 38
+  const [ref, W] = useWidth<HTMLDivElement>()
+  const H = height
+  const L = 64, R = 16, T = 12, B = 48
   const xs = data.map(d => Number(d[x])), ys = data.map(d => Number(d[y]))
   const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys)
-  const sx = (v: number) => PAD + ((v - x0) / (x1 - x0 || 1)) * (W - PAD - 14)
-  const sy = (v: number) => H - PAD - ((v - y0) / (y1 - y0 || 1)) * (H - PAD - 14)
-  const col = { input_pdb: '#3b5bdb', rfd3: '#0e7c66', bioemu: '#d97706' }
+  const sx = (v: number) => L + ((v - x0) / (x1 - x0 || 1)) * (W - L - R)
+  const sy = (v: number) => H - B - ((v - y0) / (y1 - y0 || 1)) * (H - B - T)
+  const col = { input_pdb: '#0ea5e9', rfd3: '#4f46e5', bioemu: '#f59e0b' }
+  const ticks = [0, 0.25, 0.5, 0.75, 1]
+  const fmt = (v: number, span: number) => v.toFixed(span < 2 ? 2 : 1)
+  const sel = data.find(d => d.id === selected)
 
   return (
-    <div>
-      <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ display: 'block', overflow: 'visible' }}>
-        {[0, 0.25, 0.5, 0.75, 1].map(t => (
-          <g key={t}>
-            <line x1={PAD} x2={W - 14} y1={sy(y0 + t * (y1 - y0))} y2={sy(y0 + t * (y1 - y0))} stroke="#eceff3" />
-            <text x={PAD - 6} y={sy(y0 + t * (y1 - y0)) + 3} textAnchor="end" fontSize="9" fill="#98a2b3">
-              {(y0 + t * (y1 - y0)).toFixed(1)}
-            </text>
-          </g>
-        ))}
+    <div ref={ref}>
+      <svg width={W} height={H} style={{ display: 'block' }}>
+        {ticks.map(t => {
+          const vy = y0 + t * (y1 - y0), vx = x0 + t * (x1 - x0)
+          return (
+            <g key={t}>
+              <line x1={L} x2={W - R} y1={sy(vy)} y2={sy(vy)} stroke="#f4f4f5" />
+              <text x={L - 8} y={sy(vy) + 4} textAnchor="end" fontSize="12" fill="#71717a">{fmt(vy, y1 - y0)}</text>
+              <text x={sx(vx)} y={H - B + 18} textAnchor={t === 0 ? 'start' : t === 1 ? 'end' : 'middle'}
+                fontSize="12" fill="#71717a">{fmt(vx, x1 - x0)}</text>
+            </g>
+          )
+        })}
         {cutoffX !== undefined && (
           <>
-            <line x1={sx(cutoffX)} x2={sx(cutoffX)} y1={10} y2={H - PAD} stroke="#f04438" strokeDasharray="4 3" />
-            <text x={sx(cutoffX) + 4} y={18} fontSize="9" fill="#f04438">cutoff {cutoffX}</text>
+            <line x1={sx(cutoffX)} x2={sx(cutoffX)} y1={T} y2={H - B} stroke="#dc2626" strokeDasharray="4 3" />
+            <text x={sx(cutoffX) + 4} y={T + 12} fontSize="12" fill="#dc2626">cutoff {cutoffX}</text>
           </>
         )}
-        <line x1={PAD} x2={W - 14} y1={H - PAD} y2={H - PAD} stroke="#d0d5dd" />
-        <line x1={PAD} x2={PAD} y1={10} y2={H - PAD} stroke="#d0d5dd" />
-        {data.map(d => (
-          <circle key={d.id} cx={sx(Number(d[x]))} cy={sy(Number(d[y]))}
-            r={selected === d.id ? 7 : 4.5} fill={col[d.source]}
-            stroke={selected === d.id ? '#101828' : '#fff'} strokeWidth={selected === d.id ? 2 : 1}
-            opacity={selected && selected !== d.id ? 0.35 : 0.85}
+        <line x1={L} x2={W - R} y1={H - B} y2={H - B} stroke="#d4d4d8" />
+        <line x1={L} x2={L} y1={T} y2={H - B} stroke="#d4d4d8" />
+        {data.filter(d => d.id !== selected).map(d => (
+          <circle key={d.id} cx={sx(Number(d[x]))} cy={sy(Number(d[y]))} r={5} fill={col[d.source]}
+            stroke="#fff" strokeWidth={1} opacity={selected ? 0.45 : 0.85}
             style={{ cursor: 'pointer' }} onClick={() => onPick?.(d.id)}>
             <title>{`${d.id} · ${xLabel} ${d[x]} · ${yLabel} ${d[y]}`}</title>
           </circle>
         ))}
-        <text x={W / 2} y={H - 8} textAnchor="middle" fontSize="10" fill="#475467">{xLabel}</text>
-        <text x={10} y={H / 2} textAnchor="middle" fontSize="10" fill="#475467" transform={`rotate(-90 10 ${H / 2})`}>{yLabel}</text>
+        {sel && (
+          <g>
+            <circle cx={sx(Number(sel[x]))} cy={sy(Number(sel[y]))} r={8} fill={col[sel.source]}
+              stroke="#09090b" strokeWidth={2}>
+              <title>{`${sel.id} · ${xLabel} ${sel[x]} · ${yLabel} ${sel[y]}`}</title>
+            </circle>
+            <text x={sx(Number(sel[x])) + (sx(Number(sel[x])) > W - 120 ? -12 : 12)} y={sy(Number(sel[y])) - 10}
+              textAnchor={sx(Number(sel[x])) > W - 120 ? 'end' : 'start'} fontSize="12" fontWeight="600" fill="#09090b">
+              {sel.id}
+            </text>
+          </g>
+        )}
+        <text x={L + (W - L - R) / 2} y={H - 8} textAnchor="middle" fontSize="13" fill="#52525b">{xLabel}</text>
+        <text x={14} y={T + (H - B - T) / 2} textAnchor="middle" fontSize="13" fill="#52525b"
+          transform={`rotate(-90 14 ${T + (H - B - T) / 2})`}>{yLabel}</text>
       </svg>
-      <div className="row wrap faint" style={{ fontSize: 11.5, justifyContent: 'center', marginTop: 4 }}>
+      <div className="row wrap muted" style={{ justifyContent: 'center', gap: 16, marginTop: 6 }}>
         {Object.entries(col).map(([k, v]) => (
-          <span key={k} className="row" style={{ gap: 4 }}>
-            <i style={{ width: 8, height: 8, borderRadius: 99, background: v, display: 'inline-block' }} />{k}
+          <span key={k} className="row" style={{ gap: 6 }}>
+            <i style={{ width: 10, height: 10, borderRadius: 99, background: v, display: 'inline-block' }} />{k}
           </span>
         ))}
       </div>
@@ -167,7 +201,7 @@ export function Bars({ data, height = 180, unit = '' }: {
     <div className="col" style={{ gap: 9, minHeight: height ? undefined : height }}>
       {data.map(d => (
         <div key={d.label}>
-          <div className="row" style={{ fontSize: 12, marginBottom: 3 }}>
+          <div className="row" style={{ marginBottom: 3 }}>
             <span className="muted">{d.label}</span><div className="sp" />
             <b style={{ fontVariantNumeric: 'tabular-nums' }}>{d.value}{unit}</b>
           </div>
@@ -181,7 +215,7 @@ export function Bars({ data, height = 180, unit = '' }: {
 }
 
 /* ---------------- 스파크라인 ---------------- */
-export function Spark({ values, color = '#0e7c66', height = 44 }: { values: number[]; color?: string; height?: number }) {
+export function Spark({ values, color = '#4f46e5', height = 44 }: { values: number[]; color?: string; height?: number }) {
   const max = Math.max(...values), min = Math.min(...values)
   const pts = values.map((v, i) => [
     (i / (values.length - 1)) * 100,
@@ -225,7 +259,7 @@ export function SequenceView({ candidateId, range = [1, 120] }: { candidateId: s
       </div>
       <div><span className="lbl">WT (1EMA)</span>{render(WT_SEQ.split(''), false)}</div>
       <div><span className="lbl">{cand.id}</span>{render(mutated, true)}</div>
-      <div className="row wrap faint" style={{ gap: 12, marginTop: 8, fontSize: 11.5, fontFamily: 'inherit' }}>
+      <div className="row wrap faint" style={{ gap: 12, marginTop: 8, fontFamily: 'inherit' }}>
         <span><i style={{ background: '#fde68a', width: 10, height: 10, display: 'inline-block', borderRadius: 2, marginRight: 4 }} />치환 잔기 {cand.mutations}개</span>
         <span><i style={{ background: '#dbeafe', width: 10, height: 10, display: 'inline-block', borderRadius: 2, marginRight: 4 }} />고정 잔기 (보존 tier70)</span>
       </div>

@@ -1,0 +1,126 @@
+/* 로그인 화면 전용 스타일. 모든 선택자는 .pg-login 접두어를 사용한다. */
+.pg-login {
+  min-height: 100%;
+  display: grid;
+  place-items: center;
+  padding: 32px 16px;
+  background: var(--frame);
+}
+
+.pg-login .pg-login-wrap {
+  width: min(430px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pg-login .pg-login-top {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  padding: 0 2px;
+}
+
+.pg-login .pg-login-top .sp { flex: 1; }
+
+.pg-login .pg-login-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: var(--shadow-lg);
+  padding: 26px 26px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pg-login .pg-login-svc {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.pg-login .pg-login-svc b {
+  font-size: 19px;
+  font-weight: 650;
+  letter-spacing: -.02em;
+}
+
+.pg-login .pg-login-svc span { color: var(--text-3); }
+
+.pg-login .pg-login-desc {
+  margin: 0;
+  color: var(--text-2);
+  line-height: 1.6;
+}
+
+.pg-login .pg-login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.pg-login .pg-login-or {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-3);
+}
+
+.pg-login .pg-login-or i {
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+.pg-login .pg-login-err {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid #fecaca;
+  background: var(--err-soft);
+  border-radius: var(--radius-sm);
+  color: #b91c1c;
+  line-height: 1.55;
+}
+
+.pg-login .pg-login-note {
+  margin: 0;
+  color: var(--text-3);
+  line-height: 1.65;
+}
+
+.pg-login .pg-login-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  padding: 0 2px;
+  color: var(--text-3);
+}
+
+.pg-login .pg-login-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pg-login .pg-login-load {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-2);
+  padding: 18px 0;
+}
+
+.pg-login .pg-login-spin {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid var(--line-strong);
+  border-top-color: var(--brand);
+  animation: pg-login-spin .8s linear infinite;
+  flex: none;
+}
+
+@keyframes pg-login-spin { to { transform: rotate(360deg); } }

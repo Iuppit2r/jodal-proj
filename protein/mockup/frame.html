@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<title>frame</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 2000px; height: 1300px;
+    display: grid; place-items: center;
+    background: linear-gradient(160deg, #f7f8fa 0%, #eef0f4 55%, #e7eaef 100%);
+    font-family: Pretendard, -apple-system, sans-serif;
+  }
+  .stage { position: relative; }
+
+  /* 노트북 본체 */
+  .lid {
+    width: 1508px;
+    background: linear-gradient(180deg, #2a2c31 0%, #202226 100%);
+    border-radius: 26px;
+    padding: 18px 18px 22px;
+    box-shadow:
+      0 2px 1px rgba(255,255,255,.14) inset,
+      0 40px 80px -30px rgba(16,20,30,.45),
+      0 10px 24px -12px rgba(16,20,30,.3);
+  }
+  .cam { width: 100%; height: 14px; display: grid; place-items: center; }
+  .cam i { width: 6px; height: 6px; border-radius: 50%; background: #3b3e45; box-shadow: 0 0 0 2px #26282d; display: block; }
+  .screen {
+    width: 1472px; height: 920px;          /* 1600x1000 비율 */
+    border-radius: 8px; overflow: hidden; background: #fff;
+    box-shadow: 0 0 0 1px rgba(255,255,255,.06) inset;
+  }
+  .screen img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: top left; }
+
+  /* 힌지와 받침 */
+  .base {
+    width: 1700px; height: 20px; margin: 0 auto;
+    background: linear-gradient(180deg, #b9bdc6 0%, #9aa0ab 40%, #7e8591 100%);
+    border-radius: 0 0 14px 14px;
+    position: relative;
+    box-shadow: 0 14px 26px -14px rgba(16,20,30,.5);
+  }
+  .base::after {
+    content: ''; position: absolute; left: 50%; transform: translateX(-50%);
+    top: 0; width: 180px; height: 9px;
+    background: linear-gradient(180deg, #8d939e, #a7acb6);
+    border-radius: 0 0 9px 9px;
+  }
+  .hinge { width: 1528px; height: 8px; margin: 0 auto; background: #1b1d21; border-radius: 0 0 6px 6px; }
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="lid">
+      <div class="cam"><i></i></div>
+      <div class="screen"><img id="shot" src="" alt="" /></div>
+    </div>
+    <div class="hinge"></div>
+    <div class="base"></div>
+  </div>
+</body>
+</html>

@@ -1,7 +1,9 @@
-# RAPID — AI 기반 단백질 설계 자동화 플랫폼 통합 콘솔 (UI 시안)
+# RAPID 통합 콘솔 (UI 시안)
 
-제안요청서 「AI 기반 단백질 설계 자동화 플랫폼 구축」(한국생명공학연구원 국가바이오파운드리사업단)의
-사용자 인터페이스 요구사항에 대응하는 화면 시안입니다. 프런트엔드 UI만 포함하며 백엔드는 목(mock) 데이터로 대체했습니다.
+제안요청서 「AI 기반 단백질 설계 자동화 플랫폼 구축」(한국생명공학연구원 국가바이오파운드리사업단)에 대응하는
+사용자 인터페이스 시안입니다. 승계 대상인 기존 시스템 `sblabkribb/protein_pipeline`의 사용자 기능을 모두 옮겨 담고,
+고도화 범위(자유형 DAG, Model Registry 확장, 운영 관제)를 더해 재설계했습니다.
+프런트엔드 UI만 포함하며 백엔드 호출은 없고 모든 수치는 시연용 목 데이터입니다.
 
 ## 실행
 
@@ -11,40 +13,41 @@ npm run dev     # http://localhost:5173
 npm run build   # 정적 산출물 dist/
 ```
 
-기술스택: React 19 · TypeScript · Vite (제안요청서 지정 Frontend React 준수)
+기술스택: React 19 · TypeScript · Vite · React Flow(@xyflow/react) · lucide-react
 
-## 화면 구성과 요구사항 대응
+## 화면 구성
 
-| 화면 | 경로 | 대응 요구사항 |
-|---|---|---|
-| 운영 현황 (대시보드) | `/` | SFR-023 모니터링, SFR-020 Agent Panel, UIR-001 통합 정보구조 |
-| 실행 설정 (Setup) | `/setup` | SFR-001 통합 실행환경, SFR-002 Stage 오케스트레이션, SFR-003 MSA·보존도, SFR-004 백본 관리, SFR-005 ProteinMPNN tier, SFR-006 SoluProt, SFR-007 AF2, SFR-021 결합 예측, SFR-017 fork 정책 |
-| Workflow Studio (정형) | `/workflow` `/monitor` | SFR-010 체크포인트 실행 제어 |
-| **DAG Studio (자유형)** | `/dag` | **SFR-011 자유형 DAG 구축**, UIR-002 양 모드 용어·조작 일관성 |
-| Monitor | `/monitor` | SFR-002 체크포인트, SFR-009 run 중심 산출물, SFR-019 다운로드, DAR-001·DAR-002 메타데이터 |
-| Analyze | `/analyze` | SFR-008 WT Diff·비교, SFR-015 Compare Studio·Hit List, SFR-021 결합 결과, UIR-004 3D·서열·지표 통합 뷰어 |
-| 프로젝트 · 라운드 | `/projects` | SFR-018 프로젝트·라운드·태스크·피드백, SFR-025 버전 관리, DAR-005 피드백 축적, DAR-006 학습 데이터셋 |
-| Model Registry | `/models` | SFR-012 모델 확장·버전 관리, DAR-003 Registry 저장소, SER-008 등록 승인 |
-| 작업 큐 | `/jobs` | SFR-022 큐 관리·스케줄링 |
-| GPU 운영 | `/gpu` | SFR-016 RunPod Admin·외부 GPU 운영 |
-| 성능 · 동시접속 | `/perf` | SFR-024 동시접속 안정화, PER-001~003 성능 기준 |
-| 외부 연계 | `/integrations` | SFR-013 MCP 도구 서버, SIR-001 JSON-RPC, SIR-002 HTTP API·OpenAPI, SIR-003 동적 라우팅, SER-005 시크릿 |
-| 보안 · 데이터 | `/admin` | SER-001 RBAC, SER-002 OIDC/SSO, SER-003~007 암호화·격리·감사, DAR-004 아티팩트 저장소, DAR-007 레거시 마이그레이션, DAR-008 아카이빙, DAR-009 MongoDB |
-| Copilot 패널 (전 화면) | 우측 패널 | SFR-014 자연어 계획·실행·해석, UIR-003 대화형 제어 화면 |
-
-승계 대상(Setup · Workflow Studio · Monitor · Analyze · RunPod Admin)은 모두 동일 정보구조 안에 배치했고,
-핵심 고도화 범위인 자유형 DAG Studio와 Model Registry를 별도 화면으로 신설했습니다.
-
-반응형(UIR-005)은 1280 / 960 / 560px 분기로 사이드바·Copilot·DAG 캔버스·그리드가 재배치됩니다.
+| 구분 | 화면 | 경로 | 주요 내용 |
+|---|---|---|---|
+| 설계 · 실행 | 홈 | `/` | 실험 유형 6종 선택, 작업 맥락, 진행 중 run, Evidence Agent Panel, 자원 현황 |
+| | 빠른 실행 | `/fast` | 타깃 업로드 · 붙여넣기, 보존율 tier, 총 출력 서열, 대리모델 선별, 문헌 기반 마스킹 |
+| | 고급 설정 | `/setup` | 5단계 위저드(입력 · 워크플로 · 기준 · 전문가 · 검토), 파라미터 90종, 사전 점검, 자연어 설정, 잔기 선택기 |
+| | Evolution | `/evolution` | 능동 학습 라운드, 후보 풀, 측정값 기반 Top K 선정, 실험값 입력 |
+| | Workflow Studio | `/workflow` | 세션 관리, 단계별 실행, 단계 점검, 재실행 판단, 단계 산출물 |
+| | DAG Studio | `/dag` | 자유형 DAG 편집, 조건 분기, 자동 정렬, 템플릿, 유효성 검사 |
+| | Monitor | `/monitor` | tier 단위 진행률, 큐 ETA, 검토 게이트, 산출물 브라우저, Evidence Agent Panel |
+| | Analyze | `/analyze` | 비교 스튜디오, Hit List, 차트 6종, 피드백 · 실험, 보고서, run 간 비교 |
+| 자산 · 이력 | 프로젝트 · 라운드 | `/projects` | 프로젝트 · 라운드 관리, 연결된 run, 데이터셋 추출 |
+| | Model Registry | `/models` | 등록 모델 · 버전 이력 · 스키마, Model Provider 10종, 등록 가이드 |
+| | CATH 벤치마크 | `/cath` | train · val · test 서브셋 실행, 작업 관리, 로그, 공개 데이터 |
+| | 워크플로 카탈로그 | `/catalog` | DBTL 워크플로 64종, 하드웨어 45종, 소프트웨어 38종 |
+| 운영 | 작업 큐 | `/jobs` | 큐 상태, 단계별 ETA 추정, 엔드포인트 매핑 |
+| | RunPod 운영 | `/gpu` | 기간별 사용량 · 지출, 엔드포인트 상세, 워커, 설정 패치, 지출 원장 |
+| | 성능 · 동시접속 | `/perf` | 동시접속 안정화, 성능 기준, 안정화 적용 내역 |
+| | MCP · 외부 연계 | `/integrations` | MCP 연결, 도구 카탈로그 62종, API 키, HTTP Tool API |
+| | 사용자 · 보안 | `/admin` | 사용자 · 승인, 권한 매트릭스, 보안 운영 기준, 감사 로그, 데이터 저장소 |
+| 공통 | Copilot 패널 | 우측 | 제공자 · 모델 선택, 대화 관리, 첨부, 실행 문맥, 추천 작업 |
+| | 로그인 · 설정 · 사용 안내 · 튜토리얼 | 모달 | 로컬 · SSO 로그인, 보고서 언어, 사용 안내, 13단계 튜토리얼 |
 
 ## 조작 가능한 부분
 
-- **DAG Studio** — 팔레트 클릭으로 노드 추가, 노드 드래그 이동, 출력→입력 포트 클릭으로 연결, 캔버스 패닝·확대, 노드별 인스펙터 편집, 템플릿 저장·불러오기, 유효성 검사
-- **Setup** — 5단계 위저드, 파이프라인 선택에 따라 단계 구성·입력 폼 전환, 파라미터 슬라이더가 요약에 반영
-- **Monitor** — run 선택 → 단계 바 → 단계별 상세/이벤트/산출물/파라미터 탭, 체크포인트 검토 모달
-- **Analyze** — 가중치 슬라이더로 Hit List 실시간 재정렬, 산점도 점 선택과 표 선택 연동, 구조 뷰어 드래그 회전·착색 모드 전환, 서열 뷰 치환/고정 잔기 표시
-- **Copilot** — 빠른 프롬프트·질의 유형별 응답과 추천 액션
+- **고급 설정** 5단계 위저드, 실행 모드 · RFD3 모드 · 대리모델 · Evolution 토글에 따라 표시 필드가 바뀌고, 잔기 선택기는 3D 뷰와 서열 스트립이 연동됩니다.
+- **DAG Studio** 팔레트 드래그로 노드 추가, 포트 연결(자기 · 중복 · 순환 차단), 조건 분기 yes/no, Delete 삭제, 미니맵 · 자동 정렬, 템플릿 저장 · 불러오기.
+- **Monitor** run 선택 → 단계 진행률 → 산출물 필터 · 미리보기 · ZIP, 검토 게이트에서 계속 · 재실행 선택.
+- **Analyze** 가중치 변경 시 Hit List 실시간 재정렬, 산점도 점 선택과 표 연동, 구조 비교 잔기 클릭 시 양쪽 3D 강조.
+- **RunPod 운영** 기간 이동, 엔드포인트 선택, 빠른 작업 · 설정 패치, 읽기 전용 키 · 과금 불가 상태 전환.
+- **Copilot** 질의 유형별 응답과 추천 작업 실행.
 
 ## 데이터
 
-모든 수치는 `src/data/mock.ts`의 시연용 데이터입니다. 실제 모델 실행이나 API 호출은 없습니다.
+모든 수치는 `src/data/` 아래 목 데이터입니다. 실제 모델 실행이나 API 호출은 없습니다.
