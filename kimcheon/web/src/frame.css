@@ -1,0 +1,178 @@
+
+    :root {
+      --navy: #1F4434;
+      --navy-deep: #15302A;
+      --sun-y: #F26B3A;
+      --sun-o: #F26B3A;
+      --sun-r: #F26B3A;
+      --bi-cyan: #30A8C0;
+      --text: #1C201D;
+      --sub: #525A55;
+      --mute: #737B76;
+      --line: #E3E1DA;
+      --bg: #F1F0EA;
+
+      --screen-w: 390px;
+      --screen-h: 844px;
+      --bezel: 12px;
+    }
+    
+    
+    .frame-root {
+      height: 100%;
+      font-family: 'Pretendard Variable', Pretendard, -apple-system, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(900px 600px at 85% -10%, rgba(242, 107, 58, .08), transparent 60%),
+        radial-gradient(800px 700px at -10% 110%, rgba(31, 68, 52, .10), transparent 60%),
+        var(--bg);
+      overflow: hidden;
+    }
+
+    .stage {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 72px;
+      padding: 24px;
+    }
+
+    /* ── 안내 패널 ───────────────────────────── */
+    .panel { width: 340px; flex-shrink: 0; }
+    .panel .logo { height: 34px; display: block; }
+    .panel h1 {
+      margin: 28px 0 10px;
+      font-size: 34px;
+      line-height: 1.25;
+      letter-spacing: -1.2px;
+      font-weight: 800;
+      color: var(--navy);
+    }
+    .panel p.lead { margin: 0 0 28px; color: var(--sub); font-size: 16px; line-height: 1.6; letter-spacing: -.3px; }
+    .chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 28px; }
+    .chip {
+      font-size: 12px; font-weight: 700; padding: 5px 10px; border-radius: 999px;
+      background: #fff; border: 1px solid var(--line); color: var(--sub);
+    }
+    .chip.sun { background: linear-gradient(90deg, var(--sun-y), var(--sun-o), var(--sun-r)); color: #fff; border: 0; }
+    .chip.navy { background: var(--navy); color: #fff; border: 0; }
+
+    .guide { background: #fff; border-radius: 18px; padding: 18px 20px; margin-bottom: 16px; box-shadow: 0 4px 16px rgba(28, 32, 29, .05); }
+    .guide h2 { margin: 0 0 10px; font-size: 14px; color: var(--navy); letter-spacing: -.2px; }
+    .guide ol { margin: 0; padding-left: 18px; color: var(--sub); font-size: 14px; line-height: 1.75; letter-spacing: -.2px; }
+    .guide b { color: var(--text); }
+
+    .modes-label { font-size: 13px; font-weight: 700; color: var(--mute); margin: 0 0 8px 2px; }
+    .modes {
+      display: flex; padding: 4px; gap: 4px; margin-bottom: 10px;
+      background: #fff; border: 1px solid var(--line); border-radius: 16px;
+    }
+    .mode {
+      flex: 1; height: 44px; border: 0; border-radius: 12px; background: transparent;
+      font: inherit; font-size: 14px; font-weight: 700; color: var(--sub); cursor: pointer;
+      transition: background .15s ease, color .15s ease;
+    }
+    .mode:hover { background: #F3F2ED; }
+    .mode[aria-pressed="true"] { background: var(--navy); color: #fff; }
+    .actions { display: flex; gap: 8px; }
+    .btn {
+      flex: 1; height: 48px; border-radius: 14px; border: 1px solid var(--line);
+      background: #fff; color: var(--navy); font: inherit; font-weight: 700; font-size: 15px;
+      cursor: pointer; transition: transform .08s ease, background .15s ease;
+    }
+    .btn:hover { background: #F7F6F2; }
+    .btn:active { transform: scale(.98); }
+    .btn.primary { background: var(--navy); color: #fff; border-color: var(--navy); }
+    .btn.primary:hover { background: var(--navy-deep); }
+    .foot { margin-top: 22px; display: flex; align-items: center; gap: 12px; }
+    .foot img { height: 30px; }
+    .foot span { font-size: 12px; color: var(--mute); }
+
+    /* ── 폰 목업 (border로 구성) ────────────────── */
+    .phone-wrap { flex-shrink: 0; transform-origin: center center; }
+    .phone {
+      position: relative;
+      width: calc(var(--screen-w) + var(--bezel) * 2);
+      height: calc(var(--screen-h) + var(--bezel) * 2);
+      border: var(--bezel) solid #111318;
+      border-radius: 62px;
+      background: #000;
+      box-shadow:
+        0 0 0 2px #3a3d44,               /* 금속 프레임 */
+        0 0 0 3px #1b1d22,
+        0 40px 80px -20px rgba(21, 48, 42, .35),
+        0 20px 40px -10px rgba(0, 0, 0, .25);
+    }
+    /* 측면 버튼 */
+    .phone::before, .phone::after {
+      content: ''; position: absolute; width: 4px; border-radius: 2px; background: #2a2d33;
+    }
+    .phone::before { left: calc(-1 * var(--bezel) - 6px); top: 170px; height: 64px; box-shadow: 0 84px 0 #2a2d33; }
+    .phone::after { right: calc(-1 * var(--bezel) - 6px); top: 220px; height: 96px; }
+
+    .screen {
+      position: absolute; inset: 0;
+      border-radius: 50px;
+      overflow: hidden;
+      background: #fff;
+    }
+    .screen iframe { position: relative; z-index: 1; width: 100%; height: 100%; border: 0; display: block; background: transparent; }
+
+    /* 다이내믹 아일랜드 */
+    .island {
+      position: absolute; top: 11px; left: 50%; transform: translateX(-50%);
+      width: 124px; height: 36px; border-radius: 20px; background: #000; z-index: 101;
+      pointer-events: none;
+    }
+    /* 상태표시줄 – 배경색에 따라 자동 반전 */
+    .statusbar {
+      position: absolute; top: 0; left: 0; right: 0; height: 47px; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 4px 30px 0 44px;
+      color: #fff; mix-blend-mode: difference;
+      font-size: 16px; font-weight: 700; letter-spacing: -.2px;
+      pointer-events: none;
+    }
+    .statusbar .icons { display: flex; align-items: center; gap: 6px; }
+    .statusbar svg { display: block; fill: currentColor; }
+    .home-indicator {
+      position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+      width: 136px; height: 5px; border-radius: 3px; background: #fff; mix-blend-mode: difference;
+      z-index: 100; pointer-events: none;
+    }
+
+    .loading {
+      position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 18px; background: #fff; z-index: 0;
+    }
+    .loading img { height: 64px; }
+    .loading .bar { width: 120px; height: 4px; border-radius: 2px; background: var(--line); overflow: hidden; }
+    .loading .bar::after {
+      content: ''; display: block; height: 100%; width: 40%;
+      background: linear-gradient(90deg, var(--sun-y), var(--sun-r));
+      animation: load 1s ease-in-out infinite;
+    }
+    @keyframes load { from { transform: translateX(-100%); } to { transform: translateX(250%); } }
+
+    @media (max-width: 900px) {
+      .panel { display: none; }
+      .stage { gap: 0; padding: 12px; }
+    }
+  
+    .feat { display: flex; gap: 12px; align-items: center; width: 100%; text-align: left; background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 12px 14px; margin-bottom: 8px; cursor: pointer; font: inherit; transition: transform .08s ease, box-shadow .15s ease; }
+    .feat:hover { box-shadow: 0 4px 16px rgba(28, 32, 29, .08); }
+    .feat:active { transform: scale(.99); }
+    .feat .n { flex-shrink: 0; width: 36px; height: 36px; border-radius: 11px; display: grid; place-items: center; color: #fff; font-weight: 800; font-size: 15px; background: linear-gradient(135deg, var(--sun-y), var(--sun-o) 45%, var(--sun-r)); }
+    .feat b { display: block; font-size: 15px; color: var(--text); letter-spacing: -.3px; }
+    .feat span { display: block; font-size: 14px; color: var(--sub); letter-spacing: -.2px; }
+    .frame-root .panel { max-height: calc(100vh - 48px); overflow-y: auto; scrollbar-width: none; }
+    .frame-root .panel h1 { margin: 20px 0 8px; font-size: 30px; }
+    .frame-root .panel p.lead { margin-bottom: 20px; font-size: 15px; }
+    .bare { position: fixed; inset: 0; }
+    .guide ol { list-style: decimal; }
+    .modes-label { color: var(--sub) !important; }
+    .admin-link { display: block; margin-top: 10px; padding: 12px 16px; border-radius: 14px; background: #fff; border: 1px dashed var(--navy); text-decoration: none; }
+    .admin-link b { display: block; font-size: 15px; color: var(--navy); }
+    .admin-link span { display: block; margin-top: 2px; font-size: 13px; color: var(--sub); }
+    .admin-link:hover { background: #F7F6F2; }

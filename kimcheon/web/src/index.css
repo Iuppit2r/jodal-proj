@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+/* 컬러 스킴 – Pine & Persimmon
+   brand(깊은 솔잎색) = 행동·선택·헤더 / accent(감빛 주황) = 성취(스탬프·진행·인증 버튼)
+   gold = 획득 배지 / forest = 완료 상태 / 그 외는 따뜻한 중립색. 그라데이션은 쓰지 않는다. */
+@theme {
+  --font-sans: "Pretendard Variable", Pretendard, -apple-system, system-ui, sans-serif;
+  --color-brand: #1F4434;
+  --color-brand-deep: #15302A;
+  --color-brand-50: #EAF0EC;
+  --color-accent: #F26B3A;
+  --color-accent-50: #FEEFE8;
+  --color-gold: #E0A93B;
+  --color-forest: #2F7D57;
+  --color-forest-50: #E8F3EC;
+  --color-ink: #1C201D;
+  --color-sub: #525A55;
+  --color-mute: #737B76;
+  --color-line: #E7E5DF;
+  --color-bg: #F5F4EF;
+  --color-alt: #EEEDE7;
+  --color-paper: #FAF8F3;
+}
+
+html, body, #root { height: 100%; margin: 0; }
+body { word-break: keep-all; overflow-wrap: break-word; -webkit-font-smoothing: antialiased; color: var(--color-ink); }
+
+/* 등고선 패턴 (브랜드 헤더 배경) */
+.topo {
+  background-color: var(--color-brand);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240' fill='none' stroke='%23ffffff' stroke-opacity='.06' stroke-width='1.2'%3E%3Cpath d='M-20 60c40-30 80 10 120-10s70-40 160 0'/%3E%3Cpath d='M-20 90c40-30 80 10 120-10s70-40 160 0'/%3E%3Cpath d='M-20 120c40-30 80 10 120-10s70-40 160 0'/%3E%3Cpath d='M-20 150c40-30 80 10 120-10s70-40 160 0'/%3E%3Cpath d='M-20 180c40-30 80 10 120-10s70-40 160 0'/%3E%3Cpath d='M-20 210c40-30 80 10 120-10s70-40 160 0'/%3E%3Cpath d='M-20 30c40-30 80 10 120-10s70-40 160 0'/%3E%3C/svg%3E");
+}
+
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* 화면 전환 */
+@keyframes slide-in { from { transform: translateX(28px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes rise { from { transform: translateY(18px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes stamp {
+  0% { transform: scale(2.4) rotate(-18deg); opacity: 0; }
+  60% { transform: scale(.92) rotate(-8deg); opacity: 1; }
+  100% { transform: scale(1) rotate(-8deg); opacity: 1; }
+}
+@keyframes pop { 0% { transform: scale(.4); opacity: 0; } 70% { transform: scale(1.08); } 100% { transform: scale(1); opacity: 1; } }
+@keyframes shine { from { transform: translateX(-120%) rotate(20deg); } to { transform: translateX(220%) rotate(20deg); } }
+@keyframes pulse-ring { 0% { transform: scale(.6); opacity: .7; } 100% { transform: scale(2.2); opacity: 0; } }
+@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@keyframes confetti { 0% { transform: translateY(-20px) rotate(0); opacity: 1; } 100% { transform: translateY(560px) rotate(540deg); opacity: 0; } }
+
+.anim-slide { animation: slide-in .22s ease-out both; }
+.anim-rise { animation: rise .35s ease-out both; }
+.anim-stamp { animation: stamp .55s cubic-bezier(.2,.9,.3,1.2) both; }
+.anim-pop { animation: pop .45s ease-out both; }
+.anim-bob { animation: bob 2.4s ease-in-out infinite; }
+
+.leaflet-container { font-family: inherit; background: #E8EEE4; }
+.leaflet-control-attribution { font-size: 10px !important; }
+@keyframes drop { from { transform: translateY(-120%); opacity: 0; } to { transform: none; opacity: 1; } }
+
+/* 제안서 캡처 모드 (?capture=1): 시연용 조작 요소 숨김 */
+html.capture .demo-only { display: none !important; }
+html.capture .demo-invisible { visibility: hidden !important; }
+html.capture, html.capture body { background: transparent !important; }
+html.capture .frame-root { background: transparent !important; }
+html.capture * { caret-color: transparent; }
+html.capture aside > div { max-height: none !important; }
